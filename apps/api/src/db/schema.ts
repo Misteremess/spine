@@ -100,3 +100,133 @@ export const resolutionLog = pgTable("resolution_log", {
   ms: integer("ms"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+/* ============================================================
+ * AUTENTICACIÓN (tablas de Better Auth, nombres de campo canónicos)
+ * ============================================================ */
+
+export const user = pgTable("user", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").notNull().default(false),
+  image: text("image"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const session = pgTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: timestamp("expires_at").notNull(),
+  token: text("token").notNull().unique(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const account = pgTable("account", {
+  id: text("id").primaryKey(),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: timestamp("access_token_expires_at"),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const verification = pgTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+/* ============================================================
+ * PLANO USUARIO (plan §12): el ejemplar, la lectura, la wishlist.
+ * Ejemplar ≠ lectura: prestado o wishlist nunca son estados de lectura.
+ * ============================================================ */
+
+export const readingStatus = pgEnum("reading_status", [
+  "pending",
+  "reading",
+  "paused",
+  "finished",
+  "abandoned",
+]);
+
+/** Tu ejemplar físico/digital. editionId nullable = libro añadido a mano. */
+export const userBooks = pgTable("user_books", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  editionId: integer("edition_id").references(() => editions.id),
+  /** Solo para libros manuales sin edición de catálogo. */
+  customTitle: text("custom_title"),
+  customAuthors: text("custom_authors"),
+  format: text("format"),
+  purchaseDate: text("purchase_date"),
+  purchasePriceCents: integer("purchase_price_cents"),
+  condition: text("condition"),
+  location: text("location"),
+  favorite: boolean("favorite").notNull().default(false),
+  /** Valoración del usuario en medias estrellas: 1..10. */
+  rating: integer("rating"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+/** Una lectura del ejemplar. N por libro (relecturas). */
+export const readings = pgTable("readings", {
+  id: serial("id").primaryKey(),
+  userBookId: integer("user_book_id")
+    .notNull()
+    .references(() => userBooks.id, { onDelete: "cascade" }),
+  status: readingStatus("status").notNull().default("pending"),
+  startedAt: text("started_at"),
+  finishedAt: text("finished_at"),
+  rating: integer("rating"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const progressEntries = pgTable("progress_entries", {
+  id: serial("id").primaryKey(),
+  readingId: integer("reading_id")
+    .notNull()
+    .references(() => readings.id, { onDelete: "cascade" }),
+  page: integer("page"),
+  percent: integer("percent"),
+  note: text("note"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const wishlistItems = pgTable("wishlist_items", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  editionId: integer("edition_id").references(() => editions.id),
+  /** Texto libre cuando aún no existe en el catálogo. */
+  title: text("title"),
+  /** 1 = la quiero ya · 2 = normal · 3 = algún día. */
+  priority: integer("priority").notNull().default(2),
+  targetPriceCents: integer("target_price_cents"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
