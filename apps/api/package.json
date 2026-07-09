@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@better-auth/expo": "^1.6.23",
+    "@fastify/rate-limit": "^11.1.0",
     "@spine/shared": "workspace:*",
     "better-auth": "^1.6.23",
     "drizzle-orm": "^0.44.0",

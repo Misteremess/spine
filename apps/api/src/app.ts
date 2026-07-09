@@ -1,3 +1,4 @@
+import rateLimit from "@fastify/rate-limit";
 import { toIsbn13 } from "@spine/shared";
 import Fastify from "fastify";
 import { ZodError } from "zod";
@@ -7,15 +8,34 @@ import { libraryRoutes } from "./routes/library";
 import { wishlistRoutes } from "./routes/wishlist";
 import { resolveIsbn } from "./services/resolver";
 
-export function buildApp() {
+export async function buildApp() {
   const app = Fastify({ logger: true });
+
+  // Límite global por IP; protege sobre todo la cuota gratuita de Google
+  // Books detrás del resolver. En memoria: suficiente con un solo proceso.
+  await app.register(rateLimit, {
+    global: true,
+    max: 300,
+    timeWindow: "1 minute",
+    errorResponseBuilder: (_req, ctx) => ({
+      statusCode: 429,
+      error: "rate_limited",
+      message: `Demasiadas peticiones. Vuelve a intentarlo en ${ctx.after}.`,
+    }),
+  });
 
   app.setErrorHandler((err: unknown, _req, reply) => {
     if (err instanceof ZodError) {
       return reply.code(400).send({ error: "validation", issues: err.issues });
     }
+    const e = err as { statusCode?: number; error?: string; message?: string };
+    const status = e.statusCode ?? 500;
+    // Los 4xx (rate limit, payload demasiado grande…) viajan con su mensaje;
+    // solo los 5xx se ocultan tras "internal".
+    if (status < 500) {
+      return reply.code(status).send({ error: e.error ?? "request_error", message: e.message });
+    }
     app.log.error(err);
-    const status = (err as { statusCode?: number }).statusCode ?? 500;
     return reply.code(status).send({ error: "internal" });
   });
 
@@ -25,6 +45,9 @@ export function buildApp() {
   app.route({
     method: ["GET", "POST"],
     url: "/api/auth/*",
+    // Frena fuerza bruta en credenciales. getSession queda dentro del
+    // límite: la app móvil lo llama pocas veces por sesión.
+    config: { rateLimit: { max: 30, timeWindow: "1 minute" } },
     async handler(request, reply) {
       const url = new URL(request.url, `http://${request.headers.host}`);
       const headers = new Headers();
@@ -43,8 +66,11 @@ export function buildApp() {
     },
   });
 
-  // --- Catálogo (público de momento; rate limiting antes de exponerlo) ---
-  app.get<{ Params: { isbn: string } }>("/v1/isbn/:isbn", async (req, reply) => {
+  // --- Catálogo. 60/min permite el escaneo en ráfaga sin abrir la puerta
+  // a que alguien vacíe la cuota de las fuentes externas. ---
+  app.get<{ Params: { isbn: string } }>("/v1/isbn/:isbn", {
+    config: { rateLimit: { max: 60, timeWindow: "1 minute" } },
+  }, async (req, reply) => {
     const isbn13 = toIsbn13(req.params.isbn);
     if (!isbn13) {
       return reply.code(400).send({ error: "invalid_isbn", message: "No es un ISBN-10/13 válido" });
