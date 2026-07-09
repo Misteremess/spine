@@ -1,0 +1,13 @@
+{
+  "name": "spine",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev:api": "pnpm --filter @spine/api dev",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

@@ -30,8 +30,24 @@ TypeScript end-to-end: Expo/React Native (móvil) · Next.js (web) · Fastify +
 Drizzle + PostgreSQL (backend) · infraestructura self-host. Detalle y
 justificación de cada decisión en el plan (§11).
 
-## Configuración local
+## Desarrollo
 
-Las herramientas que consultan Google Books necesitan una API key gratuita
-(Books API) en un fichero `.env` (ver `tools/fase0-isbn-test/README.md`).
-Los ficheros `.env` están excluidos del repositorio.
+Requisitos: Node ≥22, pnpm, PostgreSQL local.
+
+```bash
+pnpm install
+createdb spine_dev
+cp apps/api/.env.example apps/api/.env   # y rellena GOOGLE_BOOKS_API_KEY
+pnpm --filter @spine/api db:push          # crea las tablas
+pnpm dev:api                              # API en http://localhost:3123
+pnpm test                                 # tests de todo el monorepo
+```
+
+Prueba rápida del resolver: `curl localhost:3123/v1/isbn/9780441172719`
+
+| Workspace | Contenido |
+|---|---|
+| `apps/api` | Fastify + Drizzle + PostgreSQL. Resolver ISBN (catálogo → Open Library → Google Books) y esquema Work/Edition/Series |
+| `packages/shared` | Tipos y utilidades compartidas (validación ISBN, esquemas zod) |
+
+Las API keys viven en ficheros `.env`, excluidos del repositorio.
