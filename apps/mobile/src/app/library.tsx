@@ -1,12 +1,14 @@
 import { Image } from "expo-image";
 import { router, Stack, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   FlatList,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { api } from "../lib/api";
@@ -20,6 +22,8 @@ type Item = {
   isbn13: string | null;
   pages: number | null;
   favorite: boolean;
+  authors: string[];
+  createdAt: string;
   reading: { status: string } | null;
 };
 
@@ -31,9 +35,39 @@ const STATUS_LABEL: Record<string, { text: string; color: string }> = {
   abandoned: { text: "Abandonado", color: colors.arcilla },
 };
 
+const FILTERS: { key: string; label: string }[] = [
+  { key: "all", label: "Todos" },
+  { key: "reading", label: "Leyendo" },
+  { key: "pending", label: "Pendientes" },
+  { key: "finished", label: "Leídos" },
+  { key: "paused", label: "En pausa" },
+  { key: "abandoned", label: "Abandonados" },
+];
+
+/** Búsqueda insensible a mayúsculas y acentos. */
+const fold = (s: string) => s.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
+
 export default function Library() {
   const [items, setItems] = useState<Item[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [sortAz, setSortAz] = useState(false);
+
+  const visible = useMemo(() => {
+    let list = items;
+    if (filter !== "all") list = list.filter((it) => (it.reading?.status ?? "pending") === filter);
+    const q = fold(query.trim());
+    if (q) {
+      list = list.filter(
+        (it) => fold(it.title ?? "").includes(q) || it.authors.some((a) => fold(a).includes(q))
+      );
+    }
+    if (sortAz) {
+      list = [...list].sort((a, b) => (a.title ?? "").localeCompare(b.title ?? "", "es"));
+    }
+    return list;
+  }, [items, query, filter, sortAz]);
 
   const load = useCallback(async () => {
     try {
@@ -79,8 +113,53 @@ export default function Library() {
         }}
       />
 
+      {/* Buscador + filtros (aparecen a partir de unos cuantos libros) */}
+      {items.length > 5 && (
+        <View style={{ paddingHorizontal: 16, paddingTop: 10, gap: 8 }}>
+          <TextInput
+            style={s.search}
+            value={query}
+            onChangeText={setQuery}
+            placeholder="Buscar por título o autor"
+            placeholderTextColor={colors.mut}
+            clearButtonMode="while-editing"
+            autoCorrect={false}
+          />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+            {FILTERS.map((f) => {
+              const active = filter === f.key;
+              return (
+                <Pressable
+                  key={f.key}
+                  onPress={() => setFilter(f.key)}
+                  style={[s.filterChip, active && { backgroundColor: colors.ambar, borderColor: colors.ambar }]}
+                >
+                  <Text
+                    style={{
+                      color: active ? colors.inkOnAccent : colors.mut,
+                      fontSize: 12,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {f.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+            <Pressable
+              onPress={() => setSortAz((v) => !v)}
+              style={[s.filterChip, sortAz && { borderColor: colors.ambar }]}
+            >
+              <Text style={{ color: sortAz ? colors.ambar : colors.mut, fontSize: 12, fontWeight: "600" }}>
+                {sortAz ? "A–Z ✓" : "A–Z"}
+              </Text>
+            </Pressable>
+          </ScrollView>
+        </View>
+      )}
+
       <FlatList
-        data={items}
+        data={visible}
         keyExtractor={(it) => String(it.id)}
         contentContainerStyle={{ padding: 16, gap: 10, paddingBottom: 120 }}
         refreshControl={
@@ -95,14 +174,22 @@ export default function Library() {
           />
         }
         ListEmptyComponent={
-          <View style={{ alignItems: "center", marginTop: 80, gap: 8 }}>
-            <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: "Georgia" }}>
-              Tu biblioteca está vacía
-            </Text>
-            <Text style={{ color: colors.mut, fontSize: 13 }}>
-              Pulsa «Escanear» y apunta al código de barras
-            </Text>
-          </View>
+          items.length === 0 ? (
+            <View style={{ alignItems: "center", marginTop: 80, gap: 8 }}>
+              <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: "Georgia" }}>
+                Tu biblioteca está vacía
+              </Text>
+              <Text style={{ color: colors.mut, fontSize: 13 }}>
+                Pulsa «Escanear» y apunta al código de barras
+              </Text>
+            </View>
+          ) : (
+            <View style={{ alignItems: "center", marginTop: 60 }}>
+              <Text style={{ color: colors.mut, fontSize: 13 }}>
+                Nada coincide con la búsqueda o el filtro
+              </Text>
+            </View>
+          )
         }
         renderItem={({ item }) => {
           const st = item.reading ? STATUS_LABEL[item.reading.status] : undefined;
@@ -121,7 +208,13 @@ export default function Library() {
                 <Text style={s.title} numberOfLines={2}>
                   {item.title ?? "Sin título"}
                 </Text>
-                {item.pages ? <Text style={s.meta}>{item.pages} págs.</Text> : null}
+                {item.authors.length > 0 ? (
+                  <Text style={s.meta} numberOfLines={1}>
+                    {item.authors.join(", ")}
+                  </Text>
+                ) : item.pages ? (
+                  <Text style={s.meta}>{item.pages} págs.</Text>
+                ) : null}
               </View>
               {st && (
                 <View style={[s.pill, { borderColor: st.color }]}>
@@ -142,6 +235,23 @@ export default function Library() {
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
+  search: {
+    backgroundColor: colors.tinta2,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    color: colors.papel,
+    fontSize: 14.5,
+  },
+  filterChip: {
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 99,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
   card: {
     flexDirection: "row",
     alignItems: "center",

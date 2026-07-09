@@ -150,12 +150,26 @@ export function libraryRoutes(app: FastifyInstance) {
           title: schema.editions.title,
           coverUrl: schema.editions.coverUrl,
           pages: schema.editions.pages,
+          workId: schema.editions.workId,
         },
       })
       .from(schema.userBooks)
       .leftJoin(schema.editions, eq(schema.userBooks.editionId, schema.editions.id))
       .where(eq(schema.userBooks.userId, req.user.id))
       .orderBy(desc(schema.userBooks.createdAt));
+
+    const workIds = [...new Set(books.map((b) => b.edition?.workId).filter((id): id is number => id != null))];
+    const authorRows = workIds.length
+      ? await db
+          .select({ workId: schema.workAuthors.workId, name: schema.authors.name })
+          .from(schema.workAuthors)
+          .innerJoin(schema.authors, eq(schema.workAuthors.authorId, schema.authors.id))
+          .where(inArray(schema.workAuthors.workId, workIds))
+      : [];
+    const authorsByWork = new Map<number, string[]>();
+    for (const a of authorRows) {
+      authorsByWork.set(a.workId, [...(authorsByWork.get(a.workId) ?? []), a.name]);
+    }
 
     const ids = books.map((b) => b.userBook.id);
     const allReadings = ids.length
@@ -175,6 +189,11 @@ export function libraryRoutes(app: FastifyInstance) {
         coverUrl: b.edition?.coverUrl ?? null,
         isbn13: b.edition?.isbn13 ?? null,
         pages: b.edition?.pages ?? null,
+        authors: b.edition?.workId
+          ? (authorsByWork.get(b.edition.workId) ?? [])
+          : b.userBook.customAuthors
+            ? [b.userBook.customAuthors]
+            : [],
         reading: latest.get(b.userBook.id) ?? null,
       })),
     };
