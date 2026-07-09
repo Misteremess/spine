@@ -17,6 +17,7 @@
     --ambar-deep: #B07E24;
     --salvia: #7A8B6F;
     --arcilla: #C1553D;
+    --ink-on-accent: #1B1610; /* texto sobre ámbar, constante en ambos modos */
     --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
@@ -42,6 +43,10 @@
   .chip span { display: block; font-size: 9.5px; color: var(--board-mut); margin-top: 5px; font-variant-numeric: tabular-nums; }
   .typespec { font-family: var(--serif); font-size: 26px; }
   .typespec small { display: block; font-family: var(--sans); font-size: 12px; color: var(--board-mut); margin-top: 4px; }
+  .modes { display: flex; gap: 0; border: 1px solid var(--board-line); border-radius: 99px; overflow: hidden; width: max-content; }
+  .modes button { font: 600 12px var(--sans); padding: 8px 18px; border: 0; background: transparent; color: var(--board-mut); cursor: pointer; }
+  .modes button.on { background: var(--ambar); color: var(--ink-on-accent); }
+  .modes button:focus-visible { outline: 2px solid var(--ambar-deep); outline-offset: -2px; }
 
   /* ---------- rejilla de pantallas ---------- */
   .frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px 28px; margin-top: 46px; }
@@ -52,13 +57,21 @@
   /* teléfono */
   .phone { background: #000; border-radius: 38px; padding: 10px; box-shadow: 0 24px 48px -20px rgba(0,0,0,.45); }
   .screen { position: relative; background: var(--tinta); color: var(--papel); border-radius: 30px; overflow: hidden; height: 620px; display: flex; flex-direction: column; font-size: 12.5px; }
+  /* Modo "Papel": mismos tokens, invertidos con intención — no un simple negativo */
+  .mode-papel .screen {
+    --tinta: #F7F2E8; --tinta-2: #FFFDF6; --tinta-3: #E5DBC5;
+    --papel: #201A11; --marfil: #4A3F2B; --mut: #8A7E68;
+    --ambar: #BE8A2C; --ambar-deep: #8F6314;
+    --salvia: #5F7052; --arcilla: #AE4A33;
+  }
+  .mode-papel .screen { box-shadow: inset 0 0 0 1px #E5DBC5; }
   .sbar { display: flex; justify-content: space-between; padding: 12px 20px 6px; font-size: 11px; color: var(--mut); font-variant-numeric: tabular-nums; }
   .body { flex: 1; overflow: hidden; padding: 6px 16px 12px; display: flex; flex-direction: column; gap: 12px; }
   .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; padding: 8px 10px 16px; border-top: 1px solid var(--tinta-3); background: var(--tinta-2); }
   .tab { text-align: center; font-size: 9px; color: var(--mut); display: flex; flex-direction: column; gap: 3px; align-items: center; }
   .tab.on { color: var(--ambar); }
   .tab svg { width: 20px; height: 20px; }
-  .fab { width: 44px; height: 44px; margin: -18px auto 0; border-radius: 50%; background: var(--ambar); color: var(--tinta); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 500; box-shadow: 0 6px 16px rgba(217,164,65,.35); }
+  .fab { width: 44px; height: 44px; margin: -18px auto 0; border-radius: 50%; background: var(--ambar); color: var(--ink-on-accent); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 500; box-shadow: 0 6px 16px rgba(217,164,65,.35); }
 
   .h-serif { font-family: var(--serif); font-weight: 500; }
   .k { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--mut); font-weight: 600; }
@@ -83,10 +96,10 @@
 
   .bar { height: 6px; border-radius: 3px; background: var(--tinta-3); overflow: hidden; }
   .bar i { display: block; height: 100%; border-radius: 3px; }
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--ambar); color: var(--tinta); font-weight: 600; font-size: 11.5px; border-radius: 10px; padding: 8px 12px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--ambar); color: var(--ink-on-accent); font-weight: 600; font-size: 11.5px; border-radius: 10px; padding: 8px 12px; }
   .btn.ghost { background: transparent; color: var(--ambar); border: 1px solid var(--ambar-deep); }
   .pill { font-size: 10px; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--tinta-3); color: var(--mut); }
-  .pill.on { background: var(--ambar); border-color: var(--ambar); color: var(--tinta); font-weight: 600; }
+  .pill.on { background: var(--ambar); border-color: var(--ambar); color: var(--ink-on-accent); font-weight: 600; }
   .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
 
   /* pantallas concretas */
@@ -100,14 +113,14 @@
   .ean { font-size: 10px; color: var(--mut); letter-spacing: .3em; }
 
   .tomos { display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; }
-  .tomo { aspect-ratio: 3/4; border-radius: 5px; background: var(--ambar); color: var(--tinta); display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 600; position: relative; font-variant-numeric: tabular-nums; }
-  .tomo.leido::after { content: "✓"; position: absolute; top: 2px; right: 3px; font-size: 8px; color: var(--tinta); opacity: .8; }
+  .tomo { aspect-ratio: 3/4; border-radius: 5px; background: var(--ambar); color: var(--ink-on-accent); display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 600; position: relative; font-variant-numeric: tabular-nums; }
+  .tomo.leido::after { content: "✓"; position: absolute; top: 2px; right: 3px; font-size: 8px; color: var(--ink-on-accent); opacity: .8; }
   .tomo.falta { background: transparent; border: 1.5px dashed var(--arcilla); color: var(--arcilla); font-weight: 500; }
 
   .ring { width: 116px; height: 116px; }
   .seg { display: flex; border: 1px solid var(--tinta-3); border-radius: 10px; overflow: hidden; }
   .seg span { flex: 1; text-align: center; padding: 7px 0; font-size: 10.5px; color: var(--mut); }
-  .seg .on { background: var(--ambar); color: var(--tinta); font-weight: 600; }
+  .seg .on { background: var(--ambar); color: var(--ink-on-accent); font-weight: 600; }
   .stars { color: var(--ambar); font-size: 15px; letter-spacing: 2px; }
   .meta-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--tinta-3); font-size: 11.5px; }
   .meta-row span:first-child { color: var(--mut); }
@@ -148,6 +161,14 @@
       <div class="spec">
         <h3>Tipografía</h3>
         <div class="typespec">Fraunces para lo que se lee,<small>Inter para lo que se usa. Numerales tabulares en datos. (Este board usa serifas del sistema por ser autocontenido.)</small></div>
+      </div>
+      <div class="spec">
+        <h3>Modo de la app</h3>
+        <div class="modes" role="group" aria-label="Modo de las pantallas">
+          <button type="button" class="on" data-mode="noche">● Noche</button>
+          <button type="button" data-mode="papel">○ Papel</button>
+        </div>
+        <small style="display:block; font-size:11px; color:var(--board-mut); margin-top:8px; max-width:24ch;">Mismos tokens, invertidos con intención. La cámara del escáner permanece oscura.</small>
       </div>
     </div>
   </header>
@@ -278,7 +299,7 @@
             <div class="cover c8" style="aspect-ratio:2/3;"><div class="t">Iron Flame</div><div class="a">R. Yarros</div></div>
             <div class="cover c2" style="aspect-ratio:2/3;"><div class="t">El Hobbit</div><div class="a">Tolkien</div></div>
             <div class="cover c5" style="aspect-ratio:2/3;"><div class="t">JJK 18</div><div class="a">Akutami</div></div>
-            <div class="cover c7" style="aspect-ratio:2/3; outline:1.5px solid var(--ambar); outline-offset:2px;"><div class="t">Hábitos atómicos</div><div class="a">J. Clear</div><span style="position:absolute; top:5px; left:5px; font-size:7px; background:var(--ambar); color:var(--tinta); padding:1px 5px; border-radius:99px; font-weight:700;">PRESTADO</span></div>
+            <div class="cover c7" style="aspect-ratio:2/3; outline:1.5px solid var(--ambar); outline-offset:2px;"><div class="t">Hábitos atómicos</div><div class="a">J. Clear</div><span style="position:absolute; top:5px; left:5px; font-size:7px; background:var(--ambar); color:var(--ink-on-accent); padding:1px 5px; border-radius:99px; font-weight:700;">PRESTADO</span></div>
           </div>
           <div class="row" style="justify-content:space-between; font-size:10px; color:var(--mut);">
             <span>Vista: Portadas · Lomos · Lista</span><span>Orden: Reciente</span>
@@ -390,10 +411,10 @@
           <div class="h-serif" style="font-size:19px;">Tu 2026</div>
           <div class="row" style="gap:14px;">
             <svg class="ring" viewBox="0 0 120 120">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#282318" stroke-width="10"/>
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#D9A441" stroke-width="10" stroke-linecap="round" stroke-dasharray="181 314" transform="rotate(-90 60 60)"/>
-              <text x="60" y="57" text-anchor="middle" fill="#F6F1E7" font-size="24" font-family="Georgia" >23</text>
-              <text x="60" y="76" text-anchor="middle" fill="#9A8F7A" font-size="10">de 40 libros</text>
+              <circle cx="60" cy="60" r="50" fill="none" style="stroke:var(--tinta-3)" stroke-width="10"/>
+              <circle cx="60" cy="60" r="50" fill="none" style="stroke:var(--ambar)" stroke-width="10" stroke-linecap="round" stroke-dasharray="181 314" transform="rotate(-90 60 60)"/>
+              <text x="60" y="57" text-anchor="middle" style="fill:var(--papel)" font-size="24" font-family="Georgia" >23</text>
+              <text x="60" y="76" text-anchor="middle" style="fill:var(--mut)" font-size="10">de 40 libros</text>
             </svg>
             <div class="grow" style="display:flex; flex-direction:column; gap:8px;">
               <div class="card-p" style="padding:8px 10px;"><div class="num" style="font-size:16px; font-weight:600;">8.412</div><div class="k">Páginas</div></div>
@@ -410,10 +431,10 @@
             <div class="k" style="margin-bottom:8px;">Géneros</div>
             <div class="row" style="gap:10px;">
               <svg width="64" height="64" viewBox="0 0 42 42">
-                <circle cx="21" cy="21" r="15.9" fill="none" stroke="#282318" stroke-width="7"/>
-                <circle cx="21" cy="21" r="15.9" fill="none" stroke="#D9A441" stroke-width="7" stroke-dasharray="42 58" transform="rotate(-90 21 21)"/>
-                <circle cx="21" cy="21" r="15.9" fill="none" stroke="#7A8B6F" stroke-width="7" stroke-dasharray="30 70" stroke-dashoffset="-42" transform="rotate(-90 21 21)"/>
-                <circle cx="21" cy="21" r="15.9" fill="none" stroke="#C1553D" stroke-width="7" stroke-dasharray="16 84" stroke-dashoffset="-72" transform="rotate(-90 21 21)"/>
+                <circle cx="21" cy="21" r="15.9" fill="none" style="stroke:var(--tinta-3)" stroke-width="7"/>
+                <circle cx="21" cy="21" r="15.9" fill="none" style="stroke:var(--ambar)" stroke-width="7" stroke-dasharray="42 58" transform="rotate(-90 21 21)"/>
+                <circle cx="21" cy="21" r="15.9" fill="none" style="stroke:var(--salvia)" stroke-width="7" stroke-dasharray="30 70" stroke-dashoffset="-42" transform="rotate(-90 21 21)"/>
+                <circle cx="21" cy="21" r="15.9" fill="none" style="stroke:var(--arcilla)" stroke-width="7" stroke-dasharray="16 84" stroke-dashoffset="-72" transform="rotate(-90 21 21)"/>
               </svg>
               <div style="font-size:10.5px; color:var(--mut); display:flex; flex-direction:column; gap:3px;">
                 <span><i class="dot" style="display:inline-block; background:var(--ambar);"></i> Fantasía · 42%</span>
@@ -434,3 +455,11 @@
     Spine · Fase 1 · Estas ocho pantallas cubren los flujos críticos del MVP definidos en el plan (§8-§9). Las portadas aquí son abstracciones generadas; en producción vienen de Open Library/Google Books o de la foto del usuario. Tipografías de producción: Fraunces (display) + Inter (UI). Microinteracciones definidas: pop háptico al escanear, tarjeta que se apila, hueco de tomo que se rellena con settle, confetti único al terminar un libro. Todo &lt;400 ms e interrumpible.
   </footer>
 </div>
+<script>
+  document.querySelectorAll(".modes button").forEach((b) => {
+    b.addEventListener("click", () => {
+      document.body.classList.toggle("mode-papel", b.dataset.mode === "papel");
+      document.querySelectorAll(".modes button").forEach((x) => x.classList.toggle("on", x === b));
+    });
+  });
+</script>
