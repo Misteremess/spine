@@ -100,9 +100,17 @@ export async function fromGoogleBooks(isbn13: string): Promise<SourceResult> {
   const url =
     `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn13}` +
     `&country=ES&key=${env.GOOGLE_BOOKS_API_KEY}`;
-  const { status, data } = await fetchJson(url);
-  if (status !== 200) return null;
-  const vi = (data as Record<string, any> | null)?.items?.[0]?.volumeInfo;
+
+  // GB a veces devuelve 200 con cero items para un ISBN que SÍ tiene
+  // (intermitencia verificada en fase 0 y en producción): un reintento
+  // corto recupera la mayoría de esos falsos negativos.
+  let vi: Record<string, any> | undefined;
+  for (let attempt = 0; attempt < 2 && !vi; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, 400));
+    const { status, data } = await fetchJson(url);
+    if (status !== 200) return null;
+    vi = (data as Record<string, any> | null)?.items?.[0]?.volumeInfo;
+  }
   if (!vi) return null;
 
   return {

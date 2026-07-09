@@ -94,6 +94,20 @@ async function upsertCatalog(meta: BookMetadata, sources: Record<string, string>
   });
 }
 
+/** HEAD al índice de portadas por ISBN de OL; null si no hay imagen. */
+export async function coverByIsbn(isbn13: string): Promise<string | null> {
+  const url = `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg?default=false`;
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 5000);
+    const res = await fetch(url, { method: "HEAD", redirect: "follow", signal: ctrl.signal });
+    clearTimeout(t);
+    return res.ok ? url : null;
+  } catch {
+    return null;
+  }
+}
+
 async function logResolution(isbn13: string, resolved: boolean, source: string | null, ms: number) {
   try {
     await db.insert(schema.resolutionLog).values({ isbn13, resolved, source, ms });
@@ -121,6 +135,17 @@ export async function resolveIsbn(isbn13: string): Promise<ResolveResponse | nul
   if (!merged) {
     void logResolution(isbn13, false, null, Date.now() - t0);
     return null;
+  }
+
+  // Último recurso para la portada: el índice de covers por ISBN de OL es
+  // independiente del registro de la edición y a menudo tiene foto aunque
+  // la ficha no la referencie.
+  if (!merged.metadata.coverUrl) {
+    const coverUrl = await coverByIsbn(isbn13);
+    if (coverUrl) {
+      merged.metadata.coverUrl = coverUrl;
+      merged.sources.coverUrl = "openlibrary-covers";
+    }
   }
 
   await upsertCatalog(merged.metadata, merged.sources);
