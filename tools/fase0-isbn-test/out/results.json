@@ -1,0 +1,5887 @@
+{
+  "gbAvailable": true,
+  "gbDisabled": false,
+  "usedKey": true,
+  "results": [
+    {
+      "isbn13": "9788494917097",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788447533169",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788413560564",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478279951",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788466574860",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788441218239",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788461336715",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788415267249",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788493701314",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788417749354",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788496855700",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788499703329",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491565598",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788496747548",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788409169542",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788481085426",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788408082125",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788430606504",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788491214366",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788497340755",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788433963963",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788480538923",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788467938418",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416728381",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491514817",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491514831",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788498653595",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788470023576",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788468840499",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788435400121",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788432233678",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788471540911",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788409224470",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788408235316",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788496173569",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788415250500",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788475079868",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788408233206",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788483020807",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788484573128",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788491212393",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788409177028",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788434816558",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788447383047",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788415564690",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788433910417",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788480536844",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788432206405",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788415329725",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788401329692",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788447354092",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788416208326",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788434847873",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788434827660",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788497937634",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788497934725",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788492866809",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788494010170",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788474767964",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788461348220",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788491921882",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788450570663",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788418445095",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788430619283",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417807047",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788461622221",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788494908798",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788498951110",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788439812302",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788439857532",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788439887775",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788440420657",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788460423393",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788460465928",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788460498315",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788460707882",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788478228706",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478228775",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788478228836",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788478228881",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788477225447",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788477225454",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788477225461",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788493726034",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788413581248",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788426133779",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788478227907",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478227921",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478227952",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478228010",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788478228089",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478228232",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788478228263",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478228409",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478228416",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788478228423",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478228492",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788478228652",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788478228850",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788434025059",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788496208001",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788445071748",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788445071755",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788445072905",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788445073049",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788445073124",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788445073599",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788448030162",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788445071380",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788445071526",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788445071731",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788475293110",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788494587740",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416281763",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788472837164",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788483253977",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9788474720853",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788409256273",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788461497089",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788424917944",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417490270",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Uzumaki",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788419306593",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "スパイファミリー",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418271236",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418271434",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family, Vol. 1",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788419010124",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "STEEL BALL RUN 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418645853",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Sensor",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418751684",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Mob Psycho 100",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418562235",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family, Vol. 3",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418562884",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family, Vol. 4",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418271717",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family 2",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788419185143",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "【推しの子】 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788419010032",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family 07",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788419010728",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Hanako-Kun",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418450129",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family 3",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418450976",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family 4",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467940657",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Jujutsu Kaisen, Vol. 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467901528",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "The Minish Cap",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788496325241",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Rave Master",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788484312536",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Last Day in Vietnam",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788496415263",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Emily the strange",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467931402",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "ゼルダの伝説 トワイライトプリンセス 4",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467917031",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Death Note, Vol. 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467960488",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Ducks",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788484319481",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Hellboy",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467941562",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Jujutsu Kaisen, Vol. 2 (呪術廻戦 Jujutsu Kaisen #2)",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788498478181",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Fairy Tail 1 (Fairy Tail)",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467923537",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Tokyo Ghoul",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467941920",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "呪術廻戦 0",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467934236",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Dallas",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467927139",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Norma Editorial",
+      "label": "Monstress, Vol. 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416767489",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Paper girls, Vol. 1",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788413414997",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "My Hero Academia, Vol. 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467491791",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Chew, Vol. 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788413417943",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Snow, Glass, Apples",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416244041",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Doraemon",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416051816",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "ヴィンランド・サガ 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788413416465",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "A Study in Emerald",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491733133",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Mocha Dick",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491736820",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Star Wars - Thrawn",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788411401906",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "My Hero Academia",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491468714",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Re:ゼロから始める異世界生活 2",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416244614",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "キングダム ハーツ チェイン オブ メモリーズ 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491740131",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Another Monster",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491465843",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "Espiral",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788411402194",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta Cómic",
+      "label": "NARUTO―ナルト― サクラ秘伝 思恋、春風にのせて",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788415480129",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Juego de tronos",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467491364",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Season of Mists",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788467491371",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "A Game of You",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788484312321",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "The Doll's House",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418225710",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Watchmen",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467491357",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Dream Country",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467411522",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Batman",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788467491388",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Fables & Reflections",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788416255474",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Batman",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467491333",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Preludes & Nocturnes",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788415821625",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Inazuma Eleven Go",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788439507666",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Nam",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467477061",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Batman R.I.P",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467420920",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "V de vendetta",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788439595519",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Palestine",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491670520",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "EL ASOMBROSO SPIDERMAN",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788498855500",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "Spiderman",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417827359",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "V for Vendetta",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788498853940",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "Arthas",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491678120",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "WORLD OF WARCRAFT",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788498857221",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "WORLD OF WARCRAFT",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788467904789",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "How to understand Israel in 60 days or less",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788490949351",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "Marvel Gold",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491676423",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "N STEPHEN KING",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491670452",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "CÓMO DIBUJAR KAWAII",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491670063",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "LOS VENGADORES VS.LA PATRULLA-X",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788413341941",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "CROSSED",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788401339387",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "Apocalipsis Z",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788491676928",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "WORLD OF WARCRAFT",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788490949160",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Panini Comics",
+      "label": "Cinema Purgatorio",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417401696",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Junji Ito",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418180705",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Wytches, vol. 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416581122",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Final crisis",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416840823",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "No Man's Land, Vol. 5",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788415520320",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "The Wake",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788416374243",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Black Paradox",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788419210586",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Supergirl",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418475641",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Sonic",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416660902",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Neil Gaiman's Neverwhere",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9788418569524",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Tomie",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417908263",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Batman",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416374984",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Lobo",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418742774",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Batman/Fortnite",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418569043",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "Batman",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417644482",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "ECC Ediciones",
+      "label": "La pequeña forastera",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416960262",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "ダンジョン飯 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494354014",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "聲の形 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494354069",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "聲の形 2",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494429637",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "聲の形 4",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494456633",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "聲の形 5",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417373412",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "とんがり帽子のアトリエ 1 (Tongari Bōshi no Atelier 1)",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788419195241",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "ダンジョン飯 10",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494490019",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "聲の形 6",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494511035",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "聲の形 7",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494406461",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "聲の形 3",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416960187",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "竜のかわいい七つの子",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494231797",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "Hideout",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788417373658",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "YOU ARE IN THE BLUE SUMMER",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788494580611",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "Mi amigo capricornio",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788416960408",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Milky Way Ediciones",
+      "label": "Golden Kamuy, 1",
+      "ol": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": false,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    }
+  ]
+}

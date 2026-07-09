@@ -1,0 +1,757 @@
+{
+  "gbAvailable": true,
+  "gbDisabled": false,
+  "usedKey": true,
+  "results": [
+    {
+      "isbn13": "9780593831892",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9780593158739",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9798890983626",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780307700155",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780593357149",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780593994825",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780593834688",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780593875643",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9780593803487",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9780593132760",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9781649377371",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9781649374172",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9781649374189",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9781401971366",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780735211292",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418118036",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780441172719",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780593135204",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780547928227",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9780451524935",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9781974752690",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9781974754939",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9781974758548",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9781974762231",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9781974716463",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9781974749843",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9781974751983",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9781974756001",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": null,
+      "olStatus": 404,
+      "gbStatus": 503,
+      "resolved": false,
+      "complete": false,
+      "cascade": null
+    },
+    {
+      "isbn13": "9781974759187",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      }
+    },
+    {
+      "isbn13": "9781974751884",
+      "source": "shelf",
+      "kind": "shelf",
+      "publisher": null,
+      "label": null,
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    }
+  ]
+}

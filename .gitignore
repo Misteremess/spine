@@ -1,0 +1,14 @@
+# Secretos — nunca commitear
+.env
+.env.*
+!.env.example
+
+# Dependencias y builds
+node_modules/
+dist/
+build/
+.expo/
+
+# Sistema
+.DS_Store
+*.log
