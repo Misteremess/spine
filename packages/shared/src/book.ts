@@ -12,6 +12,9 @@ export const BookMetadataSchema = z.object({
   publishedDate: z.string().nullish(),
   coverUrl: z.string().url().nullish(),
   description: z.string().nullish(),
+  /** Serie detectada (campo series de OL o heurística sobre el título). */
+  series: z.string().nullish(),
+  seriesVolume: z.number().int().positive().nullish(),
 });
 
 export type BookMetadata = z.infer<typeof BookMetadataSchema>;

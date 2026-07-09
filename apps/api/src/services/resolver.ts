@@ -7,6 +7,7 @@ import type { BookMetadata, ResolveResponse } from "@spine/shared";
 import { eq } from "drizzle-orm";
 import { db, schema } from "../db/index";
 import { mergeResults } from "./merge";
+import { extractSeries, seriesNameKey } from "./series";
 import { fromGoogleBooks, fromOpenLibrary } from "./sources";
 
 async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
@@ -29,6 +30,9 @@ async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
     : [];
 
   const work = await db.select().from(schema.works).where(eq(schema.works.id, ed.workId)).limit(1);
+  const ser = work[0]?.seriesId
+    ? await db.select().from(schema.series).where(eq(schema.series.id, work[0].seriesId)).limit(1)
+    : [];
 
   return {
     isbn13: ed.isbn13,
@@ -41,6 +45,8 @@ async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
     publishedDate: ed.publishedDate,
     coverUrl: ed.coverUrl,
     description: work[0]?.description ?? null,
+    series: ser[0]?.name ?? null,
+    seriesVolume: ed.volumeNumber ?? work[0]?.seriesPosition ?? null,
   };
 }
 
@@ -56,9 +62,26 @@ async function upsertCatalog(meta: BookMetadata, sources: Record<string, string>
       publisherId = p?.id ?? null;
     }
 
+    let seriesId: number | null = null;
+    if (meta.series) {
+      const key = seriesNameKey(meta.series);
+      const [ser] = await tx
+        .insert(schema.series)
+        .values({ name: meta.series, nameKey: key })
+        // El nombre en pantalla se queda con la primera grafía que llegó.
+        .onConflictDoUpdate({ target: schema.series.nameKey, set: { nameKey: key } })
+        .returning({ id: schema.series.id });
+      seriesId = ser?.id ?? null;
+    }
+
     const [work] = await tx
       .insert(schema.works)
-      .values({ title: meta.title, description: meta.description ?? null })
+      .values({
+        title: meta.title,
+        description: meta.description ?? null,
+        seriesId,
+        seriesPosition: meta.seriesVolume ?? null,
+      })
       .returning({ id: schema.works.id });
     if (!work) throw new Error("no se pudo crear el work");
 
@@ -88,6 +111,7 @@ async function upsertCatalog(meta: BookMetadata, sources: Record<string, string>
         pages: meta.pages ?? null,
         publishedDate: meta.publishedDate ?? null,
         coverUrl: meta.coverUrl ?? null,
+        volumeNumber: meta.seriesVolume ?? null,
         sources,
       })
       .onConflictDoNothing({ target: schema.editions.isbn13 });
@@ -135,6 +159,16 @@ export async function resolveIsbn(isbn13: string): Promise<ResolveResponse | nul
   if (!merged) {
     void logResolution(isbn13, false, null, Date.now() - t0);
     return null;
+  }
+
+  // Si ninguna fuente declaró serie (GB nunca lo hace), heurística del título.
+  if (!merged.metadata.series) {
+    const hit = extractSeries(merged.metadata.title);
+    if (hit) {
+      merged.metadata.series = hit.name;
+      merged.metadata.seriesVolume = hit.volume;
+      merged.sources.series = "heuristic";
+    }
   }
 
   // Último recurso para la portada: el índice de covers por ISBN de OL es

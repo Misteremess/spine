@@ -38,6 +38,8 @@ export const authors = pgTable("authors", {
 export const series = pgTable("series", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  /** Clave normalizada para agrupar grafías distintas de la misma serie. */
+  nameKey: text("name_key").notNull().unique(),
   type: seriesType("type").notNull().default("saga"),
   status: seriesStatus("status").notNull().default("unknown"),
   totalVolumes: integer("total_volumes"),

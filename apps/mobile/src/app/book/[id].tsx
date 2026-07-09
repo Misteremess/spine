@@ -38,6 +38,8 @@ type Detail = {
     publisher: string | null;
     description: string | null;
     authors: string[];
+    series: string | null;
+    seriesVolume: number | null;
   } | null;
   reading: { id: number; status: ReadingStatus; startedAt: string | null; finishedAt: string | null } | null;
   lastProgress: { page: number | null; percent: number | null } | null;
@@ -144,6 +146,14 @@ export default function BookDetail() {
         <View style={{ flex: 1, gap: 5, justifyContent: "center" }}>
           <Text style={s.title}>{title}</Text>
           {authors ? <Text style={s.authors}>{authors}</Text> : null}
+          {edition?.series ? (
+            <Pressable onPress={() => router.push("/collections")} hitSlop={6}>
+              <Text style={{ color: colors.ambar, fontSize: 12.5, fontWeight: "600" }}>
+                ▦ {edition.series}
+                {edition.seriesVolume ? ` · tomo ${edition.seriesVolume}` : ""}
+              </Text>
+            </Pressable>
+          ) : null}
           <Text style={s.meta}>
             {[edition?.publisher, pages ? `${pages} págs.` : null, edition?.publishedDate]
               .filter(Boolean)

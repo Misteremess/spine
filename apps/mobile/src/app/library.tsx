@@ -61,6 +61,11 @@ export default function Library() {
       <Stack.Screen
         options={{
           title: `Biblioteca · ${items.length}`,
+          headerLeft: () => (
+            <Pressable onPress={() => router.push("/collections")} hitSlop={12}>
+              <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>▦ Series</Text>
+            </Pressable>
+          ),
           headerRight: () => (
             <View style={{ flexDirection: "row", gap: 18, alignItems: "center" }}>
               <Pressable onPress={() => router.push("/wishlist")} hitSlop={12}>

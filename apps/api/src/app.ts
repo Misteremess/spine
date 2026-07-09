@@ -2,6 +2,7 @@ import { toIsbn13 } from "@spine/shared";
 import Fastify from "fastify";
 import { ZodError } from "zod";
 import { auth } from "./auth";
+import { collectionsRoutes } from "./routes/collections";
 import { libraryRoutes } from "./routes/library";
 import { wishlistRoutes } from "./routes/wishlist";
 import { resolveIsbn } from "./services/resolver";
@@ -62,6 +63,7 @@ export function buildApp() {
   // --- Plano usuario (requiere sesión) ---
   app.register(async (scope) => libraryRoutes(scope));
   app.register(async (scope) => wishlistRoutes(scope));
+  app.register(async (scope) => collectionsRoutes(scope));
 
   return app;
 }

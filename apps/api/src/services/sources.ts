@@ -7,6 +7,7 @@
  */
 import type { BookMetadata } from "@spine/shared";
 import { env } from "../env";
+import { extractSeries } from "./series";
 
 const UA = "Spine/0.1 (+https://github.com/Misteremess/spine)";
 
@@ -91,6 +92,18 @@ export async function fromOpenLibrary(isbn13: string): Promise<SourceResult> {
     }
   }
   if (names.length > 0) partial.authors = names;
+
+  // Serie: OL la declara a veces en la edición; si no, heurística del título.
+  if (partial.title) {
+    const olSeries = Array.isArray(ed.series)
+      ? ed.series.filter((s: unknown): s is string => typeof s === "string")
+      : undefined;
+    const hit = extractSeries(partial.title, olSeries);
+    if (hit) {
+      partial.series = hit.name;
+      partial.seriesVolume = hit.volume;
+    }
+  }
 
   return { partial, source: "openlibrary" };
 }
