@@ -100,9 +100,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -245,7 +251,7 @@
       "label": null,
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -328,24 +334,12 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 404,
-      "gbStatus": 200,
-      "resolved": true,
+      "gbStatus": 503,
+      "resolved": false,
       "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      }
+      "cascade": null
     },
     {
       "isbn13": "9788496747548",
@@ -394,12 +388,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 404,
-      "gbStatus": 503,
-      "resolved": false,
+      "gbStatus": 200,
+      "resolved": true,
       "complete": false,
-      "cascade": null
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
     },
     {
       "isbn13": "9788408082125",
@@ -414,15 +420,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -446,17 +446,23 @@
         "pages": true,
         "cover": false
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       }
     },
     {
@@ -472,9 +478,15 @@
         "pages": true,
         "cover": false
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": false,
       "cascade": {
@@ -498,9 +510,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -519,7 +537,7 @@
       "label": null,
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -527,11 +545,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -576,9 +594,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -602,9 +626,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -654,15 +684,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -686,9 +710,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -706,12 +736,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 404,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
-      "cascade": null
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      }
     },
     {
       "isbn13": "9788468840499",
@@ -740,9 +782,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -761,25 +809,19 @@
       "label": null,
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
-      "resolved": false,
-      "complete": false,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -826,7 +868,7 @@
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": false,
       "complete": false,
       "cascade": {
@@ -876,15 +918,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -908,15 +944,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -940,16 +970,22 @@
         "pages": false,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": true
       }
     },
@@ -986,12 +1022,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 404,
-      "gbStatus": 503,
-      "resolved": false,
+      "gbStatus": 200,
+      "resolved": true,
       "complete": false,
-      "cascade": null
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
     },
     {
       "isbn13": "9788484573128",
@@ -1078,53 +1126,21 @@
         "pages": false,
         "cover": false
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": true,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": true,
+        "pages": false,
         "cover": false
       }
     },
     {
       "isbn13": "9788447383047",
-      "source": "wikidata",
-      "kind": "general",
-      "publisher": null,
-      "label": null,
-      "ol": null,
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
-      "olStatus": 404,
-      "gbStatus": 200,
-      "resolved": false,
-      "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      }
-    },
-    {
-      "isbn13": "9788415564690",
       "source": "wikidata",
       "kind": "general",
       "publisher": null,
@@ -1136,6 +1152,32 @@
       "resolved": false,
       "complete": false,
       "cascade": null
+    },
+    {
+      "isbn13": "9788415564690",
+      "source": "wikidata",
+      "kind": "general",
+      "publisher": null,
+      "label": null,
+      "ol": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "olStatus": 404,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
     },
     {
       "isbn13": "9788433910417",
@@ -1170,12 +1212,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 404,
-      "gbStatus": 503,
-      "resolved": false,
+      "gbStatus": 200,
+      "resolved": true,
       "complete": false,
-      "cascade": null
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
     },
     {
       "isbn13": "9788432206405",
@@ -1185,19 +1239,25 @@
       "label": null,
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -1250,12 +1310,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 404,
-      "gbStatus": 503,
-      "resolved": false,
+      "gbStatus": 200,
+      "resolved": true,
       "complete": false,
-      "cascade": null
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
     },
     {
       "isbn13": "9788416208326",
@@ -1264,12 +1336,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 404,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
-      "cascade": null
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      }
     },
     {
       "isbn13": "9788434847873",
@@ -1284,9 +1368,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -1310,15 +1400,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": true,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -1388,24 +1472,12 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 404,
-      "gbStatus": 200,
-      "resolved": true,
+      "gbStatus": 503,
+      "resolved": false,
       "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      }
+      "cascade": null
     },
     {
       "isbn13": "9788494010170",
@@ -1442,7 +1514,7 @@
       "ol": null,
       "gb": null,
       "olStatus": 404,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": false,
       "complete": false,
       "cascade": null
@@ -1469,21 +1541,27 @@
       "label": null,
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": false,
         "pages": false,
         "cover": false
       },
-      "gb": null,
-      "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
-      "cascade": {
+      "gb": {
         "title": true,
         "authors": false,
         "publisher": false,
-        "pages": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
         "cover": false
       }
     },
@@ -1500,16 +1578,22 @@
         "pages": false,
         "cover": false
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": false
       }
     },
@@ -1547,7 +1631,7 @@
       "label": null,
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -1555,11 +1639,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -1706,24 +1790,12 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 404,
-      "gbStatus": 200,
-      "resolved": true,
+      "gbStatus": 503,
+      "resolved": false,
       "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      }
+      "cascade": null
     },
     {
       "isbn13": "9788460423393",
@@ -1746,24 +1818,12 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 404,
-      "gbStatus": 200,
-      "resolved": true,
+      "gbStatus": 503,
+      "resolved": false,
       "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      }
+      "cascade": null
     },
     {
       "isbn13": "9788460498315",
@@ -1930,12 +1990,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 404,
-      "gbStatus": 503,
-      "resolved": false,
+      "gbStatus": 200,
+      "resolved": true,
       "complete": false,
-      "cascade": null
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      }
     },
     {
       "isbn13": "9788477225461",
@@ -1985,7 +2057,7 @@
       "label": null,
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -2016,24 +2088,12 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 404,
-      "gbStatus": 200,
-      "resolved": true,
+      "gbStatus": 503,
+      "resolved": false,
       "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      }
+      "cascade": null
     },
     {
       "isbn13": "9788478227907",
@@ -2048,15 +2108,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2080,15 +2134,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2170,9 +2218,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2196,15 +2250,9 @@
         "pages": true,
         "cover": false
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": false,
       "cascade": {
@@ -2228,9 +2276,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2254,15 +2308,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2286,9 +2334,15 @@
         "pages": true,
         "cover": false
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": false,
       "cascade": {
@@ -2344,15 +2398,9 @@
         "pages": true,
         "cover": false
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": false,
       "cascade": {
@@ -2500,15 +2548,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2564,16 +2606,22 @@
         "pages": false,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": true
       }
     },
@@ -2590,15 +2638,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2662,22 +2704,16 @@
         "pages": false,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": true,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
-      "complete": true,
+      "complete": false,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": true,
+        "pages": false,
         "cover": true
       }
     },
@@ -2720,22 +2756,16 @@
         "pages": false,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
-      "complete": true,
+      "complete": false,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": true,
+        "pages": false,
         "cover": true
       }
     },
@@ -2752,9 +2782,15 @@
         "pages": true,
         "cover": false
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": false,
       "cascade": {
@@ -2778,9 +2814,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2812,12 +2854,24 @@
       "publisher": null,
       "label": null,
       "ol": null,
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      },
       "olStatus": 404,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": false,
       "complete": false,
-      "cascade": null
+      "cascade": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": true
+      }
     },
     {
       "isbn13": "9788483253977",
@@ -2936,15 +2990,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -2961,58 +3009,6 @@
       "kind": "manga",
       "publisher": "Ivrea",
       "label": "Uzumaki",
-      "ol": {
-        "title": true,
-        "authors": false,
-        "publisher": true,
-        "pages": true,
-        "cover": true
-      },
-      "gb": null,
-      "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": false,
-        "publisher": true,
-        "pages": true,
-        "cover": true
-      }
-    },
-    {
-      "isbn13": "9788419306593",
-      "source": "openlibrary",
-      "kind": "manga",
-      "publisher": "Ivrea",
-      "label": "スパイファミリー",
-      "ol": {
-        "title": true,
-        "authors": false,
-        "publisher": true,
-        "pages": false,
-        "cover": true
-      },
-      "gb": null,
-      "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": false,
-        "publisher": true,
-        "pages": false,
-        "cover": true
-      }
-    },
-    {
-      "isbn13": "9788418271236",
-      "source": "openlibrary",
-      "kind": "manga",
-      "publisher": "Ivrea",
-      "label": "Spy x Family 1",
       "ol": {
         "title": true,
         "authors": true,
@@ -3040,6 +3036,58 @@
       }
     },
     {
+      "isbn13": "9788419306593",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "スパイファミリー",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": false,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788418271236",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Ivrea",
+      "label": "Spy x Family 1",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": null,
+      "olStatus": 200,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
       "isbn13": "9788418271434",
       "source": "openlibrary",
       "kind": "manga",
@@ -3047,19 +3095,19 @@
       "label": "Spy x Family, Vol. 1",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
-      "resolved": false,
+      "gbStatus": 503,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -3105,19 +3153,19 @@
       "label": "Sensor",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
-      "resolved": false,
-      "complete": false,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -3131,19 +3179,19 @@
       "label": "Mob Psycho 100",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
-      "resolved": false,
-      "complete": false,
+      "gbStatus": 503,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -3157,19 +3205,19 @@
       "label": "Spy x Family, Vol. 3",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
+      "gbStatus": 200,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -3183,19 +3231,19 @@
       "label": "Spy x Family, Vol. 4",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
-      "resolved": false,
+      "gbStatus": 503,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -3214,15 +3262,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3298,15 +3340,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3330,15 +3366,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3388,15 +3418,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3420,9 +3444,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3444,7 +3474,7 @@
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       },
       "gb": {
         "title": true,
@@ -3473,20 +3503,14 @@
       "label": "Last Day in Vietnam",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3505,20 +3529,14 @@
       "label": "Emily the strange",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3542,15 +3560,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3574,15 +3586,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3630,17 +3636,11 @@
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
-      },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": false,
         "cover": true
       },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3664,9 +3664,15 @@
         "pages": false,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": false,
       "cascade": {
@@ -3685,7 +3691,7 @@
       "label": "Fairy Tail 1 (Fairy Tail)",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -3693,11 +3699,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -3742,9 +3748,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3768,9 +3780,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3794,9 +3812,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": false,
+        "cover": true
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3815,27 +3839,21 @@
       "label": "Paper girls, Vol. 1",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
-      "complete": true,
+      "complete": false,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": true,
+        "pages": false,
         "cover": true
       }
     },
@@ -3910,15 +3928,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -3937,21 +3949,27 @@
       "label": "Doraemon",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
-      "gb": null,
-      "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
-      "cascade": {
+      "gb": {
         "title": true,
         "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": true
       }
     },
@@ -3994,15 +4012,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4052,9 +4064,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4078,9 +4096,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4104,15 +4128,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4168,9 +4186,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4189,21 +4213,27 @@
       "label": "Espiral",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": true
       }
     },
@@ -4213,6 +4243,38 @@
       "kind": "manga",
       "publisher": "Planeta Cómic",
       "label": "NARUTO―ナルト― サクラ秘伝 思恋、春風にのせて",
+      "ol": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
+      "olStatus": 200,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
+      "cascade": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": true
+      }
+    },
+    {
+      "isbn13": "9788415480129",
+      "source": "openlibrary",
+      "kind": "manga",
+      "publisher": "Planeta DeAgostini",
+      "label": "Juego de tronos",
       "ol": {
         "title": true,
         "authors": true,
@@ -4234,32 +4296,6 @@
       }
     },
     {
-      "isbn13": "9788415480129",
-      "source": "openlibrary",
-      "kind": "manga",
-      "publisher": "Planeta DeAgostini",
-      "label": "Juego de tronos",
-      "ol": {
-        "title": true,
-        "authors": false,
-        "publisher": true,
-        "pages": true,
-        "cover": true
-      },
-      "gb": null,
-      "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
-      "cascade": {
-        "title": true,
-        "authors": false,
-        "publisher": true,
-        "pages": true,
-        "cover": true
-      }
-    },
-    {
       "isbn13": "9788467491364",
       "source": "openlibrary",
       "kind": "manga",
@@ -4270,19 +4306,19 @@
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       },
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       }
     },
     {
@@ -4319,7 +4355,7 @@
       "label": "The Doll's House",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -4327,11 +4363,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -4350,15 +4386,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4380,17 +4410,11 @@
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
-      },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
         "cover": true
       },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4409,22 +4433,22 @@
       "label": "Batman",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
-        "cover": false
+        "cover": true
       },
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
-        "cover": false
+        "cover": true
       }
     },
     {
@@ -4438,19 +4462,25 @@
         "authors": true,
         "publisher": true,
         "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
         "cover": false
       },
-      "gb": null,
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       }
     },
     {
@@ -4461,19 +4491,19 @@
       "label": "Batman",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
+      "gbStatus": 200,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -4490,19 +4520,25 @@
         "authors": true,
         "publisher": true,
         "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
         "cover": false
       },
-      "gb": null,
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       }
     },
     {
@@ -4513,19 +4549,19 @@
       "label": "Inazuma Eleven Go",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
-      "resolved": false,
+      "gbStatus": 503,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -4539,7 +4575,7 @@
       "label": "Nam",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -4547,11 +4583,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -4596,16 +4632,22 @@
         "pages": false,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "gbStatus": 200,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": true
       }
     },
@@ -4622,9 +4664,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": true,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4669,7 +4717,7 @@
       "label": "Spiderman",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -4677,11 +4725,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
@@ -4695,7 +4743,7 @@
       "label": "V for Vendetta",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -4703,11 +4751,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
-      "resolved": false,
-      "complete": false,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -4721,7 +4769,7 @@
       "label": "Arthas",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -4729,11 +4777,11 @@
       "gb": null,
       "olStatus": 200,
       "gbStatus": 200,
-      "resolved": false,
-      "complete": false,
+      "resolved": true,
+      "complete": true,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": true,
         "cover": true
@@ -4752,15 +4800,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4786,7 +4828,7 @@
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": false,
       "complete": false,
       "cascade": {
@@ -4805,27 +4847,21 @@
       "label": "How to understand Israel in 60 days or less",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
-      "complete": true,
+      "complete": false,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": true,
+        "pages": false,
         "cover": true
       }
     },
@@ -4842,15 +4878,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4926,9 +4956,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -4978,15 +5014,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": true,
-        "pages": false,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5036,16 +5066,22 @@
         "pages": false,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": true
       }
     },
@@ -5062,15 +5098,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5128,7 +5158,7 @@
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5182,19 +5212,25 @@
         "authors": true,
         "publisher": true,
         "pages": true,
+        "cover": true
+      },
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": true,
         "cover": false
       },
-      "gb": null,
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       }
     },
     {
@@ -5286,19 +5322,19 @@
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       },
       "gb": null,
       "olStatus": 200,
       "gbStatus": 503,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
         "pages": true,
-        "cover": false
+        "cover": true
       }
     },
     {
@@ -5398,15 +5434,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": true,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5430,9 +5460,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": true,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5458,7 +5494,7 @@
       },
       "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5508,15 +5544,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": true,
-        "cover": true
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5566,9 +5596,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5592,9 +5628,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5618,16 +5660,22 @@
         "pages": false,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": true,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
-      "complete": false,
+      "complete": true,
       "cascade": {
         "title": true,
         "authors": true,
         "publisher": true,
-        "pages": false,
+        "pages": true,
         "cover": true
       }
     },
@@ -5644,15 +5692,9 @@
         "pages": true,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": false,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
+      "gbStatus": 503,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5702,9 +5744,15 @@
         "pages": true,
         "cover": true
       },
-      "gb": null,
+      "gb": {
+        "title": true,
+        "authors": false,
+        "publisher": false,
+        "pages": false,
+        "cover": false
+      },
       "olStatus": 200,
-      "gbStatus": 503,
+      "gbStatus": 200,
       "resolved": true,
       "complete": true,
       "cascade": {
@@ -5859,27 +5907,21 @@
       "label": "Golden Kamuy, 1",
       "ol": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
         "pages": false,
         "cover": true
       },
-      "gb": {
-        "title": true,
-        "authors": false,
-        "publisher": false,
-        "pages": true,
-        "cover": false
-      },
+      "gb": null,
       "olStatus": 200,
-      "gbStatus": 200,
-      "resolved": false,
+      "gbStatus": 503,
+      "resolved": true,
       "complete": false,
       "cascade": {
         "title": true,
-        "authors": false,
+        "authors": true,
         "publisher": true,
-        "pages": true,
+        "pages": false,
         "cover": true
       }
     }
