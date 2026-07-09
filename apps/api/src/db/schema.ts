@@ -178,6 +178,8 @@ export const userBooks = pgTable("user_books", {
   /** Solo para libros manuales sin edición de catálogo. */
   customTitle: text("custom_title"),
   customAuthors: text("custom_authors"),
+  /** ISBN escaneado que la cascada no resolvió: se guarda para reintentar más adelante. */
+  customIsbn13: varchar("custom_isbn13", { length: 13 }),
   format: text("format"),
   purchaseDate: text("purchase_date"),
   purchasePriceCents: integer("purchase_price_cents"),

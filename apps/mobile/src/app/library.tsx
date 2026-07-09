@@ -97,7 +97,7 @@ export default function Library() {
         renderItem={({ item }) => {
           const st = item.reading ? STATUS_LABEL[item.reading.status] : undefined;
           return (
-            <View style={s.card}>
+            <Pressable style={s.card} onPress={() => router.push(`/book/${item.id}`)}>
               {item.coverUrl ? (
                 <Image source={{ uri: item.coverUrl }} style={s.cover} contentFit="cover" />
               ) : (
@@ -118,7 +118,7 @@ export default function Library() {
                   <Text style={{ color: st.color, fontSize: 10, fontWeight: "600" }}>{st.text}</Text>
                 </View>
               )}
-            </View>
+            </Pressable>
           );
         }}
       />

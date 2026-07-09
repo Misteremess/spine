@@ -1,8 +1,8 @@
 import { toIsbn13 } from "@spine/shared";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
-import { useRef, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { api, ApiError } from "../lib/api";
 import { colors } from "../lib/theme";
@@ -27,6 +27,30 @@ export default function Scanner() {
   function patchCard(isbn13: string, patch: Partial<Card>) {
     setCards((cs) => cs.map((c) => (c.isbn13 === isbn13 ? { ...c, ...patch } : c)));
   }
+
+  // Al volver del alta manual, las tarjetas "no encontrado" que ya estén
+  // en la biblioteca (por su ISBN guardado) pasan a "añadido".
+  useFocusEffect(
+    useCallback(() => {
+      setCards((cs) => {
+        if (!cs.some((c) => c.state === "notfound")) return cs;
+        void (async () => {
+          try {
+            const { items } = await api<{ items: { isbn13: string | null; customIsbn13: string | null }[] }>(
+              "/v1/library"
+            );
+            const owned = new Set(items.flatMap((i) => [i.isbn13, i.customIsbn13].filter(Boolean)));
+            setCards((prev) =>
+              prev.map((c) => (c.state === "notfound" && owned.has(c.isbn13) ? { ...c, state: "added" } : c))
+            );
+          } catch {
+            /* cosmético: si falla, la tarjeta se queda como está */
+          }
+        })();
+        return cs;
+      });
+    }, [])
+  );
 
   async function onBarcode(data: string) {
     const now = Date.now();
@@ -127,19 +151,27 @@ function ScanCard({ card }: { card: Card }) {
     loading: { text: "Buscando…", color: colors.mut },
     added: { text: "✓ Añadido", color: colors.salvia },
     duplicate: { text: "Ya lo tienes", color: colors.ambar },
-    notfound: { text: "No encontrado · en cola", color: colors.arcilla },
+    notfound: { text: "No encontrado — toca para añadirlo a mano", color: colors.arcilla },
     error: { text: "Error — reinténtalo", color: colors.arcilla },
   }[card.state];
 
+  const notfound = card.state === "notfound";
   return (
-    <View style={[s.card, card.state === "notfound" && { borderColor: "rgba(193,85,61,.5)" }]}>
+    <Pressable
+      style={[s.card, notfound && { borderColor: "rgba(193,85,61,.5)" }]}
+      disabled={!notfound}
+      onPress={() =>
+        router.push({ pathname: "/manual", params: { isbn: card.isbn13 } })
+      }
+    >
       <View style={{ flex: 1, gap: 2 }}>
         <Text style={{ color: colors.papel, fontSize: 13.5, fontWeight: "600" }} numberOfLines={1}>
           {card.title ?? `ISBN ${card.isbn13}`}
         </Text>
         <Text style={{ color: label.color, fontSize: 11.5 }}>{label.text}</Text>
       </View>
-    </View>
+      {notfound && <Text style={{ color: colors.arcilla, fontSize: 18 }}>›</Text>}
+    </Pressable>
   );
 }
 

@@ -15,6 +15,8 @@ const AddByIsbnSchema = z.object({
 const AddManualSchema = z.object({
   title: z.string().min(1).max(500),
   authors: z.string().max(500).optional(),
+  /** ISBN que la cascada no encontró: se conserva para reintentos futuros. */
+  isbn: z.string().min(10).max(17).optional(),
   format: z.string().max(50).optional(),
   location: z.string().max(200).optional(),
   purchaseDate: z.string().max(10).optional(),
@@ -126,6 +128,7 @@ export function libraryRoutes(app: FastifyInstance) {
         userId: req.user.id,
         customTitle: body.title,
         customAuthors: body.authors ?? null,
+        customIsbn13: body.isbn ? toIsbn13(body.isbn) : null,
         format: body.format ?? null,
         location: body.location ?? null,
         purchaseDate: body.purchaseDate ?? null,
@@ -175,6 +178,56 @@ export function libraryRoutes(app: FastifyInstance) {
         reading: latest.get(b.userBook.id) ?? null,
       })),
     };
+  });
+
+  /** Ficha completa: ejemplar + metadatos de la edición + lectura y último progreso. */
+  app.get<{ Params: { id: string } }>("/v1/library/:id", async (req, reply) => {
+    const id = Number(req.params.id);
+    const book = await ownedBook(req.user.id, id);
+    if (!book) return reply.code(404).send({ error: "not_found" });
+
+    let edition = null;
+    if (book.editionId) {
+      const rows = await db
+        .select({
+          isbn13: schema.editions.isbn13,
+          title: schema.editions.title,
+          subtitle: schema.editions.subtitle,
+          pages: schema.editions.pages,
+          publishedDate: schema.editions.publishedDate,
+          coverUrl: schema.editions.coverUrl,
+          workId: schema.editions.workId,
+          publisher: schema.publishers.name,
+          description: schema.works.description,
+        })
+        .from(schema.editions)
+        .leftJoin(schema.publishers, eq(schema.editions.publisherId, schema.publishers.id))
+        .innerJoin(schema.works, eq(schema.editions.workId, schema.works.id))
+        .where(eq(schema.editions.id, book.editionId))
+        .limit(1);
+      const ed = rows[0];
+      if (ed) {
+        const authorRows = await db
+          .select({ name: schema.authors.name })
+          .from(schema.workAuthors)
+          .innerJoin(schema.authors, eq(schema.workAuthors.authorId, schema.authors.id))
+          .where(eq(schema.workAuthors.workId, ed.workId));
+        const { workId: _workId, ...rest } = ed;
+        edition = { ...rest, authors: authorRows.map((a) => a.name) };
+      }
+    }
+
+    const reading = await latestReading(id);
+    const lastProgress = reading
+      ? ((await db
+          .select()
+          .from(schema.progressEntries)
+          .where(eq(schema.progressEntries.readingId, reading.id))
+          .orderBy(desc(schema.progressEntries.id))
+          .limit(1))[0] ?? null)
+      : null;
+
+    return { book, edition, reading, lastProgress };
   });
 
   /** Editar campos del ejemplar. */
