@@ -4,6 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "./db/index";
 import { account, session, user, verification } from "./db/schema";
 import { env } from "./env";
+import { mailerEnabled, sendMail, verificationEmailHtml } from "./services/mailer";
 
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
@@ -17,8 +18,21 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    // TODO(beta): activar verificación por email cuando haya SMTP (Brevo).
-    requireEmailVerification: false,
+    // Con SMTP configurado (Brevo) la verificación es obligatoria;
+    // sin él (desarrollo) el registro entra directo.
+    requireEmailVerification: mailerEnabled,
     minPasswordLength: 10,
+  },
+  emailVerification: {
+    sendOnSignUp: mailerEnabled,
+    autoSignInAfterVerification: true,
+    expiresIn: 3600,
+    async sendVerificationEmail({ user: u, url }) {
+      await sendMail({
+        to: u.email,
+        subject: "Confirma tu correo — Spine",
+        html: verificationEmailHtml(u.name, url),
+      });
+    },
   },
 });
