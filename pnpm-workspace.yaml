@@ -1,5 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+# Metro (React Native) no soporta el layout aislado con symlinks de pnpm
+nodeLinker: hoisted
 allowBuilds:
   esbuild: true

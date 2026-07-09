@@ -1,5 +1,5 @@
 import type { BookMetadata } from "@spine/shared";
-import type { SourceResult } from "./sources.js";
+import type { SourceResult } from "./sources";
 
 const FIELDS: (keyof BookMetadata)[] = [
   "title",

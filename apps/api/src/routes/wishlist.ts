@@ -2,9 +2,9 @@ import { toIsbn13 } from "@spine/shared";
 import { and, desc, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { db, schema } from "../db/index.js";
-import { requireUser } from "../plugins/require-user.js";
-import { resolveIsbn } from "../services/resolver.js";
+import { db, schema } from "../db/index";
+import { requireUser } from "../plugins/require-user";
+import { resolveIsbn } from "../services/resolver";
 
 const AddSchema = z
   .object({

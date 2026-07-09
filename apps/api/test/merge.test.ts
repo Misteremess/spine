@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mergeResults } from "../src/services/merge.js";
+import { mergeResults } from "../src/services/merge";
 
 const ISBN = "9780441172719";
 

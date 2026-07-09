@@ -1,6 +1,6 @@
 import { fromNodeHeaders } from "better-auth/node";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { auth } from "../auth.js";
+import { auth } from "../auth";
 
 export type SessionUser = { id: string; email: string; name: string };
 

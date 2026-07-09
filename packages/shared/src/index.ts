@@ -1,2 +1,2 @@
-export * from "./isbn.js";
-export * from "./book.js";
+export * from "./isbn";
+export * from "./book";

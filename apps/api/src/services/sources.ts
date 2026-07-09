@@ -6,7 +6,7 @@
  *  - GB exige API key (el acceso anónimo devuelve 429).
  */
 import type { BookMetadata } from "@spine/shared";
-import { env } from "../env.js";
+import { env } from "../env";
 
 const UA = "Spine/0.1 (+https://github.com/Misteremess/spine)";
 

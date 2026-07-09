@@ -5,9 +5,9 @@
  */
 import type { BookMetadata, ResolveResponse } from "@spine/shared";
 import { eq } from "drizzle-orm";
-import { db, schema } from "../db/index.js";
-import { mergeResults } from "./merge.js";
-import { fromGoogleBooks, fromOpenLibrary } from "./sources.js";
+import { db, schema } from "../db/index";
+import { mergeResults } from "./merge";
+import { fromGoogleBooks, fromOpenLibrary } from "./sources";
 
 async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
   const rows = await db

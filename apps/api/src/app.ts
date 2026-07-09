@@ -1,10 +1,10 @@
 import { toIsbn13 } from "@spine/shared";
 import Fastify from "fastify";
 import { ZodError } from "zod";
-import { auth } from "./auth.js";
-import { libraryRoutes } from "./routes/library.js";
-import { wishlistRoutes } from "./routes/wishlist.js";
-import { resolveIsbn } from "./services/resolver.js";
+import { auth } from "./auth";
+import { libraryRoutes } from "./routes/library";
+import { wishlistRoutes } from "./routes/wishlist";
+import { resolveIsbn } from "./services/resolver";
 
 export function buildApp() {
   const app = Fastify({ logger: true });

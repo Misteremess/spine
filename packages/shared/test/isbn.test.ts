@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isbn10To13, isValidIsbn10, isValidIsbn13, toIsbn13 } from "../src/isbn.js";
+import { isbn10To13, isValidIsbn10, isValidIsbn13, toIsbn13 } from "../src/isbn";
 
 describe("isbn", () => {
   it("valida ISBN-13 reales", () => {
