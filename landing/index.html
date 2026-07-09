@@ -22,35 +22,52 @@
   body:not(.en) .en { display: none; }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
 
+  /* bandas con vídeo de fondo */
+  .band { position: relative; overflow: hidden; }
+  .band > .bgvid, .band > .veil { position: absolute; inset: 0; }
+  .band > .bgvid { width: 100%; height: 100%; object-fit: cover; }
+  .band > .veil { z-index: 1; }
+  .band > .wrap { position: relative; z-index: 2; }
+  .hero-band { background: url(media/hero-book-water.jpg) center/cover; }
+  .hero-band > .veil { background: linear-gradient(100deg, rgba(20,18,15,.97) 0%, rgba(20,18,15,.88) 48%, rgba(20,18,15,.55) 100%); }
+  .close-band { background: url(media/shelf-daylight.jpg) center/cover; }
+  .close-band > .veil { background: linear-gradient(180deg, var(--tinta) 0%, rgba(20,18,15,.86) 22%, rgba(20,18,15,.86) 78%, var(--tinta) 100%); }
+  @media (prefers-reduced-motion: reduce) { .band > .bgvid { display: none; } }
+
   header.top { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
   .logo { font-family: var(--serif); font-size: 24px; color: var(--ambar); font-weight: 500; letter-spacing: .01em; }
-  .lang { border: 1px solid var(--tinta-3); border-radius: 99px; overflow: hidden; display: flex; }
+  .lang { border: 1px solid rgba(246,241,231,.22); border-radius: 99px; overflow: hidden; display: flex; }
   .lang button { font: 600 12px var(--sans); background: transparent; color: var(--mut); border: 0; padding: 6px 14px; cursor: pointer; }
   .lang button.on { background: var(--marfil); color: var(--ink); }
 
-  .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; padding: 56px 0 72px; }
+  .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; padding: 56px 0 80px; }
   .eyebrow { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--ambar); font-weight: 600; }
   h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 5.4vw, 58px); line-height: 1.08; margin: 16px 0 18px; text-wrap: balance; }
   h1 em { font-style: normal; color: var(--ambar); }
-  .sub { color: var(--mut); font-size: 17px; max-width: 52ch; }
+  .sub { color: #C4B99F; font-size: 17px; max-width: 52ch; }
 
   form.cta { display: flex; gap: 10px; margin-top: 30px; max-width: 440px; }
-  form.cta input { flex: 1; min-width: 0; background: var(--tinta-2); border: 1px solid var(--tinta-3); border-radius: 12px; color: var(--papel); font: 15px var(--sans); padding: 13px 16px; }
+  form.cta input[type=email] { flex: 1; min-width: 0; background: rgba(29,26,21,.85); border: 1px solid rgba(246,241,231,.18); border-radius: 12px; color: var(--papel); font: 15px var(--sans); padding: 13px 16px; }
   form.cta input::placeholder { color: var(--mut); }
   form.cta input:focus { outline: 2px solid var(--ambar-deep); border-color: transparent; }
   form.cta button { background: var(--ambar); color: var(--ink); border: 0; border-radius: 12px; font: 600 15px var(--sans); padding: 13px 20px; cursor: pointer; white-space: nowrap; }
   form.cta button:hover { background: #E4B355; }
+  form.cta button:disabled { opacity: .6; cursor: wait; }
+  .hp { position: absolute; left: -9999px; }
   .tiny { font-size: 12px; color: var(--mut); margin-top: 12px; max-width: 48ch; }
-  .tiny a { color: var(--mut); }
-  .ok-msg { display: none; margin-top: 30px; padding: 14px 18px; border: 1px solid var(--salvia); border-radius: 12px; color: var(--marfil); max-width: 440px; }
+  .ok-msg, .err-msg { display: none; margin-top: 30px; padding: 14px 18px; border-radius: 12px; max-width: 460px; }
+  .ok-msg { border: 1px solid var(--salvia); color: var(--marfil); background: rgba(122,139,111,.12); }
+  .err-msg { border: 1px solid var(--arcilla); color: var(--marfil); background: rgba(193,85,61,.12); }
+  .err-msg a { color: var(--ambar); }
   body.ok .ok-msg { display: block; }
   body.ok form.cta, body.ok .tiny { display: none; }
+  body.err .err-msg { display: block; }
 
   /* estantería de lomos */
-  .shelf { display: flex; align-items: flex-end; gap: 6px; height: 300px; padding: 0 8px 0; border-bottom: 10px solid var(--tinta-3); border-radius: 0 0 4px 4px; justify-content: center; }
-  .sp { border-radius: 3px 3px 0 0; width: 34px; position: relative; box-shadow: inset -4px 0 6px -3px rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; }
+  .shelf { display: flex; align-items: flex-end; gap: 6px; height: 300px; padding: 0 8px 0; border-bottom: 10px solid rgba(42,37,28,.9); border-radius: 0 0 4px 4px; justify-content: center; }
+  .sp { border-radius: 3px 3px 0 0; width: 34px; position: relative; box-shadow: inset -4px 0 6px -3px rgba(0,0,0,.5), 0 10px 24px rgba(0,0,0,.35); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; }
   .sp span { writing-mode: vertical-rl; font-family: var(--serif); font-size: 10.5px; color: rgba(246,241,231,.85); letter-spacing: .04em; max-height: 85%; overflow: hidden; }
-  .sp.gap { background: transparent !important; border: 2px dashed var(--arcilla); box-shadow: none; opacity: .8; align-items: center; padding: 0; }
+  .sp.gap { background: transparent !important; border: 2px dashed var(--arcilla); box-shadow: none; opacity: .85; align-items: center; padding: 0; }
   .sp.gap span { writing-mode: horizontal-tb; color: var(--arcilla); font-family: var(--sans); font-weight: 700; font-size: 13px; }
   @media (prefers-reduced-motion: no-preference) {
     .sp { animation: settle .7s cubic-bezier(.2,.8,.3,1.1) backwards; }
@@ -60,7 +77,7 @@
     @keyframes settle { from { opacity: 0; transform: translateY(-18px); } }
   }
 
-  section.feats { border-top: 1px solid var(--tinta-3); padding: 64px 0; }
+  section.feats { padding: 64px 0; }
   .k { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--mut); font-weight: 600; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-top: 28px; }
   .feat { background: var(--tinta-2); border: 1px solid var(--tinta-3); border-radius: 16px; padding: 22px; }
@@ -75,10 +92,10 @@
   .who blockquote { background: var(--tinta-2); border: 1px solid var(--tinta-3); border-left: 3px solid var(--ambar); border-radius: 12px; padding: 20px 22px; font-family: var(--serif); font-size: 17px; color: var(--marfil); }
   .who blockquote footer { font-family: var(--sans); font-size: 12px; color: var(--mut); margin-top: 10px; }
 
-  section.close { border-top: 1px solid var(--tinta-3); padding: 72px 0 40px; text-align: center; }
+  section.close { padding: 88px 0 96px; text-align: center; }
   .close h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(26px, 3.6vw, 38px); text-wrap: balance; }
   .close form.cta { margin: 28px auto 0; justify-content: center; }
-  .close .ok-msg { margin: 28px auto 0; }
+  .close .ok-msg, .close .err-msg { margin: 28px auto 0; }
 
   footer.page { border-top: 1px solid var(--tinta-3); padding: 26px 0 40px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--mut); font-size: 12.5px; }
   footer.page a { color: var(--mut); }
@@ -91,127 +108,152 @@
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div class="logo">Spine</div>
-    <div class="lang" role="group" aria-label="Idioma / Language">
-      <button type="button" class="on" data-lang="es">ES</button>
-      <button type="button" data-lang="en">EN</button>
+  <div class="band hero-band">
+    <video class="bgvid" autoplay muted loop playsinline poster="media/hero-book-water.jpg" aria-hidden="true">
+      <source src="media/hero-book-water.mp4" type="video/mp4">
+    </video>
+    <div class="veil"></div>
+    <div class="wrap">
+      <header class="top">
+        <div class="logo">Spine</div>
+        <div class="lang" role="group" aria-label="Idioma / Language">
+          <button type="button" class="on" data-lang="es">ES</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </header>
+      <section class="hero">
+        <div>
+          <div class="eyebrow"><span class="es">Beta cerrada · plazas limitadas</span><span class="en">Closed beta · limited spots</span></div>
+          <h1>
+            <span class="es">Tu biblioteca, <em>bajo control</em>.<br>Tu lectura, con memoria.</span>
+            <span class="en">Your library, <em>under control</em>.<br>Your reading, remembered.</span>
+          </h1>
+          <p class="sub">
+            <span class="es">La app para la gente que ama sus libros como objetos. Escanea tu estantería en una tarde, controla tus colecciones tomo a tomo, y entiende tu vida lectora. Sin feed, sin ruido, sin vender tus datos.</span>
+            <span class="en">The app for people who love their books as objects. Scan your shelves in an afternoon, track your collections volume by volume, and understand your reading life. No feed, no noise, no selling your data.</span>
+          </p>
+          <form class="cta" data-signup novalidate>
+            <input type="text" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <input type="email" name="email" required placeholder="tu@email.com" aria-label="Email">
+            <button type="submit"><span class="es">Quiero la beta</span><span class="en">Join the beta</span></button>
+          </form>
+          <p class="tiny">
+            <span class="es">Solo te escribiremos para la beta. Sin spam, baja cuando quieras.</span>
+            <span class="en">We'll only email you about the beta. No spam, leave anytime.</span>
+          </p>
+          <div class="ok-msg" role="status">
+            <span class="es">📚 Estás dentro de la lista. Te avisaremos cuando abra la beta.</span>
+            <span class="en">📚 You're on the list. We'll let you know when the beta opens.</span>
+          </div>
+          <div class="err-msg" role="alert">
+            <span class="es">No hemos podido registrarte ahora mismo. Escríbenos a <a id="mailtoEs" href="mailto:maximoduperez@gmail.com?subject=Spine%20beta">este correo</a> y te apuntamos a mano.</span>
+            <span class="en">We couldn't sign you up right now. Email us <a id="mailtoEn" href="mailto:maximoduperez@gmail.com?subject=Spine%20beta">here</a> and we'll add you manually.</span>
+          </div>
+        </div>
+        <div class="shelf" aria-hidden="true">
+          <div class="sp" style="height:88%; background:#8A5A2B;"><span>Dune</span></div>
+          <div class="sp" style="height:72%; background:#33513B;"><span>El Hobbit</span></div>
+          <div class="sp" style="height:80%; background:#58335E; width:26px;"><span>JJK 3</span></div>
+          <div class="sp gap" style="height:80%; width:26px;"><span>4</span></div>
+          <div class="sp" style="height:80%; background:#58335E; width:26px;"><span>JJK 5</span></div>
+          <div class="sp" style="height:94%; background:#24445E;"><span>Project Hail Mary</span></div>
+          <div class="sp" style="height:76%; background:#6E2F26; width:30px;"><span>1984</span></div>
+          <div class="sp" style="height:84%; background:#9C7B23;"><span>Fourth Wing</span></div>
+          <div class="sp" style="height:70%; background:#37596B; width:28px;"><span>Kaiju Nº8</span></div>
+        </div>
+      </section>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <section class="hero">
-      <div>
-        <div class="eyebrow"><span class="es">Beta cerrada · plazas limitadas</span><span class="en">Closed beta · limited spots</span></div>
-        <h1>
-          <span class="es">Tu biblioteca, <em>bajo control</em>.<br>Tu lectura, con memoria.</span>
-          <span class="en">Your library, <em>under control</em>.<br>Your reading, remembered.</span>
-        </h1>
-        <p class="sub">
-          <span class="es">La app para la gente que ama sus libros como objetos. Escanea tu estantería en una tarde, controla tus colecciones tomo a tomo, y entiende tu vida lectora. Sin feed, sin ruido, sin vender tus datos.</span>
-          <span class="en">The app for people who love their books as objects. Scan your shelves in an afternoon, track your collections volume by volume, and understand your reading life. No feed, no noise, no selling your data.</span>
+  <div class="wrap">
+    <main>
+      <section class="feats">
+        <div class="k"><span class="es">Por qué Spine</span><span class="en">Why Spine</span></div>
+        <div class="grid">
+          <div class="feat">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg></div>
+            <h3><span class="es">Escáner en ráfaga</span><span class="en">Burst scanning</span></h3>
+            <p><span class="es"><b>200 libros en una tarde.</b> La cámara no se cierra entre libros: escanea, apila y sigue. Funciona incluso sin conexión.</span><span class="en"><b>200 books in one afternoon.</b> The camera never closes between books: scan, stack, keep going. Works offline too.</span></p>
+          </div>
+          <div class="feat">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="4" height="16" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="17" y="4" width="4" height="16" rx="1" stroke-dasharray="3 3"/></svg></div>
+            <h3><span class="es">Tomo a tomo</span><span class="en">Volume by volume</span></h3>
+            <p><span class="es">Manga, cómic y sagas con progreso triple: <b>tengo / leído / publicado</b>. El detector de huecos te dice exactamente qué tomos te faltan.</span><span class="en">Manga, comics and sagas with triple progress: <b>owned / read / published</b>. The gap detector tells you exactly which volumes you're missing.</span></p>
+          </div>
+          <div class="feat">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20v-6M18 20V4"/></svg></div>
+            <h3><span class="es">Tu vida lectora</span><span class="en">Your reading life</span></h3>
+            <p><span class="es">Rachas, objetivos, gasto, ratio tsundoku. <b>Las estadísticas como espejo</b>, no como examen — y un resumen anual para presumir.</span><span class="en">Streaks, goals, spending, tsundoku ratio. <b>Stats as a mirror</b>, not a test — plus a shareable year in review.</span></p>
+          </div>
+          <div class="feat">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
+            <h3><span class="es">Tuyo de verdad</span><span class="en">Truly yours</span></h3>
+            <p><span class="es">Privado por defecto. <b>Exporta todo, gratis, siempre.</b> Importa tu historial de Goodreads en dos toques. Sin publicidad, jamás.</span><span class="en">Private by default. <b>Export everything, free, forever.</b> Import your Goodreads history in two taps. No ads, ever.</span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="who">
+        <div class="k"><span class="es">¿Te suena?</span><span class="en">Sound familiar?</span></div>
+        <div class="who-inner">
+          <blockquote>
+            <span class="es">«He vuelto de la librería con un tomo que ya tenía. Otra vez.»</span>
+            <span class="en">"I came home from the bookstore with a volume I already owned. Again."</span>
+            <footer><span class="es">— Spine te lo dice antes de pagar: escanea en la tienda y listo.</span><span class="en">— Spine tells you before you pay: scan it in the store, done.</span></footer>
+          </blockquote>
+          <blockquote>
+            <span class="es">«Mi colección vive en un Excel que llevo tres meses sin abrir.»</span>
+            <span class="en">"My collection lives in a spreadsheet I haven't opened in three months."</span>
+            <footer><span class="es">— Importa el CSV y no vuelvas a teclear un ISBN a mano.</span><span class="en">— Import the CSV and never type an ISBN by hand again.</span></footer>
+          </blockquote>
+          <blockquote>
+            <span class="es">«¿A quién le presté 'Hábitos atómicos' hace un año?»</span>
+            <span class="en">"Who did I lend 'Atomic Habits' to a year ago?"</span>
+            <footer><span class="es">— Préstamos con nombre, fecha y recordatorio amable.</span><span class="en">— Loans with a name, a date and a gentle reminder.</span></footer>
+          </blockquote>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="band close-band">
+    <video class="bgvid" autoplay muted loop playsinline poster="media/shelf-daylight.jpg" aria-hidden="true">
+      <source src="media/shelf-daylight.mp4" type="video/mp4">
+    </video>
+    <div class="veil"></div>
+    <div class="wrap">
+      <section class="close">
+        <h2><span class="es">Los primeros lectores moldean la app.</span><span class="en">Early readers shape the app.</span></h2>
+        <p class="sub" style="margin: 12px auto 0; text-align:center;">
+          <span class="es">Apúntate a la beta cerrada y decide con nosotros cómo debe ser.</span>
+          <span class="en">Join the closed beta and help decide what it becomes.</span>
         </p>
-        <form class="cta" action="https://formsubmit.co/maximoduperez@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="Spine beta — nuevo registro">
-          <input type="hidden" name="_next" value="https://misteremess.github.io/spine/?ok=1">
+        <form class="cta" data-signup novalidate>
+          <input type="text" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="email" name="email" required placeholder="tu@email.com" aria-label="Email">
           <button type="submit"><span class="es">Quiero la beta</span><span class="en">Join the beta</span></button>
         </form>
-        <p class="tiny">
-          <span class="es">Solo te escribiremos para la beta. Sin spam, baja cuando quieras. </span>
-          <span class="en">We'll only email you about the beta. No spam, leave anytime. </span>
-        </p>
         <div class="ok-msg" role="status">
           <span class="es">📚 Estás dentro de la lista. Te avisaremos cuando abra la beta.</span>
           <span class="en">📚 You're on the list. We'll let you know when the beta opens.</span>
         </div>
-      </div>
-      <div class="shelf" aria-hidden="true">
-        <div class="sp" style="height:88%; background:#8A5A2B;"><span>Dune</span></div>
-        <div class="sp" style="height:72%; background:#33513B;"><span>El Hobbit</span></div>
-        <div class="sp" style="height:80%; background:#58335E; width:26px;"><span>JJK 3</span></div>
-        <div class="sp gap" style="height:80%; width:26px;"><span>4</span></div>
-        <div class="sp" style="height:80%; background:#58335E; width:26px;"><span>JJK 5</span></div>
-        <div class="sp" style="height:94%; background:#24445E;"><span>Project Hail Mary</span></div>
-        <div class="sp" style="height:76%; background:#6E2F26; width:30px;"><span>1984</span></div>
-        <div class="sp" style="height:84%; background:#9C7B23;"><span>Fourth Wing</span></div>
-        <div class="sp" style="height:70%; background:#37596B; width:28px;"><span>Kaiju Nº8</span></div>
-      </div>
-    </section>
-
-    <section class="feats">
-      <div class="k"><span class="es">Por qué Spine</span><span class="en">Why Spine</span></div>
-      <div class="grid">
-        <div class="feat">
-          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10"/></svg></div>
-          <h3><span class="es">Escáner en ráfaga</span><span class="en">Burst scanning</span></h3>
-          <p><span class="es"><b>200 libros en una tarde.</b> La cámara no se cierra entre libros: escanea, apila y sigue. Funciona incluso sin conexión.</span><span class="en"><b>200 books in one afternoon.</b> The camera never closes between books: scan, stack, keep going. Works offline too.</span></p>
+        <div class="err-msg" role="alert">
+          <span class="es">No hemos podido registrarte ahora mismo. Escríbenos a <a href="mailto:maximoduperez@gmail.com?subject=Spine%20beta">este correo</a> y te apuntamos a mano.</span>
+          <span class="en">We couldn't sign you up right now. Email us <a href="mailto:maximoduperez@gmail.com?subject=Spine%20beta">here</a> and we'll add you manually.</span>
         </div>
-        <div class="feat">
-          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="4" height="16" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="17" y="4" width="4" height="16" rx="1" stroke-dasharray="3 3"/></svg></div>
-          <h3><span class="es">Tomo a tomo</span><span class="en">Volume by volume</span></h3>
-          <p><span class="es">Manga, cómic y sagas con progreso triple: <b>tengo / leído / publicado</b>. El detector de huecos te dice exactamente qué tomos te faltan.</span><span class="en">Manga, comics and sagas with triple progress: <b>owned / read / published</b>. The gap detector tells you exactly which volumes you're missing.</span></p>
-        </div>
-        <div class="feat">
-          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M6 20v-6M18 20V4"/></svg></div>
-          <h3><span class="es">Tu vida lectora</span><span class="en">Your reading life</span></h3>
-          <p><span class="es">Rachas, objetivos, gasto, ratio tsundoku. <b>Las estadísticas como espejo</b>, no como examen — y un resumen anual para presumir.</span><span class="en">Streaks, goals, spending, tsundoku ratio. <b>Stats as a mirror</b>, not a test — plus a shareable year in review.</span></p>
-        </div>
-        <div class="feat">
-          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
-          <h3><span class="es">Tuyo de verdad</span><span class="en">Truly yours</span></h3>
-          <p><span class="es">Privado por defecto. <b>Exporta todo, gratis, siempre.</b> Importa tu historial de Goodreads en dos toques. Sin publicidad, jamás.</span><span class="en">Private by default. <b>Export everything, free, forever.</b> Import your Goodreads history in two taps. No ads, ever.</span></p>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
+  </div>
 
-    <section class="who">
-      <div class="k"><span class="es">¿Te suena?</span><span class="en">Sound familiar?</span></div>
-      <div class="who-inner">
-        <blockquote>
-          <span class="es">«He vuelto de la librería con un tomo que ya tenía. Otra vez.»</span>
-          <span class="en">"I came home from the bookstore with a volume I already owned. Again."</span>
-          <footer><span class="es">— Spine te lo dice antes de pagar: escanea en la tienda y listo.</span><span class="en">— Spine tells you before you pay: scan it in the store, done.</span></footer>
-        </blockquote>
-        <blockquote>
-          <span class="es">«Mi colección vive en un Excel que llevo tres meses sin abrir.»</span>
-          <span class="en">"My collection lives in a spreadsheet I haven't opened in three months."</span>
-          <footer><span class="es">— Importa el CSV y no vuelvas a teclear un ISBN a mano.</span><span class="en">— Import the CSV and never type an ISBN by hand again.</span></footer>
-        </blockquote>
-        <blockquote>
-          <span class="es">«¿A quién le presté 'Hábitos atómicos' hace un año?»</span>
-          <span class="en">"Who did I lend 'Atomic Habits' to a year ago?"</span>
-          <footer><span class="es">— Préstamos con nombre, fecha y recordatorio amable.</span><span class="en">— Loans with a name, a date and a gentle reminder.</span></footer>
-        </blockquote>
-      </div>
-    </section>
+  <div class="wrap">
+    <footer class="page">
+      <span>© 2026 Spine</span>
+      <span><span class="es">Hecho por lectores, para lectores.</span><span class="en">Made by readers, for readers.</span> · <a href="https://github.com/Misteremess/spine">GitHub</a></span>
+    </footer>
+  </div>
 
-    <section class="close">
-      <h2><span class="es">Los primeros lectores moldean la app.</span><span class="en">Early readers shape the app.</span></h2>
-      <p class="sub" style="margin: 12px auto 0; text-align:center;">
-        <span class="es">Apúntate a la beta cerrada y decide con nosotros cómo debe ser.</span>
-        <span class="en">Join the closed beta and help decide what it becomes.</span>
-      </p>
-      <form class="cta" action="https://formsubmit.co/maximoduperez@gmail.com" method="POST">
-        <input type="hidden" name="_subject" value="Spine beta — nuevo registro">
-        <input type="hidden" name="_next" value="https://misteremess.github.io/spine/?ok=1">
-        <input type="email" name="email" required placeholder="tu@email.com" aria-label="Email">
-        <button type="submit"><span class="es">Quiero la beta</span><span class="en">Join the beta</span></button>
-      </form>
-      <div class="ok-msg" role="status">
-        <span class="es">📚 Estás dentro de la lista. Te avisaremos cuando abra la beta.</span>
-        <span class="en">📚 You're on the list. We'll let you know when the beta opens.</span>
-      </div>
-    </section>
-  </main>
-
-  <footer class="page">
-    <span>© 2026 Spine</span>
-    <span><span class="es">Hecho por lectores, para lectores.</span><span class="en">Made by readers, for readers.</span> · <a href="https://github.com/Misteremess/spine">GitHub</a></span>
-  </footer>
-</div>
 <script>
+  // idioma
   document.querySelectorAll(".lang button").forEach((b) => {
     b.addEventListener("click", () => {
       document.body.classList.toggle("en", b.dataset.lang === "en");
@@ -220,7 +262,37 @@
     });
   });
   if (navigator.language && !navigator.language.startsWith("es")) document.querySelector('[data-lang="en"]').click();
-  if (new URLSearchParams(location.search).has("ok")) document.body.classList.add("ok");
+
+  // registro beta — Web3Forms (clave pendiente; mientras tanto, respaldo por correo)
+  const WEB3FORMS_KEY = "ab7d0f03-58cb-44ea-b151-fa253c663f16";
+  document.querySelectorAll("form[data-signup]").forEach((f) => {
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = f.email.value.trim();
+      if (!email || !email.includes("@")) { f.email.focus(); return; }
+      if (f.botcheck.value) return; // honeypot
+      const mailto = "mailto:maximoduperez@gmail.com?subject=Spine%20beta&body=" +
+        encodeURIComponent("Quiero unirme a la beta de Spine. Mi email: " + email);
+      if (!WEB3FORMS_KEY) { location.href = mailto; return; }
+      const btn = f.querySelector("button");
+      btn.disabled = true;
+      try {
+        const r = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: "Spine beta — nuevo registro", email, from_name: "Landing Spine" }),
+        });
+        const data = await r.json();
+        if (!data.success) throw new Error(data.message);
+        document.body.classList.remove("err");
+        document.body.classList.add("ok");
+      } catch {
+        document.body.classList.add("err");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
 </script>
 </body>
 </html>

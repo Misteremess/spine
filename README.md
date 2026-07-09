@@ -21,6 +21,8 @@ colecciones por tomos. Un CRM personal para lectores y coleccionistas.
 |---|---|
 | [`docs/PLAN-PRODUCTO.md`](docs/PLAN-PRODUCTO.md) | Plan estratégico completo: visión, benchmark, funcionalidades, MVP, arquitectura, stack, modelo de datos, roadmap |
 | [`tools/fase0-isbn-test/`](tools/fase0-isbn-test/) | Prueba de validación de la cascada ISBN con ediciones españolas reales |
+| [`design/prototipo.html`](design/prototipo.html) | Prototipo UX/UI de las 8 pantallas clave del MVP (modos Noche y Papel) |
+| [`landing/`](landing/) | Landing de captura para la beta ([misteremess.github.io/spine](https://misteremess.github.io/spine/)), desplegada vía GitHub Pages |
 
 ## Stack previsto
 
