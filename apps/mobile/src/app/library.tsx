@@ -62,9 +62,14 @@ export default function Library() {
         options={{
           title: `Biblioteca · ${items.length}`,
           headerRight: () => (
-            <Pressable onPress={signOut} hitSlop={12}>
-              <Text style={{ color: colors.mut, fontSize: 13 }}>Salir</Text>
-            </Pressable>
+            <View style={{ flexDirection: "row", gap: 18, alignItems: "center" }}>
+              <Pressable onPress={() => router.push("/wishlist")} hitSlop={12}>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>♡ Deseos</Text>
+              </Pressable>
+              <Pressable onPress={signOut} hitSlop={12}>
+                <Text style={{ color: colors.mut, fontSize: 13 }}>Salir</Text>
+              </Pressable>
+            </View>
           ),
         }}
       />
