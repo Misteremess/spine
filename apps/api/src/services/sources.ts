@@ -5,6 +5,7 @@
  *  - Google Books responde de forma intermitente → reintentos con backoff.
  *  - GB exige API key (el acceso anónimo devuelve 429).
  */
+import { createHash } from "node:crypto";
 import type { BookMetadata } from "@spine/shared";
 import { env } from "../env";
 import { extractSeries } from "./series";
@@ -108,6 +109,12 @@ export async function fromOpenLibrary(isbn13: string): Promise<SourceResult> {
   return { partial, source: "openlibrary" };
 }
 
+/** Imágenes "portada no disponible" de Google Books, por zoom. */
+export const GB_PLACEHOLDER_MD5 = new Set([
+  "d7c21c65fc861fc5128753e9e091b23c", // zoom=1
+  "1fe98bd081e1f98c8193d52c74cf2ad2", // zoom=3
+]);
+
 /**
  * Cadena de portadas por ISBN, independiente de las fichas:
  * 1. Índice de covers de OL (HEAD con default=false).
@@ -128,12 +135,21 @@ export async function coverByIsbn(isbn13: string): Promise<string | null> {
     /* probamos la siguiente fuente */
   }
 
-  const gb = `https://books.google.com/books/content?vid=ISBN${isbn13}&printsec=frontcover&img=1&zoom=1`;
-  try {
-    const res = await fetch(gb, { redirect: "follow", signal: AbortSignal.timeout(6000) });
-    if (res.ok && (await res.arrayBuffer()).byteLength > 1500) return gb;
-  } catch {
-    /* sin portada */
+  // zoom=3 da ~575px de ancho; si no existe a esa resolución, zoom=1 (128px).
+  // GB devuelve una imagen genérica de "no disponible" (no un 404), así que
+  // hay que descartarla por hash — el tamaño no vale, pesa 246 KB.
+  for (const zoom of [3, 1]) {
+    const gb = `https://books.google.com/books/content?vid=ISBN${isbn13}&printsec=frontcover&img=1&zoom=${zoom}`;
+    try {
+      const res = await fetch(gb, { redirect: "follow", signal: AbortSignal.timeout(6000) });
+      if (!res.ok) continue;
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.byteLength > 1500 && !GB_PLACEHOLDER_MD5.has(createHash("md5").update(buf).digest("hex"))) {
+        return gb;
+      }
+    } catch {
+      /* probamos el siguiente zoom */
+    }
   }
   return null;
 }
