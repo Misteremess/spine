@@ -4,6 +4,7 @@ import Fastify from "fastify";
 import { ZodError } from "zod";
 import { auth } from "./auth";
 import { collectionsRoutes } from "./routes/collections";
+import { importRoutes } from "./routes/import";
 import { libraryRoutes } from "./routes/library";
 import { statsRoutes } from "./routes/stats";
 import { wishlistRoutes } from "./routes/wishlist";
@@ -92,6 +93,7 @@ export async function buildApp() {
   app.register(async (scope) => wishlistRoutes(scope));
   app.register(async (scope) => collectionsRoutes(scope));
   app.register(async (scope) => statsRoutes(scope));
+  app.register(async (scope) => importRoutes(scope));
 
   return app;
 }

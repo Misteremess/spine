@@ -216,6 +216,50 @@ describe("colecciones", () => {
   });
 });
 
+describe("import de Goodreads", () => {
+  it("importa, deduplica y mapea estantes/rating/fecha", async () => {
+    const importer = await signUp(app, "import@spine.test");
+    const csv = [
+      "Book Id,Title,Author,Additional Authors,ISBN,ISBN13,My Rating,Publisher,Number of Pages,Year Published,Exclusive Shelf,Date Read,My Review,Private Notes",
+      `1,Dune,Frank Herbert,,"=""""","=""${DUNE}""",4,Ace,535,1990,read,2026/03/15,Brutal,`,
+      `2,Fanzine sin ISBN,Autora X,,,,0,,,,to-read,,,`,
+      `3,Dune otra vez,Frank Herbert,,"=""""","=""${DUNE}""",0,,,,read,,,`,
+    ].join("\n");
+
+    const res = await app.inject({
+      method: "POST",
+      url: "/v1/import/goodreads",
+      payload: { csv },
+      headers: { cookie: importer },
+    });
+    expect(res.statusCode).toBe(200);
+    expect(res.json()).toMatchObject({ imported: 2, skipped: 1, failed: 0, total: 3 });
+
+    const lib = await app.inject({ method: "GET", url: "/v1/library", headers: { cookie: importer } });
+    const items = lib.json().items;
+    expect(items).toHaveLength(2);
+
+    const dune = items.find((i: { title: string }) => i.title === "Dune");
+    expect(dune.rating).toBe(8);
+    expect(dune.notes).toBe("Brutal");
+    expect(dune.reading.status).toBe("finished");
+    expect(dune.reading.finishedAt).toBe("2026-03-15");
+    expect(dune.isbn13).toBe(DUNE); // vinculado a la edición del catálogo
+
+    const fanzine = items.find((i: { title: string }) => i.title === "Fanzine sin ISBN");
+    expect(fanzine.reading.status).toBe("pending");
+  });
+
+  it("CSV que no es de Goodreads → 400", async () => {
+    const res = await inject({
+      method: "POST",
+      url: "/v1/import/goodreads",
+      payload: { csv: "a,b\n1,2" },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+});
+
 describe("estadísticas", () => {
   it("agrega biblioteca, año, racha, colección y autores", async () => {
     // Estado heredado de las suites anteriores: Dune (releyéndose tras

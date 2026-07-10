@@ -10,7 +10,7 @@ import { mergeResults } from "./merge";
 import { extractSeries, seriesNameKey } from "./series";
 import { fromGoogleBooks, fromOpenLibrary } from "./sources";
 
-async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
+export async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
   const rows = await db
     .select()
     .from(schema.editions)
@@ -50,7 +50,7 @@ async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
   };
 }
 
-async function upsertCatalog(meta: BookMetadata, sources: Record<string, string>): Promise<void> {
+export async function upsertCatalog(meta: BookMetadata, sources: Record<string, string>): Promise<void> {
   await db.transaction(async (tx) => {
     let publisherId: number | null = null;
     if (meta.publisher) {

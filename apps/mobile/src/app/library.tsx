@@ -187,6 +187,11 @@ export default function Library() {
               <Text style={{ color: colors.mut, fontSize: 13 }}>
                 Pulsa «Escanear» y apunta al código de barras
               </Text>
+              <Pressable onPress={() => router.push("/import")} hitSlop={8} style={{ marginTop: 10 }}>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>
+                  ¿Vienes de Goodreads? Importa tu biblioteca →
+                </Text>
+              </Pressable>
             </View>
           ) : (
             <View style={{ alignItems: "center", marginTop: 60 }}>
@@ -195,6 +200,19 @@ export default function Library() {
               </Text>
             </View>
           )
+        }
+        ListFooterComponent={
+          items.length > 0 ? (
+            <Pressable
+              onPress={() => router.push("/import")}
+              hitSlop={8}
+              style={{ alignItems: "center", paddingVertical: 14 }}
+            >
+              <Text style={{ color: colors.mut, fontSize: 12 }}>
+                Importar biblioteca de Goodreads (CSV)
+              </Text>
+            </Pressable>
+          ) : null
         }
         renderItem={({ item }) => {
           const st = item.reading ? STATUS_LABEL[item.reading.status] : undefined;
