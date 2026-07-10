@@ -10,8 +10,8 @@ export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
   plugins: [expo()],
-  // spine:// = app compilada · exp:// = desarrollo con Expo Go
-  trustedOrigins: ["spine://", "exp://", "exp://*"],
+  // spine:// = app compilada · exp:// = desarrollo con Expo Go · web
+  trustedOrigins: ["spine://", "exp://", "exp://*", env.WEB_ORIGIN],
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: { user, session, account, verification },

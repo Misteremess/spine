@@ -5,3 +5,5 @@ packages:
 nodeLinker: hoisted
 allowBuilds:
   esbuild: true
+  # Optimizador de imágenes de Next; la web usa <img> directo, no necesita el binario.
+  sharp: false

@@ -1,8 +1,10 @@
+import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import { toIsbn13 } from "@spine/shared";
 import Fastify from "fastify";
 import { ZodError } from "zod";
 import { auth } from "./auth";
+import { env } from "./env";
 import { collectionsRoutes } from "./routes/collections";
 import { importRoutes } from "./routes/import";
 import { libraryRoutes } from "./routes/library";
@@ -12,6 +14,12 @@ import { resolveIsbn } from "./services/resolver";
 
 export async function buildApp() {
   const app = Fastify({ logger: true });
+
+  // El frontend web vive en otro origen; cookies de sesión via CORS.
+  await app.register(cors, {
+    origin: [env.WEB_ORIGIN],
+    credentials: true,
+  });
 
   // Límite global por IP; protege sobre todo la cuota gratuita de Google
   // Books detrás del resolver. En memoria: suficiente con un solo proceso.
