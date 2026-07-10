@@ -33,11 +33,18 @@ beforeAll(async () => {
   await seedEdition({ isbn13: BERSERK3, title: "Berserk 3", seriesName: "Berserk", volumeNumber: 3 });
   cookie = await signUp(app, "sagas@spine.test");
 
-  // El usuario tiene los tomos 1 y 3.
+  // El usuario tiene los tomos 1 y 3; el 1 ya lo leyó.
+  const bookIds: number[] = [];
   for (const isbn of [BERSERK1, BERSERK3]) {
     const res = await inject({ method: "POST", url: "/v1/library", payload: { isbn } });
     expect(res.statusCode).toBe(201);
+    bookIds.push(res.json().userBook.id);
   }
+  await inject({
+    method: "POST",
+    url: `/v1/library/${bookIds[0]}/status`,
+    payload: { status: "finished" },
+  });
 
   const [ser] = await db
     .select()
@@ -76,9 +83,10 @@ describe("detalle de saga", () => {
     expect(body.series.name).toBe("Berserk");
     // Horizonte = máximo conocido entre tenidos (3) y releases (5).
     expect(body.volumes).toHaveLength(5);
-    expect(body.volumes[0]).toMatchObject({ volume: 1, owned: true });
+    expect(body.volumes[0]).toMatchObject({ volume: 1, owned: true, read: true });
     expect(body.volumes[1]).toMatchObject({ volume: 2, owned: false });
-    expect(body.volumes[2]).toMatchObject({ volume: 3, owned: true });
+    expect(body.volumes[2]).toMatchObject({ volume: 3, owned: true, read: false });
+    expect(body.readCount).toBe(1);
     // El tomo 4 trae el ISBN del radar para poder desearlo con un toque.
     expect(body.volumes[3]).toMatchObject({
       volume: 4,

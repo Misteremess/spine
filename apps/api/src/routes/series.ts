@@ -2,7 +2,7 @@
  * Detalle de saga (plan §5.5 al completo): la rejilla de tomos 1..N con
  * tenidos/huecos, la ficha enriquecida y el radar de novedades bajo demanda.
  */
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { db, schema } from "../db/index";
 import { requireUser } from "../plugins/require-user";
@@ -30,6 +30,20 @@ async function seriesDetail(seriesId: number, userId: string) {
     .innerJoin(schema.editions, eq(schema.userBooks.editionId, schema.editions.id))
     .innerJoin(schema.works, eq(schema.editions.workId, schema.works.id))
     .where(and(eq(schema.userBooks.userId, userId), eq(schema.works.seriesId, seriesId)));
+
+  // Estado de lectura de tus tomos: el progreso triple del prototipo
+  // (tengo / leídos / publicados) necesita saber cuáles terminaste.
+  const readingRows = owned.length
+    ? await db
+        .select({ userBookId: schema.readings.userBookId, status: schema.readings.status })
+        .from(schema.readings)
+        .where(inArray(schema.readings.userBookId, owned.map((b) => b.userBookId)))
+        .orderBy(desc(schema.readings.id))
+    : [];
+  const readingByBook = new Map<number, string>();
+  for (const r of readingRows) {
+    if (!readingByBook.has(r.userBookId)) readingByBook.set(r.userBookId, r.status);
+  }
 
   // Tomos que el radar conoce (título, fecha, ISBN → añadir a wishlist).
   const releases = await db
@@ -62,6 +76,7 @@ async function seriesDetail(seriesId: number, userId: string) {
     volumes.push({
       volume: n,
       owned: !!mine,
+      read: mine ? readingByBook.get(mine.userBookId) === "finished" : false,
       userBookId: mine?.userBookId ?? null,
       editionId: mine?.editionId ?? null,
       title: mine?.title ?? rel?.title ?? null,
@@ -87,6 +102,8 @@ async function seriesDetail(seriesId: number, userId: string) {
       coverUrl: v.coverUrl,
     }));
 
+  const readCount = volumes.filter((v) => v.read).length;
+
   return {
     series: {
       id: ser.id,
@@ -103,6 +120,7 @@ async function seriesDetail(seriesId: number, userId: string) {
     volumes,
     unnumbered,
     ownedCount: ownedByVolume.size + unnumbered.length,
+    readCount,
     missing,
     upcoming,
   };

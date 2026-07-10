@@ -14,6 +14,7 @@ import { api } from "@/lib/api";
 type Volume = {
   volume: number;
   owned: boolean;
+  read: boolean;
   userBookId: number | null;
   title: string | null;
   coverUrl: string | null;
@@ -37,6 +38,7 @@ type Detail = {
   volumes: Volume[];
   unnumbered: { userBookId: number; title: string }[];
   ownedCount: number;
+  readCount: number;
   missing: number[];
   upcoming: { volume: number; title: string | null; publishedDate: string | null; isbn13: string | null }[];
 };
@@ -86,7 +88,7 @@ export default function SerieDetalle() {
     );
   }
 
-  const { series, volumes, unnumbered, ownedCount, missing, upcoming } = detail;
+  const { series, volumes, unnumbered, ownedCount, readCount, missing, upcoming } = detail;
   const st = STATUS[series.status];
   const horizon = Math.max(series.totalVolumes ?? 0, volumes.length);
   const pct = horizon > 0 ? Math.min(100, Math.round((ownedCount / horizon) * 100)) : 0;
@@ -125,6 +127,9 @@ export default function SerieDetalle() {
               <span style={{ color: "var(--ambar)", fontWeight: 700, fontSize: 14 }}>
                 {ownedCount} de {series.totalVolumes ?? series.latestVolume ?? "?"}
               </span>
+              {readCount > 0 && (
+                <span style={{ color: "var(--salvia)", fontWeight: 600, fontSize: 13 }}>✓ {readCount} leídos</span>
+              )}
               {series.latestVolume && (
                 <span className="muted" style={{ fontSize: 12.5 }}>
                   último publicado: {series.latestVolume}
@@ -176,6 +181,25 @@ export default function SerieDetalle() {
                       position: "relative",
                     }}
                   >
+                    {v.read && (
+                      <span
+                        style={{
+                          position: "absolute",
+                          top: 2,
+                          left: 2,
+                          background: "var(--salvia)",
+                          color: "var(--ink-on-accent)",
+                          borderRadius: 4,
+                          fontSize: 9,
+                          width: 14,
+                          height: 14,
+                          display: "grid",
+                          placeItems: "center",
+                        }}
+                      >
+                        ✓
+                      </span>
+                    )}
                     <span
                       style={
                         v.coverUrl

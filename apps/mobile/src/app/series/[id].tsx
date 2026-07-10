@@ -22,6 +22,7 @@ import { colors, fonts } from "../../lib/theme";
 type Volume = {
   volume: number;
   owned: boolean;
+  read: boolean;
   userBookId: number | null;
   title: string | null;
   coverUrl: string | null;
@@ -45,6 +46,7 @@ type Detail = {
   volumes: Volume[];
   unnumbered: { userBookId: number; title: string }[];
   ownedCount: number;
+  readCount: number;
   missing: number[];
   upcoming: { volume: number; title: string | null; publishedDate: string | null; isbn13: string | null }[];
 };
@@ -120,7 +122,7 @@ export default function SeriesDetail() {
     );
   }
 
-  const { series, volumes, unnumbered, ownedCount, missing, upcoming } = detail;
+  const { series, volumes, unnumbered, ownedCount, readCount, missing, upcoming } = detail;
   const st = STATUS_LABEL[series.status];
   const horizon = Math.max(series.totalVolumes ?? 0, volumes.length);
   const pct = horizon > 0 ? Math.round((ownedCount / horizon) * 100) : 0;
@@ -149,6 +151,11 @@ export default function SeriesDetail() {
             <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansBold }}>
               {ownedCount} de {series.totalVolumes ?? series.latestVolume ?? "?"}
             </Text>
+            {readCount > 0 && (
+              <Text style={{ color: colors.salvia, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
+                ✓ {readCount} leídos
+              </Text>
+            )}
           </View>
           {series.latestVolume ? (
             <Text style={{ color: colors.mut, fontSize: 11.5 }}>
@@ -204,6 +211,11 @@ export default function SeriesDetail() {
                   <View style={s.tomoNum}>
                     <Text style={{ color: colors.papel, fontSize: 9, fontFamily: fonts.sansBold }}>{v.volume}</Text>
                   </View>
+                  {v.read && (
+                    <View style={s.readBadge}>
+                      <Text style={{ color: colors.inkOnAccent, fontSize: 9, fontFamily: fonts.sansBold }}>✓</Text>
+                    </View>
+                  )}
                 </Pressable>
               );
             }
@@ -319,6 +331,17 @@ const s = StyleSheet.create({
     paddingVertical: 1,
   },
   tomoGap: { borderColor: "rgba(193,85,61,.55)", borderStyle: "dashed" },
+  readBadge: {
+    position: "absolute",
+    top: 2,
+    left: 2,
+    backgroundColor: colors.salvia,
+    borderRadius: 4,
+    width: 13,
+    height: 13,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   tomoUpcoming: { borderColor: "rgba(217,164,65,.5)", borderStyle: "dotted" },
   refreshBtn: { alignItems: "center", gap: 3, paddingVertical: 8 },
 });
