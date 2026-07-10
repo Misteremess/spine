@@ -8,7 +8,7 @@ export async function resetDb() {
     TRUNCATE "user", session, account, verification,
       publishers, authors, series, works, work_authors, editions, resolution_log,
       user_books, readings, progress_entries, wishlist_items,
-      series_releases, notifications
+      series_releases, notifications, reviews, clubs, club_members, club_posts
     RESTART IDENTITY CASCADE
   `);
 }

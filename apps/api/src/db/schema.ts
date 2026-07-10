@@ -248,6 +248,73 @@ export const progressEntries = pgTable("progress_entries", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+/**
+ * Reseña pública de una OBRA (no de la edición: la reseña de Dune vale
+ * para cualquier ISBN). Una por usuario y obra; estrellas en medias: 1..10.
+ */
+export const reviews = pgTable(
+  "reviews",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    workId: integer("work_id")
+      .notNull()
+      .references(() => works.id, { onDelete: "cascade" }),
+    rating: integer("rating").notNull(),
+    text: text("text"),
+    spoilers: boolean("spoilers").notNull().default(false),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (t) => [unique().on(t.userId, t.workId)]
+);
+
+/* ============================================================
+ * CLUBS DE LECTURA: grupo privado con código de invitación,
+ * libro actual y un hilo de debate.
+ * ============================================================ */
+
+export const clubs = pgTable("clubs", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  inviteCode: varchar("invite_code", { length: 8 }).notNull().unique(),
+  ownerId: text("owner_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  currentWorkId: integer("current_work_id").references(() => works.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const clubMembers = pgTable(
+  "club_members",
+  {
+    clubId: integer("club_id")
+      .notNull()
+      .references(() => clubs.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    role: text("role").notNull().default("member"),
+    joinedAt: timestamp("joined_at").notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.clubId, t.userId] })]
+);
+
+export const clubPosts = pgTable("club_posts", {
+  id: serial("id").primaryKey(),
+  clubId: integer("club_id")
+    .notNull()
+    .references(() => clubs.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 /** Avisos in-app: nuevos tomos de tus sagas, actividad de tus clubs… */
 export const notifications = pgTable("notifications", {
   id: serial("id").primaryKey(),

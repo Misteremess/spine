@@ -5,8 +5,10 @@ import Fastify from "fastify";
 import { ZodError } from "zod";
 import { auth } from "./auth";
 import { env } from "./env";
+import { clubsRoutes } from "./routes/clubs";
 import { collectionsRoutes } from "./routes/collections";
 import { importRoutes } from "./routes/import";
+import { reviewsRoutes } from "./routes/reviews";
 import { libraryRoutes } from "./routes/library";
 import { notificationsRoutes, seriesRoutes } from "./routes/series";
 import { statsRoutes } from "./routes/stats";
@@ -108,6 +110,8 @@ export async function buildApp() {
   app.register(async (scope) => importRoutes(scope));
   app.register(async (scope) => seriesRoutes(scope));
   app.register(async (scope) => notificationsRoutes(scope));
+  app.register(async (scope) => reviewsRoutes(scope));
+  app.register(async (scope) => clubsRoutes(scope));
 
   return app;
 }

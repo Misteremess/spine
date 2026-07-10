@@ -221,6 +221,7 @@ export function libraryRoutes(app: FastifyInstance) {
           volumeNumber: schema.editions.volumeNumber,
           seriesPosition: schema.works.seriesPosition,
           seriesName: schema.series.name,
+          seriesId: schema.series.id,
         })
         .from(schema.editions)
         .leftJoin(schema.publishers, eq(schema.editions.publisherId, schema.publishers.id))
@@ -235,7 +236,7 @@ export function libraryRoutes(app: FastifyInstance) {
           .from(schema.workAuthors)
           .innerJoin(schema.authors, eq(schema.workAuthors.authorId, schema.authors.id))
           .where(eq(schema.workAuthors.workId, ed.workId));
-        const { workId: _workId, seriesPosition, seriesName, volumeNumber, ...rest } = ed;
+        const { seriesPosition, seriesName, volumeNumber, ...rest } = ed;
         edition = {
           ...rest,
           authors: authorRows.map((a) => a.name),
