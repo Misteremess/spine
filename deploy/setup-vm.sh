@@ -7,6 +7,15 @@ DOMAIN="${1:?Uso: sudo bash setup-vm.sh <dominio>}"
 APP_DIR="/home/ubuntu/spine"
 DB_PASS="$(openssl rand -hex 16)"
 
+echo "== Swap (imprescindible en la E2.1.Micro de 1 GB) =="
+if [ ! -f /swapfile ]; then
+  fallocate -l 2G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
 echo "== Node 24 + pnpm =="
 curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
 apt-get install -y nodejs git
