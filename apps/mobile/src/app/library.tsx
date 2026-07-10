@@ -96,9 +96,14 @@ export default function Library() {
         options={{
           title: `Biblioteca · ${items.length}`,
           headerLeft: () => (
-            <Pressable onPress={() => router.push("/collections")} hitSlop={12}>
-              <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>▦ Series</Text>
-            </Pressable>
+            <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
+              <Pressable onPress={() => router.push("/collections")} hitSlop={12}>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>▦ Series</Text>
+              </Pressable>
+              <Pressable onPress={() => router.push("/stats")} hitSlop={12}>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>✦ Stats</Text>
+              </Pressable>
+            </View>
           ),
           headerRight: () => (
             <View style={{ flexDirection: "row", gap: 18, alignItems: "center" }}>

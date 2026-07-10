@@ -215,3 +215,24 @@ describe("colecciones", () => {
     expect(res.statusCode).toBe(404);
   });
 });
+
+describe("estadísticas", () => {
+  it("agrega biblioteca, año, racha, colección y autores", async () => {
+    // Estado heredado de las suites anteriores: Dune (releyéndose tras
+    // terminarse hoy, con progreso hoy) + Berserk 1 y 3 (serie total 5).
+    const res = await inject({ method: "GET", url: "/v1/stats" });
+    expect(res.statusCode).toBe(200);
+    const stats = res.json();
+
+    expect(stats.library.total).toBe(3);
+    expect(stats.library.byStatus.reading).toBe(1); // Dune en relectura
+    expect(stats.thisYear.finished).toBe(1); // la primera lectura de Dune
+    expect(stats.thisYear.pages).toBe(535);
+    expect(stats.months).toHaveLength(12);
+    expect(stats.months[11].finished).toBe(1); // terminado este mes
+    expect(stats.streakDays).toBeGreaterThanOrEqual(1); // progreso registrado hoy
+    expect(stats.collection.series).toBe(1);
+    expect(stats.collection.seriesComplete).toBe(0); // 2 de 5 tomos
+    expect(stats.topAuthors[0]).toEqual({ name: "Frank Herbert", count: 1 });
+  });
+});
