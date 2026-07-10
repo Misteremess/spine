@@ -5,7 +5,7 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { api, ApiError } from "../lib/api";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 type Card = {
   isbn13: string;
@@ -93,7 +93,7 @@ export default function Scanner() {
   if (!permission.granted) {
     return (
       <View style={[s.screen, { justifyContent: "center", padding: 32, gap: 16 }]}>
-        <Text style={{ color: colors.papel, fontSize: 17, textAlign: "center", fontFamily: "Georgia" }}>
+        <Text style={{ color: colors.papel, fontSize: 17, textAlign: "center", fontFamily: fonts.serif }}>
           Spine necesita la cámara para escanear tus libros
         </Text>
         <Pressable style={s.btn} onPress={requestPermission}>
@@ -126,7 +126,7 @@ export default function Scanner() {
           Sigue escaneando — cada libro se apila abajo
         </Text>
         <View style={s.counter}>
-          <Text style={{ color: colors.inkOnAccent, fontWeight: "700", fontSize: 12 }}>
+          <Text style={{ color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 12 }}>
             {added} añadidos
           </Text>
         </View>
@@ -165,7 +165,7 @@ function ScanCard({ card }: { card: Card }) {
       }
     >
       <View style={{ flex: 1, gap: 2 }}>
-        <Text style={{ color: colors.papel, fontSize: 13.5, fontWeight: "600" }} numberOfLines={1}>
+        <Text style={{ color: colors.papel, fontSize: 13.5, fontFamily: fonts.sansSemi }} numberOfLines={1}>
           {card.title ?? `ISBN ${card.isbn13}`}
         </Text>
         <Text style={{ color: label.color, fontSize: 11.5 }}>{label.text}</Text>
@@ -219,7 +219,7 @@ const s = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
   },
-  btnText: { color: colors.inkOnAccent, fontWeight: "700", fontSize: 15 },
+  btnText: { color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 15 },
   done: {
     position: "absolute",
     bottom: 24,

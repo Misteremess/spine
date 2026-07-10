@@ -2,7 +2,7 @@ import { Stack, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api } from "../lib/api";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 type Stats = {
   library: { total: number; byStatus: Record<string, number>; readPct: number };
@@ -135,7 +135,7 @@ export default function StatsScreen() {
           <Text style={s.cardTitle}>Autores de cabecera</Text>
           {topAuthors.map((a, i) => (
             <View key={a.name} style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-              <Text style={{ color: colors.ambar, fontSize: 15, fontFamily: "Georgia", width: 18 }}>
+              <Text style={{ color: colors.ambar, fontSize: 15, fontFamily: fonts.serif, width: 18 }}>
                 {i + 1}
               </Text>
               <Text style={{ color: colors.papel, fontSize: 14.5, flex: 1 }} numberOfLines={1}>
@@ -172,8 +172,8 @@ const s = StyleSheet.create({
     padding: 14,
     gap: 10,
   },
-  cardTitle: { color: colors.marfil, fontSize: 13, fontWeight: "700", letterSpacing: 0.4 },
-  big: { color: colors.papel, fontSize: 26, fontFamily: "Georgia" },
+  cardTitle: { color: colors.marfil, fontSize: 13, fontFamily: fonts.sansBold, letterSpacing: 0.4 },
+  big: { color: colors.papel, fontSize: 26, fontFamily: fonts.serif },
   label: { color: colors.mut, fontSize: 11.5 },
   chart: {
     flexDirection: "row",

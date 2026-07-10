@@ -14,7 +14,7 @@ import {
   View,
 } from "react-native";
 import { api } from "../../lib/api";
-import { colors } from "../../lib/theme";
+import { colors, fonts } from "../../lib/theme";
 
 type ReadingStatus = "pending" | "reading" | "paused" | "finished" | "abandoned";
 
@@ -213,7 +213,7 @@ export default function BookDetail() {
           {authors ? <Text style={s.authors}>{authors}</Text> : null}
           {edition?.series ? (
             <Pressable onPress={() => router.push("/collections")} hitSlop={6}>
-              <Text style={{ color: colors.ambar, fontSize: 12.5, fontWeight: "600" }}>
+              <Text style={{ color: colors.ambar, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
                 ▦ {edition.series}
                 {edition.seriesVolume ? ` · tomo ${edition.seriesVolume}` : ""}
               </Text>
@@ -244,7 +244,7 @@ export default function BookDetail() {
                   style={{
                     color: active ? colors.inkOnAccent : st.color,
                     fontSize: 12.5,
-                    fontWeight: "600",
+                    fontFamily: fonts.sansSemi,
                   }}
                 >
                   {st.label}
@@ -402,7 +402,7 @@ export default function BookDetail() {
       ) : null}
 
       <Pressable style={s.deleteBtn} onPress={confirmDelete}>
-        <Text style={{ color: colors.arcilla, fontWeight: "600", fontSize: 14 }}>
+        <Text style={{ color: colors.arcilla, fontFamily: fonts.sansSemi, fontSize: 14 }}>
           Eliminar de mi biblioteca
         </Text>
       </Pressable>
@@ -418,7 +418,7 @@ const s = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: colors.tinta3,
   },
-  title: { color: colors.papel, fontSize: 21, fontFamily: "Georgia", lineHeight: 26 },
+  title: { color: colors.papel, fontSize: 21, fontFamily: fonts.serif, lineHeight: 26 },
   authors: { color: colors.marfil, fontSize: 14 },
   meta: { color: colors.mut, fontSize: 12.5 },
   section: {
@@ -429,7 +429,7 @@ const s = StyleSheet.create({
     padding: 14,
     gap: 10,
   },
-  sectionTitle: { color: colors.marfil, fontSize: 13, fontWeight: "700", letterSpacing: 0.4 },
+  sectionTitle: { color: colors.marfil, fontSize: 13, fontFamily: fonts.sansBold, letterSpacing: 0.4 },
   pill: {
     borderWidth: 1,
     borderColor: colors.tinta3,
@@ -438,7 +438,7 @@ const s = StyleSheet.create({
     paddingVertical: 7,
   },
   description: { color: colors.marfil, fontSize: 13.5, lineHeight: 20 },
-  fieldLabel: { color: colors.mut, fontSize: 11.5, fontWeight: "600" },
+  fieldLabel: { color: colors.mut, fontSize: 11.5, fontFamily: fonts.sansSemi },
   fieldInput: {
     backgroundColor: colors.tinta,
     borderWidth: 1,
@@ -468,6 +468,6 @@ const s = StyleSheet.create({
     paddingHorizontal: 18,
     justifyContent: "center",
   },
-  btnText: { color: colors.inkOnAccent, fontWeight: "700", fontSize: 14 },
+  btnText: { color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 14 },
   deleteBtn: { alignItems: "center", paddingVertical: 12 },
 });

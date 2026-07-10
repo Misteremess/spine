@@ -1,4 +1,15 @@
 /** Tokens "biblioteca de noche" — mismos valores que design/prototipo.html */
+
+/** Identidad tipográfica: Fraunces para títulos, Inter para todo lo demás. */
+export const fonts = {
+  serif: "Fraunces_600SemiBold",
+  serifMedium: "Fraunces_500Medium",
+  sans: "Inter_400Regular",
+  sansMedium: "Inter_500Medium",
+  sansSemi: "Inter_600SemiBold",
+  sansBold: "Inter_700Bold",
+} as const;
+
 export const colors = {
   tinta: "#14120F",
   tinta2: "#1D1A15",

@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { api } from "../lib/api";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 type Volume = {
   volume: number | null;
@@ -89,7 +89,7 @@ export default function Collections() {
         }
         ListEmptyComponent={
           <View style={{ alignItems: "center", marginTop: 80, gap: 8, paddingHorizontal: 30 }}>
-            <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: "Georgia" }}>
+            <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: fonts.serif }}>
               Aún no hay colecciones
             </Text>
             <Text style={{ color: colors.mut, fontSize: 13, textAlign: "center" }}>
@@ -117,7 +117,7 @@ export default function Collections() {
                 <Text style={s.name} numberOfLines={1}>
                   {item.series.name}
                 </Text>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "700" }}>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansBold }}>
                   {ownedByNumber.size} de {total ?? "?"}
                 </Text>
               </View>
@@ -133,7 +133,7 @@ export default function Collections() {
                   if (!owners) {
                     return (
                       <Pressable key={n} style={[s.tomo, s.tomoGap]} onPress={() => wishMissing(item, n)}>
-                        <Text style={{ color: colors.arcilla, fontSize: 11, fontWeight: "600" }}>{n}</Text>
+                        <Text style={{ color: colors.arcilla, fontSize: 11, fontFamily: fonts.sansSemi }}>{n}</Text>
                       </Pressable>
                     );
                   }
@@ -145,7 +145,7 @@ export default function Collections() {
                       style={[s.tomo, { backgroundColor: bg, borderColor: bg }]}
                       onPress={() => router.push(`/book/${owners[0]!.userBookId}`)}
                     >
-                      <Text style={{ color: colors.inkOnAccent, fontSize: 11, fontWeight: "700" }}>{n}</Text>
+                      <Text style={{ color: colors.inkOnAccent, fontSize: 11, fontFamily: fonts.sansBold }}>{n}</Text>
                     </Pressable>
                   );
                 })}
@@ -170,7 +170,7 @@ export default function Collections() {
                     onSubmitEditing={() => void saveTotal(item.series.id)}
                   />
                   <Pressable style={s.totalBtn} onPress={() => void saveTotal(item.series.id)}>
-                    <Text style={{ color: colors.inkOnAccent, fontWeight: "700", fontSize: 12 }}>OK</Text>
+                    <Text style={{ color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 12 }}>OK</Text>
                   </Pressable>
                 </View>
               ) : (
@@ -204,7 +204,7 @@ const s = StyleSheet.create({
     padding: 14,
     gap: 10,
   },
-  name: { color: colors.papel, fontSize: 17, fontFamily: "Georgia", flexShrink: 1 },
+  name: { color: colors.papel, fontSize: 17, fontFamily: fonts.serif, flexShrink: 1 },
   barTrack: { height: 5, borderRadius: 99, backgroundColor: colors.tinta3, overflow: "hidden" },
   barFill: { height: 5, borderRadius: 99, backgroundColor: colors.ambar },
   tomo: {

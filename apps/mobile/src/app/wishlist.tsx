@@ -17,7 +17,7 @@ import {
   View,
 } from "react-native";
 import { api } from "../lib/api";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 type Item = {
   id: number;
@@ -130,7 +130,7 @@ export default function Wishlist() {
         }
         ListEmptyComponent={
           <View style={{ alignItems: "center", marginTop: 70, gap: 8 }}>
-            <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: "Georgia" }}>
+            <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: fonts.serif }}>
               Nada en la lista de deseos
             </Text>
             <Text style={{ color: colors.mut, fontSize: 13, textAlign: "center" }}>
@@ -157,7 +157,7 @@ export default function Wishlist() {
                 </Text>
                 <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
                   <View style={[s.prioPill, { borderColor: p.color }]}>
-                    <Text style={{ color: p.color, fontSize: 10, fontWeight: "600" }}>{p.label}</Text>
+                    <Text style={{ color: p.color, fontSize: 10, fontFamily: fonts.sansSemi }}>{p.label}</Text>
                   </View>
                   <Pressable hitSlop={8} onPress={() => remove(item)}>
                     <Text style={{ color: colors.mut, fontSize: 11 }}>Quitar</Text>
@@ -165,7 +165,7 @@ export default function Wishlist() {
                 </View>
               </View>
               <Pressable style={s.buyBtn} onPress={() => purchase(item)}>
-                <Text style={{ color: colors.inkOnAccent, fontSize: 11.5, fontWeight: "700" }}>
+                <Text style={{ color: colors.inkOnAccent, fontSize: 11.5, fontFamily: fonts.sansBold }}>
                   Lo compré
                 </Text>
               </Pressable>
@@ -189,7 +189,7 @@ export default function Wishlist() {
                   style={{
                     color: active ? colors.inkOnAccent : p.color,
                     fontSize: 11.5,
-                    fontWeight: "600",
+                    fontFamily: fonts.sansSemi,
                   }}
                 >
                   {p.label}
@@ -213,7 +213,7 @@ export default function Wishlist() {
             disabled={!input.trim() || adding}
             onPress={() => void add()}
           >
-            <Text style={{ color: colors.inkOnAccent, fontWeight: "700", fontSize: 14 }}>
+            <Text style={{ color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 14 }}>
               {adding ? "…" : "Añadir"}
             </Text>
           </Pressable>
@@ -236,7 +236,7 @@ const s = StyleSheet.create({
     padding: 10,
   },
   cover: { width: 44, height: 64, borderRadius: 5, backgroundColor: colors.tinta3 },
-  title: { color: colors.papel, fontSize: 14.5, fontWeight: "600" },
+  title: { color: colors.papel, fontSize: 14.5, fontFamily: fonts.sansSemi },
   prioPill: { borderWidth: 1, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 2 },
   buyBtn: {
     backgroundColor: colors.salvia,

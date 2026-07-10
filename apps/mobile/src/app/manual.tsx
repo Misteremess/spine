@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { api } from "../lib/api";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 /**
  * Alta manual (plan §8): cuando la cascada no resuelve un ISBN, el escaneo
@@ -116,7 +116,7 @@ const s = StyleSheet.create({
     padding: 12,
     gap: 3,
   },
-  label: { color: colors.marfil, fontSize: 13, fontWeight: "600" },
+  label: { color: colors.marfil, fontSize: 13, fontFamily: fonts.sansSemi },
   input: {
     backgroundColor: colors.tinta2,
     borderWidth: 1,
@@ -134,5 +134,5 @@ const s = StyleSheet.create({
     alignItems: "center",
     marginTop: 6,
   },
-  btnText: { color: colors.inkOnAccent, fontWeight: "700", fontSize: 15 },
+  btnText: { color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 15 },
 });

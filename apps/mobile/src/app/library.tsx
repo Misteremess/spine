@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { api } from "../lib/api";
 import { authClient } from "../lib/auth";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 type Item = {
   id: number;
@@ -99,17 +99,17 @@ export default function Library() {
           headerLeft: () => (
             <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
               <Pressable onPress={() => router.push("/collections")} hitSlop={12}>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>▦ Series</Text>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>▦ Series</Text>
               </Pressable>
               <Pressable onPress={() => router.push("/stats")} hitSlop={12}>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>✦ Stats</Text>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>✦ Stats</Text>
               </Pressable>
             </View>
           ),
           headerRight: () => (
             <View style={{ flexDirection: "row", gap: 18, alignItems: "center" }}>
               <Pressable onPress={() => router.push("/wishlist")} hitSlop={12}>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>♡ Deseos</Text>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>♡ Deseos</Text>
               </Pressable>
               <Pressable onPress={signOut} hitSlop={12}>
                 <Text style={{ color: colors.mut, fontSize: 13 }}>Salir</Text>
@@ -144,7 +144,7 @@ export default function Library() {
                     style={{
                       color: active ? colors.inkOnAccent : colors.mut,
                       fontSize: 12,
-                      fontWeight: "600",
+                      fontFamily: fonts.sansSemi,
                     }}
                   >
                     {f.label}
@@ -156,7 +156,7 @@ export default function Library() {
               onPress={() => setSortAz((v) => !v)}
               style={[s.filterChip, sortAz && { borderColor: colors.ambar }]}
             >
-              <Text style={{ color: sortAz ? colors.ambar : colors.mut, fontSize: 12, fontWeight: "600" }}>
+              <Text style={{ color: sortAz ? colors.ambar : colors.mut, fontSize: 12, fontFamily: fonts.sansSemi }}>
                 {sortAz ? "A–Z ✓" : "A–Z"}
               </Text>
             </Pressable>
@@ -164,7 +164,7 @@ export default function Library() {
               onPress={() => setGrid((v) => !v)}
               style={[s.filterChip, grid && { borderColor: colors.ambar }]}
             >
-              <Text style={{ color: grid ? colors.ambar : colors.mut, fontSize: 12, fontWeight: "600" }}>
+              <Text style={{ color: grid ? colors.ambar : colors.mut, fontSize: 12, fontFamily: fonts.sansSemi }}>
                 {grid ? "▤ Lista" : "▦ Portadas"}
               </Text>
             </Pressable>
@@ -193,14 +193,14 @@ export default function Library() {
         ListEmptyComponent={
           items.length === 0 ? (
             <View style={{ alignItems: "center", marginTop: 80, gap: 8 }}>
-              <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: "Georgia" }}>
+              <Text style={{ color: colors.marfil, fontSize: 17, fontFamily: fonts.serif }}>
                 Tu biblioteca está vacía
               </Text>
               <Text style={{ color: colors.mut, fontSize: 13 }}>
                 Pulsa «Escanear» y apunta al código de barras
               </Text>
               <Pressable onPress={() => router.push("/import")} hitSlop={8} style={{ marginTop: 10 }}>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontWeight: "600" }}>
+                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>
                   ¿Vienes de Goodreads? Importa tu biblioteca →
                 </Text>
               </Pressable>
@@ -274,7 +274,7 @@ export default function Library() {
               {item.favorite && <Text style={{ color: colors.arcilla, fontSize: 13 }}>♥</Text>}
               {st && (
                 <View style={[s.pill, { borderColor: st.color }]}>
-                  <Text style={{ color: st.color, fontSize: 10, fontWeight: "600" }}>{st.text}</Text>
+                  <Text style={{ color: st.color, fontSize: 10, fontFamily: fonts.sansSemi }}>{st.text}</Text>
                 </View>
               )}
             </Pressable>
@@ -349,7 +349,7 @@ const s = StyleSheet.create({
     textShadowRadius: 3,
   },
   coverPlaceholder: { alignItems: "center", justifyContent: "center" },
-  title: { color: colors.papel, fontSize: 14.5, fontWeight: "600" },
+  title: { color: colors.papel, fontSize: 14.5, fontFamily: fonts.sansSemi },
   meta: { color: colors.mut, fontSize: 11.5 },
   pill: {
     borderWidth: 1,
@@ -371,5 +371,5 @@ const s = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 6,
   },
-  fabText: { color: colors.inkOnAccent, fontWeight: "700", fontSize: 15 },
+  fabText: { color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 15 },
 });

@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 import { authClient } from "../lib/auth";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 export default function Login() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -97,7 +97,7 @@ export default function Login() {
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta, justifyContent: "center", padding: 24 },
   card: { gap: 12 },
-  logo: { fontFamily: "Georgia", fontSize: 44, color: colors.ambar, textAlign: "center" },
+  logo: { fontFamily: fonts.serif, fontSize: 44, color: colors.ambar, textAlign: "center" },
   sub: { color: colors.mut, textAlign: "center", marginBottom: 18 },
   input: {
     backgroundColor: colors.tinta2,
@@ -117,6 +117,6 @@ const s = StyleSheet.create({
     alignItems: "center",
     marginTop: 6,
   },
-  btnText: { color: colors.inkOnAccent, fontWeight: "600", fontSize: 16 },
+  btnText: { color: colors.inkOnAccent, fontFamily: fonts.sansSemi, fontSize: 16 },
   switch: { color: colors.mut, textAlign: "center", marginTop: 14, fontSize: 13 },
 });

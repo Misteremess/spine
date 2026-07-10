@@ -5,7 +5,7 @@ import { router, Stack } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api, ApiError } from "../lib/api";
-import { colors } from "../lib/theme";
+import { colors, fonts } from "../lib/theme";
 
 type Result = { imported: number; skipped: number; failed: number; total: number };
 
@@ -106,7 +106,7 @@ const s = StyleSheet.create({
     padding: 16,
     gap: 10,
   },
-  step: { color: colors.marfil, fontSize: 14, fontWeight: "700" },
+  step: { color: colors.marfil, fontSize: 14, fontFamily: fonts.sansBold },
   text: { color: colors.mut, fontSize: 13.5, lineHeight: 20 },
   hl: { color: colors.papel },
   btn: {
@@ -116,5 +116,5 @@ const s = StyleSheet.create({
     alignItems: "center",
     marginTop: 4,
   },
-  btnText: { color: colors.inkOnAccent, fontWeight: "700", fontSize: 14.5 },
+  btnText: { color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 14.5 },
 });
