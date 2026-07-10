@@ -27,6 +27,10 @@ type Detail = {
     favorite: boolean;
     rating: number | null;
     notes: string | null;
+    format: string | null;
+    location: string | null;
+    purchaseDate: string | null;
+    purchasePriceCents: number | null;
   };
   edition: {
     isbn13: string;
@@ -53,15 +57,36 @@ const STATUSES: { key: ReadingStatus; label: string; color: string }[] = [
   { key: "abandoned", label: "Abandonado", color: colors.arcilla },
 ];
 
+type EjemplarForm = {
+  format: string;
+  location: string;
+  purchaseDate: string;
+  price: string;
+  notes: string;
+};
+
+function toForm(book: Detail["book"]): EjemplarForm {
+  return {
+    format: book.format ?? "",
+    location: book.location ?? "",
+    purchaseDate: book.purchaseDate ?? "",
+    price: book.purchasePriceCents !== null ? String(book.purchasePriceCents / 100) : "",
+    notes: book.notes ?? "",
+  };
+}
+
 export default function BookDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [detail, setDetail] = useState<Detail | null>(null);
   const [pageInput, setPageInput] = useState("");
   const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState<EjemplarForm | null>(null);
 
   const load = useCallback(async () => {
     try {
-      setDetail(await api<Detail>(`/v1/library/${id}`));
+      const d = await api<Detail>(`/v1/library/${id}`);
+      setDetail(d);
+      setForm(toForm(d.book));
     } catch {
       router.back();
     }
@@ -99,6 +124,39 @@ export default function BookDetail() {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setDetail((d) => (d ? { ...d, book: { ...d.book, rating: next } } : d));
     await api(`/v1/library/${book.id}`, { method: "PATCH", body: { rating: next } });
+  }
+
+  async function toggleFavorite() {
+    const next = !book.favorite;
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setDetail((d) => (d ? { ...d, book: { ...d.book, favorite: next } } : d));
+    await api(`/v1/library/${book.id}`, { method: "PATCH", body: { favorite: next } });
+  }
+
+  const formDirty = form !== null && JSON.stringify(form) !== JSON.stringify(toForm(book));
+
+  async function saveEjemplar() {
+    if (!form) return;
+    const price = Number(form.price.replace(",", "."));
+    const patch = {
+      format: form.format.trim() || null,
+      location: form.location.trim() || null,
+      purchaseDate: /^\d{4}-\d{2}-\d{2}$/.test(form.purchaseDate.trim())
+        ? form.purchaseDate.trim()
+        : null,
+      purchasePriceCents:
+        form.price.trim() && Number.isFinite(price) && price >= 0 ? Math.round(price * 100) : null,
+      notes: form.notes.trim() || null,
+    };
+    setSaving(true);
+    try {
+      await api(`/v1/library/${book.id}`, { method: "PATCH", body: patch });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      Keyboard.dismiss();
+      await load();
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function saveProgress() {
@@ -144,7 +202,14 @@ export default function BookDetail() {
           </View>
         )}
         <View style={{ flex: 1, gap: 5, justifyContent: "center" }}>
-          <Text style={s.title}>{title}</Text>
+          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
+            <Text style={[s.title, { flex: 1 }]}>{title}</Text>
+            <Pressable onPress={() => void toggleFavorite()} hitSlop={10}>
+              <Text style={{ fontSize: 22, color: book.favorite ? colors.arcilla : colors.tinta3 }}>
+                {book.favorite ? "♥" : "♡"}
+              </Text>
+            </Pressable>
+          </View>
           {authors ? <Text style={s.authors}>{authors}</Text> : null}
           {edition?.series ? (
             <Pressable onPress={() => router.push("/collections")} hitSlop={6}>
@@ -257,6 +322,78 @@ export default function BookDetail() {
         </View>
       </View>
 
+      {/* Tu ejemplar: la parte inventario del coleccionista (plan §5.1) */}
+      {form && (
+        <View style={s.section}>
+          <Text style={s.sectionTitle}>Tu ejemplar</Text>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={{ flex: 1, gap: 5 }}>
+              <Text style={s.fieldLabel}>Formato</Text>
+              <TextInput
+                style={s.fieldInput}
+                value={form.format}
+                onChangeText={(v) => setForm({ ...form, format: v })}
+                placeholder="Tapa blanda…"
+                placeholderTextColor={colors.mut}
+              />
+            </View>
+            <View style={{ flex: 1, gap: 5 }}>
+              <Text style={s.fieldLabel}>Ubicación</Text>
+              <TextInput
+                style={s.fieldInput}
+                value={form.location}
+                onChangeText={(v) => setForm({ ...form, location: v })}
+                placeholder="Estantería A…"
+                placeholderTextColor={colors.mut}
+              />
+            </View>
+          </View>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={{ flex: 1, gap: 5 }}>
+              <Text style={s.fieldLabel}>Precio (€)</Text>
+              <TextInput
+                style={s.fieldInput}
+                value={form.price}
+                onChangeText={(v) => setForm({ ...form, price: v })}
+                placeholder="9,95"
+                placeholderTextColor={colors.mut}
+                keyboardType="decimal-pad"
+              />
+            </View>
+            <View style={{ flex: 1, gap: 5 }}>
+              <Text style={s.fieldLabel}>Fecha de compra</Text>
+              <TextInput
+                style={s.fieldInput}
+                value={form.purchaseDate}
+                onChangeText={(v) => setForm({ ...form, purchaseDate: v })}
+                placeholder="2026-07-10"
+                placeholderTextColor={colors.mut}
+              />
+            </View>
+          </View>
+          <View style={{ gap: 5 }}>
+            <Text style={s.fieldLabel}>Notas</Text>
+            <TextInput
+              style={[s.fieldInput, { minHeight: 70, textAlignVertical: "top" }]}
+              value={form.notes}
+              onChangeText={(v) => setForm({ ...form, notes: v })}
+              placeholder="Firmado, edición limitada, prestado a…"
+              placeholderTextColor={colors.mut}
+              multiline
+            />
+          </View>
+          {formDirty && (
+            <Pressable
+              style={[s.btn, { paddingVertical: 12, alignItems: "center" }, saving && { opacity: 0.5 }]}
+              disabled={saving}
+              onPress={() => void saveEjemplar()}
+            >
+              <Text style={s.btnText}>{saving ? "Guardando…" : "Guardar cambios"}</Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+
       {edition?.description ? (
         <View style={s.section}>
           <Text style={s.sectionTitle}>Sinopsis</Text>
@@ -301,6 +438,17 @@ const s = StyleSheet.create({
     paddingVertical: 7,
   },
   description: { color: colors.marfil, fontSize: 13.5, lineHeight: 20 },
+  fieldLabel: { color: colors.mut, fontSize: 11.5, fontWeight: "600" },
+  fieldInput: {
+    backgroundColor: colors.tinta,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    color: colors.papel,
+    fontSize: 13.5,
+  },
   barTrack: { height: 6, borderRadius: 99, backgroundColor: colors.tinta3, overflow: "hidden" },
   barFill: { height: 6, borderRadius: 99, backgroundColor: colors.ambar },
   input: {

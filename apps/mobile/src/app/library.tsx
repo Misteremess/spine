@@ -53,6 +53,7 @@ export default function Library() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [sortAz, setSortAz] = useState(false);
+  const [grid, setGrid] = useState(false);
 
   const visible = useMemo(() => {
     let list = items;
@@ -159,12 +160,23 @@ export default function Library() {
                 {sortAz ? "A–Z ✓" : "A–Z"}
               </Text>
             </Pressable>
+            <Pressable
+              onPress={() => setGrid((v) => !v)}
+              style={[s.filterChip, grid && { borderColor: colors.ambar }]}
+            >
+              <Text style={{ color: grid ? colors.ambar : colors.mut, fontSize: 12, fontWeight: "600" }}>
+                {grid ? "▤ Lista" : "▦ Portadas"}
+              </Text>
+            </Pressable>
           </ScrollView>
         </View>
       )}
 
       <FlatList
+        key={grid ? "grid" : "list"}
         data={visible}
+        numColumns={grid ? 3 : 1}
+        columnWrapperStyle={grid ? { gap: 10 } : undefined}
         keyExtractor={(it) => String(it.id)}
         contentContainerStyle={{ padding: 16, gap: 10, paddingBottom: 120 }}
         refreshControl={
@@ -216,6 +228,26 @@ export default function Library() {
         }
         renderItem={({ item }) => {
           const st = item.reading ? STATUS_LABEL[item.reading.status] : undefined;
+          if (grid) {
+            return (
+              <Pressable style={s.gridCell} onPress={() => router.push(`/book/${item.id}`)}>
+                {item.coverUrl ? (
+                  <Image source={{ uri: item.coverUrl }} style={s.gridCover} contentFit="cover" />
+                ) : (
+                  <View style={[s.gridCover, s.gridPlaceholder]}>
+                    <Text
+                      style={{ color: colors.mut, fontSize: 10.5, textAlign: "center", padding: 6 }}
+                      numberOfLines={4}
+                    >
+                      {item.title ?? "Sin título"}
+                    </Text>
+                  </View>
+                )}
+                {st && <View style={[s.gridDot, { backgroundColor: st.color }]} />}
+                {item.favorite && <Text style={s.gridHeart}>♥</Text>}
+              </Pressable>
+            );
+          }
           return (
             <Pressable style={s.card} onPress={() => router.push(`/book/${item.id}`)}>
               {item.coverUrl ? (
@@ -239,6 +271,7 @@ export default function Library() {
                   <Text style={s.meta}>{item.pages} págs.</Text>
                 ) : null}
               </View>
+              {item.favorite && <Text style={{ color: colors.arcilla, fontSize: 13 }}>♥</Text>}
               {st && (
                 <View style={[s.pill, { borderColor: st.color }]}>
                   <Text style={{ color: st.color, fontSize: 10, fontWeight: "600" }}>{st.text}</Text>
@@ -286,6 +319,35 @@ const s = StyleSheet.create({
     padding: 10,
   },
   cover: { width: 44, height: 64, borderRadius: 5, backgroundColor: colors.tinta3 },
+  gridCell: { flex: 1 / 3 },
+  gridCover: {
+    width: "100%",
+    aspectRatio: 2 / 3,
+    borderRadius: 8,
+    backgroundColor: colors.tinta2,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+  },
+  gridPlaceholder: { alignItems: "center", justifyContent: "center" },
+  gridDot: {
+    position: "absolute",
+    bottom: 6,
+    left: 6,
+    width: 9,
+    height: 9,
+    borderRadius: 99,
+    borderWidth: 1.5,
+    borderColor: colors.tinta,
+  },
+  gridHeart: {
+    position: "absolute",
+    top: 4,
+    right: 6,
+    color: colors.arcilla,
+    fontSize: 13,
+    textShadowColor: colors.tinta,
+    textShadowRadius: 3,
+  },
   coverPlaceholder: { alignItems: "center", justifyContent: "center" },
   title: { color: colors.papel, fontSize: 14.5, fontWeight: "600" },
   meta: { color: colors.mut, fontSize: 11.5 },
