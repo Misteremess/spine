@@ -48,12 +48,15 @@ echo "Subred: $SUBNET"
 echo "Ubuntu ARM: $IMG_ARM · Ubuntu x86: $IMG_X86"
 
 # Si ya existe (cazada a mano o en una ejecución anterior), no duplicar.
+# Ojo: con cero instancias la CLI no imprime nada — vacío significa 0.
 existing() {
-  oci compute instance list --compartment-id "$TENANCY" \
+  local n
+  n=$(oci compute instance list --compartment-id "$TENANCY" \
     --query "length(data[?\"display-name\"=='$DISPLAY_NAME' && \"lifecycle-state\"!='TERMINATED'])" \
-    --raw-output 2>/dev/null
+    --raw-output 2>/dev/null)
+  echo "${n:-0}"
 }
-if [ "$(existing)" != "0" ]; then
+if [ "$(existing)" -gt 0 ] 2>/dev/null; then
   echo "Ya existe una instancia '$DISPLAY_NAME'. Nada que cazar."
   exit 0
 fi
