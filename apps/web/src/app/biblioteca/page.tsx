@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/Shell";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 
 type Item = {
   id: number;
@@ -37,6 +37,9 @@ export default function Biblioteca() {
   const [items, setItems] = useState<Item[] | null>(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+  const [isbnInput, setIsbnInput] = useState("");
+  const [adding, setAdding] = useState(false);
+  const [addMsg, setAddMsg] = useState<{ text: string; ok: boolean } | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -50,6 +53,35 @@ export default function Biblioteca() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  async function addByIsbn(e: React.FormEvent) {
+    e.preventDefault();
+    const isbn = isbnInput.trim();
+    if (!isbn || adding) return;
+    setAdding(true);
+    setAddMsg(null);
+    try {
+      const res = await api<{ metadata: { title: string } }>("/v1/library", {
+        method: "POST",
+        body: { isbn },
+      });
+      setAddMsg({ text: `✓ «${res.metadata.title}» añadido`, ok: true });
+      setIsbnInput("");
+      await load();
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        setAddMsg({ text: "Ya tienes este libro en la biblioteca", ok: false });
+      } else if (err instanceof ApiError && err.status === 404) {
+        setAddMsg({ text: "Ninguna fuente conoce ese ISBN todavía — añádelo desde la app móvil", ok: false });
+      } else if (err instanceof ApiError && err.status === 400) {
+        setAddMsg({ text: "Eso no parece un ISBN válido", ok: false });
+      } else {
+        setAddMsg({ text: "No se pudo añadir. Inténtalo de nuevo", ok: false });
+      }
+    } finally {
+      setAdding(false);
+    }
+  }
 
   const visible = useMemo(() => {
     let list = items ?? [];
@@ -73,7 +105,28 @@ export default function Biblioteca() {
           <span className="muted" style={{ fontSize: 14 }}>
             {items?.length ?? "…"} libros
           </span>
+          <span style={{ flex: 1 }} />
+          <form style={{ display: "flex", gap: 8 }} onSubmit={addByIsbn}>
+            <input
+              style={{ width: 180, fontSize: 13.5, padding: "8px 11px" }}
+              placeholder="Añadir por ISBN"
+              value={isbnInput}
+              onChange={(e) => setIsbnInput(e.target.value)}
+            />
+            <button className="btn" style={{ padding: "8px 14px", fontSize: 13.5 }} disabled={!isbnInput.trim() || adding}>
+              {adding ? "…" : "Añadir"}
+            </button>
+          </form>
+          <Link href="/importar" className="muted" style={{ fontSize: 13 }}>
+            Importar de Goodreads
+          </Link>
         </div>
+
+        {addMsg && (
+          <p style={{ color: addMsg.ok ? "var(--salvia)" : "var(--arcilla)", fontSize: 13.5 }}>
+            {addMsg.text}
+          </p>
+        )}
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           <input

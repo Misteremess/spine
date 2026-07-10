@@ -16,9 +16,12 @@ export async function buildApp() {
   const app = Fastify({ logger: true });
 
   // El frontend web vive en otro origen; cookies de sesión via CORS.
+  // OJO: el default del plugin solo permite métodos "safelisted" — sin
+  // PATCH/DELETE explícitos, editar o borrar falla el preflight.
   await app.register(cors, {
     origin: [env.WEB_ORIGIN],
     credentials: true,
+    methods: ["GET", "HEAD", "POST", "PATCH", "DELETE"],
   });
 
   // Límite global por IP; protege sobre todo la cuota gratuita de Google

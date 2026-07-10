@@ -48,9 +48,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <Link href="/biblioteca" className="serif" style={{ fontSize: 20, color: "var(--ambar)" }}>
             Spine
           </Link>
-          <nav style={{ display: "flex", gap: 18, fontSize: 14, flex: 1 }}>
+          <nav style={{ display: "flex", gap: 18, fontSize: 14, flex: 1, flexWrap: "wrap" }}>
             <Link href="/biblioteca" style={{ color: "var(--marfil)" }}>
               Biblioteca
+            </Link>
+            <Link href="/colecciones" style={{ color: "var(--marfil)" }}>
+              Colecciones
+            </Link>
+            <Link href="/deseos" style={{ color: "var(--marfil)" }}>
+              Deseos
+            </Link>
+            <Link href="/stats" style={{ color: "var(--marfil)" }}>
+              Stats
             </Link>
           </nav>
           <span className="muted" style={{ fontSize: 13 }}>
