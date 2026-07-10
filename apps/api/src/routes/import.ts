@@ -4,7 +4,8 @@ import { z } from "zod";
 import { db, schema } from "../db/index";
 import { requireUser } from "../plugins/require-user";
 import { parseGoodreadsCsv, type GoodreadsRow } from "../services/goodreads";
-import { coverByIsbn, findInCatalog, upsertCatalog } from "../services/resolver";
+import { findInCatalog, upsertCatalog } from "../services/resolver";
+import { coverByIsbn } from "../services/sources";
 
 const BodySchema = z.object({ csv: z.string().min(1) });
 

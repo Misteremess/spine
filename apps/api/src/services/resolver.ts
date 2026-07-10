@@ -6,9 +6,15 @@
 import type { BookMetadata, ResolveResponse } from "@spine/shared";
 import { eq } from "drizzle-orm";
 import { db, schema } from "../db/index";
+import { enrichEdition } from "./enrich";
 import { mergeResults } from "./merge";
 import { extractSeries, seriesNameKey } from "./series";
-import { fromGoogleBooks, fromOpenLibrary } from "./sources";
+import {
+  coverByIsbn,
+  fromGoogleBooks,
+  fromOpenLibrary,
+  fromOpenLibrarySearch,
+} from "./sources";
 
 export async function findInCatalog(isbn13: string): Promise<BookMetadata | null> {
   const rows = await db
@@ -118,20 +124,6 @@ export async function upsertCatalog(meta: BookMetadata, sources: Record<string, 
   });
 }
 
-/** HEAD al índice de portadas por ISBN de OL; null si no hay imagen. */
-export async function coverByIsbn(isbn13: string): Promise<string | null> {
-  const url = `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg?default=false`;
-  try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), 5000);
-    const res = await fetch(url, { method: "HEAD", redirect: "follow", signal: ctrl.signal });
-    clearTimeout(t);
-    return res.ok ? url : null;
-  } catch {
-    return null;
-  }
-}
-
 async function logResolution(isbn13: string, resolved: boolean, source: string | null, ms: number) {
   try {
     await db.insert(schema.resolutionLog).values({ isbn13, resolved, source, ms });
@@ -145,6 +137,12 @@ export async function resolveIsbn(isbn13: string): Promise<ResolveResponse | nul
 
   const cached = await findInCatalog(isbn13);
   if (cached) {
+    // Los registros incompletos (escaneados cuando las fuentes fallaron o
+    // sabían menos) se enriquecen en segundo plano: la próxima consulta
+    // ya verá los huecos rellenos.
+    if (!cached.coverUrl || !cached.description || !cached.pages || cached.authors.length === 0) {
+      void enrichEdition(isbn13).catch(() => {});
+    }
     void logResolution(isbn13, true, "catalog", Date.now() - t0);
     return { metadata: cached, source: "catalog", cached: true };
   }
@@ -154,6 +152,11 @@ export async function resolveIsbn(isbn13: string): Promise<ResolveResponse | nul
     ol.status === "fulfilled" ? ol.value : null,
     gb.status === "fulfilled" ? gb.value : null,
   ];
+
+  // Si ninguna fuente directa responde, el buscador de OL como red final.
+  if (!results[0] && !results[1]) {
+    results.push(await fromOpenLibrarySearch(isbn13).catch(() => null));
+  }
 
   const merged = mergeResults(isbn13, results);
   if (!merged) {

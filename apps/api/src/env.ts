@@ -1,4 +1,17 @@
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { z } from "zod";
+
+// Cargar apps/api/.env SIEMPRE (tsx no lo hace solo): sin esto el server
+// arranca sin la key de Google Books y la cascada pierde la mitad de fuentes.
+const envFile = fileURLToPath(new URL("../.env", import.meta.url));
+if (existsSync(envFile)) {
+  try {
+    process.loadEnvFile(envFile);
+  } catch {
+    /* variables ya definidas en el entorno ganan */
+  }
+}
 
 const EnvSchema = z.object({
   DATABASE_URL: z.string().default("postgres://localhost:5432/spine_dev"),

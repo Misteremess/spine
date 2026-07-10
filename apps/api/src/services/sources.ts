@@ -108,11 +108,76 @@ export async function fromOpenLibrary(isbn13: string): Promise<SourceResult> {
   return { partial, source: "openlibrary" };
 }
 
+/**
+ * Cadena de portadas por ISBN, independiente de las fichas:
+ * 1. Índice de covers de OL (HEAD con default=false).
+ * 2. Portada directa de Google Books (existe para ~87% de los ISBNs
+ *    españoles que ni siquiera resuelven metadatos; si no hay imagen
+ *    devuelve un gif diminuto, de ahí el umbral de tamaño).
+ */
+export async function coverByIsbn(isbn13: string): Promise<string | null> {
+  const ol = `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg?default=false`;
+  try {
+    const res = await fetch(ol, {
+      method: "HEAD",
+      redirect: "follow",
+      signal: AbortSignal.timeout(5000),
+    });
+    if (res.ok) return ol;
+  } catch {
+    /* probamos la siguiente fuente */
+  }
+
+  const gb = `https://books.google.com/books/content?vid=ISBN${isbn13}&printsec=frontcover&img=1&zoom=1`;
+  try {
+    const res = await fetch(gb, { redirect: "follow", signal: AbortSignal.timeout(6000) });
+    if (res.ok && (await res.arrayBuffer()).byteLength > 1500) return gb;
+  } catch {
+    /* sin portada */
+  }
+  return null;
+}
+
+/**
+ * Último recurso de metadatos: el buscador de OL a veces conoce ISBNs que
+ * el endpoint /isbn/ no tiene enlazados (rescata ~10% de los fallos).
+ */
+export async function fromOpenLibrarySearch(isbn13: string): Promise<SourceResult> {
+  const url =
+    `https://openlibrary.org/search.json?q=isbn:${isbn13}` +
+    `&fields=title,author_name,cover_i,number_of_pages_median,publisher,first_publish_year&limit=1`;
+  const { status, data } = await fetchJson(url);
+  if (status !== 200 || !data || typeof data !== "object") return null;
+  const doc = (data as Record<string, any>).docs?.[0];
+  if (!doc || typeof doc.title !== "string") return null;
+
+  const partial: Partial<BookMetadata> = {
+    isbn13,
+    title: doc.title,
+    authors: Array.isArray(doc.author_name) ? doc.author_name.slice(0, 4) : undefined,
+    publisher: Array.isArray(doc.publisher) ? doc.publisher[0] : undefined,
+    pages:
+      typeof doc.number_of_pages_median === "number" && doc.number_of_pages_median > 0
+        ? doc.number_of_pages_median
+        : undefined,
+    publishedDate:
+      typeof doc.first_publish_year === "number" ? String(doc.first_publish_year) : undefined,
+    coverUrl: doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg` : undefined,
+  };
+  const hit = extractSeries(doc.title);
+  if (hit) {
+    partial.series = hit.name;
+    partial.seriesVolume = hit.volume;
+  }
+  return { partial, source: "openlibrary-search" };
+}
+
 export async function fromGoogleBooks(isbn13: string): Promise<SourceResult> {
   if (!env.GOOGLE_BOOKS_API_KEY) return null;
-  const url =
-    `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn13}` +
-    `&country=ES&key=${env.GOOGLE_BOOKS_API_KEY}`;
+  // Sin `country`: fijarlo a ES filtraba resultados que GB SÍ tiene
+  // (verificado: rescata el 58% de los ISBNs españoles no resueltos).
+  // Si GB exige país por la IP, se reintenta una vez con country=ES.
+  const base = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn13}&key=${env.GOOGLE_BOOKS_API_KEY}`;
 
   // GB a veces devuelve 200 con cero items para un ISBN que SÍ tiene
   // (intermitencia verificada en fase 0 y en producción): un reintento
@@ -120,7 +185,8 @@ export async function fromGoogleBooks(isbn13: string): Promise<SourceResult> {
   let vi: Record<string, any> | undefined;
   for (let attempt = 0; attempt < 2 && !vi; attempt++) {
     if (attempt > 0) await new Promise((r) => setTimeout(r, 400));
-    const { status, data } = await fetchJson(url);
+    let { status, data } = await fetchJson(base);
+    if (status === 403) ({ status, data } = await fetchJson(`${base}&country=ES`));
     if (status !== 200) return null;
     vi = (data as Record<string, any> | null)?.items?.[0]?.volumeInfo;
   }

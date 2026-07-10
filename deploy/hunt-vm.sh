@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Caza una VM Always Free en Oracle cuando no hay capacidad (error habitual
-# en regiones saturadas). Intenta la A1.Flex (2 OCPU/12 GB) cada ~3 min y,
-# uno de cada cinco intentos, también la E2.1.Micro: gana la primera.
+# en regiones saturadas). Intenta la A1.Flex (2 OCPU/12 GB) cada ~2 min;
+# con HUNT_MICRO=1 prueba también la E2.1.Micro uno de cada cinco intentos.
 #
 # Requiere la OCI CLI configurada (~/.oci/config) y una clave SSH en
 # ~/.ssh/spine_oracle.pub. Uso recomendado (evita que el Mac se duerma):
@@ -10,7 +10,8 @@ set -uo pipefail
 
 DISPLAY_NAME="spine-api"
 SSH_KEY_FILE="$HOME/.ssh/spine_oracle.pub"
-SLEEP_SECONDS=170
+SLEEP_SECONDS="${HUNT_SLEEP:-115}"
+HUNT_MICRO="${HUNT_MICRO:-0}"
 
 say_notify() {
   osascript -e "display notification \"$1\" with title \"Spine — caza de VM\"" 2>/dev/null || true
@@ -83,7 +84,7 @@ while true; do
   fi
   echo "[$stamp · intento $attempt] A1.Flex: $(echo "$out" | grep -o 'Out of capacity[^"]*\|LimitExceeded\|TooManyRequests' | head -1 || echo "sin hueco")"
 
-  if [ $((attempt % 5)) -eq 0 ]; then
+  if [ "$HUNT_MICRO" = "1" ] && [ $((attempt % 5)) -eq 0 ]; then
     out=$(try_launch "VM.Standard.E2.1.Micro" "$IMG_X86" "")
     if echo "$out" | grep -q '"lifecycle-state"'; then
       shape="E2.1.Micro (1 OCPU / 1 GB)"
