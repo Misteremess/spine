@@ -1,7 +1,7 @@
 import { toIsbn13 } from "@spine/shared";
 import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
-import { Stack, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   Alert,
@@ -16,8 +16,9 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { api } from "../lib/api";
-import { colors, fonts } from "../lib/theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { api } from "../../lib/api";
+import { colors, fonts } from "../../lib/theme";
 
 type Item = {
   id: number;
@@ -37,6 +38,7 @@ const PRIORITIES: { value: number; label: string; color: string }[] = [
 const prio = (v: number) => PRIORITIES.find((p) => p.value === v) ?? PRIORITIES[1]!;
 
 export default function Wishlist() {
+  const insets = useSafeAreaInsets();
   const [items, setItems] = useState<Item[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [input, setInput] = useState("");
@@ -111,7 +113,10 @@ export default function Wishlist() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={90}
     >
-      <Stack.Screen options={{ title: `Deseos · ${items.length}` }} />
+      <View style={[s.header, { paddingTop: insets.top + 14 }]}>
+        <Text style={s.h1}>Deseos</Text>
+        <Text style={{ color: colors.mut, fontSize: 14, fontVariant: ["tabular-nums"] }}>{items.length}</Text>
+      </View>
 
       <FlatList
         data={items}
@@ -225,6 +230,14 @@ export default function Wishlist() {
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
+  header: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 8,
+    paddingHorizontal: 18,
+    paddingBottom: 4,
+  },
+  h1: { color: colors.papel, fontSize: 26, fontFamily: fonts.serif },
   card: {
     flexDirection: "row",
     alignItems: "center",

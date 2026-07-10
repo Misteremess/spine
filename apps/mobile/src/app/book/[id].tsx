@@ -44,6 +44,8 @@ type Detail = {
     authors: string[];
     series: string | null;
     seriesVolume: number | null;
+    workId: number;
+    seriesId: number | null;
   } | null;
   reading: { id: number; status: ReadingStatus; startedAt: string | null; finishedAt: string | null } | null;
   lastProgress: { page: number | null; percent: number | null } | null;
@@ -212,10 +214,15 @@ export default function BookDetail() {
           </View>
           {authors ? <Text style={s.authors}>{authors}</Text> : null}
           {edition?.series ? (
-            <Pressable onPress={() => router.push("/collections")} hitSlop={6}>
+            <Pressable
+              onPress={() =>
+                edition.seriesId ? router.push(`/series/${edition.seriesId}`) : router.push("/collections")
+              }
+              hitSlop={6}
+            >
               <Text style={{ color: colors.ambar, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
                 ▦ {edition.series}
-                {edition.seriesVolume ? ` · tomo ${edition.seriesVolume}` : ""}
+                {edition.seriesVolume ? ` · tomo ${edition.seriesVolume}` : ""} ›
               </Text>
             </Pressable>
           ) : null}
@@ -401,12 +408,170 @@ export default function BookDetail() {
         </View>
       ) : null}
 
+      {edition?.workId ? <Reviews workId={edition.workId} /> : null}
+
       <Pressable style={s.deleteBtn} onPress={confirmDelete}>
         <Text style={{ color: colors.arcilla, fontFamily: fonts.sansSemi, fontSize: 14 }}>
           Eliminar de mi biblioteca
         </Text>
       </Pressable>
     </ScrollView>
+  );
+}
+
+/**
+ * Reseñas públicas de la obra: tu reseña (estrellas + texto) y las de la
+ * comunidad con la media. Las estrellas siguen el patrón de la valoración
+ * privada: toque = entera, segundo toque = media, tercero = quitar.
+ */
+function Reviews({ workId }: { workId: number }) {
+  type ReviewList = {
+    reviews: { id: number; rating: number; text: string | null; spoilers: boolean; userName: string; own: boolean; updatedAt: string }[];
+    count: number;
+    average: number | null;
+    mine: { rating: number; text: string | null; spoilers: boolean } | null;
+  };
+  const [data, setData] = useState<ReviewList | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [rating, setRatingInput] = useState(0);
+  const [text, setText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [showSpoilers, setShowSpoilers] = useState<Set<number>>(new Set());
+
+  const loadReviews = useCallback(async () => {
+    try {
+      setData(await api<ReviewList>(`/v1/works/${workId}/reviews`));
+    } catch {
+      /* las reseñas nunca rompen la ficha */
+    }
+  }, [workId]);
+
+  useEffect(() => {
+    void loadReviews();
+  }, [loadReviews]);
+
+  async function publish() {
+    if (rating < 1 || saving) return;
+    setSaving(true);
+    try {
+      await api(`/v1/works/${workId}/review`, {
+        method: "PUT",
+        body: { rating, text: text.trim() || undefined },
+      });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setEditing(false);
+      await loadReviews();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!data) return null;
+
+  const stars = (r: number, size = 14) => (
+    <Text style={{ color: colors.ambar, fontSize: size }}>
+      {"★".repeat(Math.floor(r / 2))}
+      {r % 2 === 1 ? "⯨" : ""}
+      <Text style={{ color: colors.tinta3 }}>{"★".repeat(5 - Math.ceil(r / 2))}</Text>
+    </Text>
+  );
+
+  return (
+    <View style={s.section}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <Text style={s.sectionTitle}>Reseñas</Text>
+        {data.average !== null && (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            {stars(Math.round(data.average))}
+            <Text style={{ color: colors.mut, fontSize: 11.5, fontVariant: ["tabular-nums"] }}>
+              {(data.average / 2).toFixed(1)} · {data.count}
+            </Text>
+          </View>
+        )}
+      </View>
+
+      {editing ? (
+        <View style={{ gap: 10 }}>
+          <View style={{ flexDirection: "row", gap: 6 }}>
+            {[1, 2, 3, 4, 5].map((star) => {
+              const glyph = rating >= star * 2 ? "★" : rating === star * 2 - 1 ? "⯨" : "☆";
+              return (
+                <Pressable
+                  key={star}
+                  hitSlop={6}
+                  onPress={() =>
+                    setRatingInput(rating === star * 2 ? star * 2 - 1 : rating === star * 2 - 1 ? 0 : star * 2)
+                  }
+                >
+                  <Text style={{ fontSize: 28, color: glyph === "☆" ? colors.tinta3 : colors.ambar }}>{glyph}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <TextInput
+            style={[s.fieldInput, { minHeight: 80, textAlignVertical: "top" }]}
+            value={text}
+            onChangeText={setText}
+            placeholder="¿Qué te ha parecido? (opcional)"
+            placeholderTextColor={colors.mut}
+            multiline
+          />
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <Pressable
+              style={[s.btn, { flex: 1, paddingVertical: 11, alignItems: "center" }, (rating < 1 || saving) && { opacity: 0.4 }]}
+              disabled={rating < 1 || saving}
+              onPress={() => void publish()}
+            >
+              <Text style={s.btnText}>{saving ? "Publicando…" : "Publicar reseña"}</Text>
+            </Pressable>
+            <Pressable style={{ justifyContent: "center", paddingHorizontal: 8 }} onPress={() => setEditing(false)}>
+              <Text style={{ color: colors.mut, fontSize: 13 }}>Cancelar</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : (
+        <Pressable
+          style={s.reviewCta}
+          onPress={() => {
+            setRatingInput(data.mine?.rating ?? 0);
+            setText(data.mine?.text ?? "");
+            setEditing(true);
+          }}
+        >
+          <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>
+            {data.mine ? "✎ Editar tu reseña" : "✎ Escribir una reseña"}
+          </Text>
+        </Pressable>
+      )}
+
+      {data.reviews.map((r) => {
+        const hidden = r.spoilers && !r.own && !showSpoilers.has(r.id);
+        return (
+          <View key={r.id} style={s.reviewCard}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+              <Text style={{ color: colors.papel, fontSize: 12.5, fontFamily: fonts.sansSemi, flex: 1 }}>
+                {r.own ? "Tu reseña" : r.userName}
+              </Text>
+              {stars(r.rating, 12)}
+            </View>
+            {r.text ? (
+              hidden ? (
+                <Pressable onPress={() => setShowSpoilers((prev) => new Set(prev).add(r.id))}>
+                  <Text style={{ color: colors.mut, fontSize: 12.5, fontStyle: "italic" }}>
+                    Contiene spoilers · toca para leer
+                  </Text>
+                </Pressable>
+              ) : (
+                <Text style={{ color: colors.marfil, fontSize: 13, lineHeight: 19 }}>{r.text}</Text>
+              )
+            ) : null}
+          </View>
+        );
+      })}
+      {data.count === 0 && !editing && (
+        <Text style={{ color: colors.mut, fontSize: 12 }}>Nadie ha reseñado este libro todavía. Estrena tú.</Text>
+      )}
+    </View>
   );
 }
 
@@ -470,4 +635,13 @@ const s = StyleSheet.create({
   },
   btnText: { color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 14 },
   deleteBtn: { alignItems: "center", paddingVertical: 12 },
+  reviewCta: { paddingVertical: 2 },
+  reviewCard: {
+    backgroundColor: colors.tinta,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 10,
+    padding: 11,
+    gap: 5,
+  },
 });

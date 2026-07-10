@@ -113,14 +113,18 @@ export default function Collections() {
 
           return (
             <View style={s.card}>
-              <View style={{ flexDirection: "row", alignItems: "baseline", gap: 8 }}>
+              <Pressable
+                style={{ flexDirection: "row", alignItems: "baseline", gap: 8 }}
+                onPress={() => router.push(`/series/${item.series.id}`)}
+              >
                 <Text style={s.name} numberOfLines={1}>
                   {item.series.name}
                 </Text>
                 <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansBold }}>
                   {ownedByNumber.size} de {total ?? "?"}
                 </Text>
-              </View>
+                <Text style={{ color: colors.mut, fontSize: 15, marginLeft: "auto" }}>›</Text>
+              </Pressable>
 
               <View style={s.barTrack}>
                 <View style={[s.barFill, { width: `${Math.min(100, pct)}%` }]} />

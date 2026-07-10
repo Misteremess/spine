@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { router, Stack, useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import {
   FlatList,
@@ -11,9 +11,9 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { api } from "../lib/api";
-import { authClient } from "../lib/auth";
-import { colors, fonts } from "../lib/theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { api } from "../../lib/api";
+import { colors, fonts } from "../../lib/theme";
 
 type Item = {
   id: number;
@@ -48,6 +48,7 @@ const FILTERS: { key: string; label: string }[] = [
 const fold = (s: string) => s.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
 
 export default function Library() {
+  const insets = useSafeAreaInsets();
   const [items, setItems] = useState<Item[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [query, setQuery] = useState("");
@@ -86,38 +87,18 @@ export default function Library() {
     }, [load])
   );
 
-  async function signOut() {
-    await authClient.signOut();
-    router.replace("/login");
-  }
-
   return (
-    <View style={s.screen}>
-      <Stack.Screen
-        options={{
-          title: `Biblioteca · ${items.length}`,
-          headerLeft: () => (
-            <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
-              <Pressable onPress={() => router.push("/collections")} hitSlop={12}>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>▦ Series</Text>
-              </Pressable>
-              <Pressable onPress={() => router.push("/stats")} hitSlop={12}>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>✦ Stats</Text>
-              </Pressable>
-            </View>
-          ),
-          headerRight: () => (
-            <View style={{ flexDirection: "row", gap: 18, alignItems: "center" }}>
-              <Pressable onPress={() => router.push("/wishlist")} hitSlop={12}>
-                <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>♡ Deseos</Text>
-              </Pressable>
-              <Pressable onPress={signOut} hitSlop={12}>
-                <Text style={{ color: colors.mut, fontSize: 13 }}>Salir</Text>
-              </Pressable>
-            </View>
-          ),
-        }}
-      />
+    <View style={[s.screen, { paddingTop: insets.top + 14 }]}>
+      {/* Cabecera propia (las pestañas no llevan cabecera nativa) */}
+      <View style={s.header}>
+        <View style={{ flexDirection: "row", alignItems: "baseline", gap: 8 }}>
+          <Text style={s.h1}>Biblioteca</Text>
+          <Text style={{ color: colors.mut, fontSize: 14, fontVariant: ["tabular-nums"] }}>{items.length}</Text>
+        </View>
+        <Pressable onPress={() => router.push("/collections")} hitSlop={10}>
+          <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>▦ Sagas</Text>
+        </Pressable>
+      </View>
 
       {/* Buscador + filtros (aparecen a partir de unos cuantos libros) */}
       {items.length > 5 && (
@@ -282,15 +263,20 @@ export default function Library() {
         }}
       />
 
-      <Pressable style={s.fab} onPress={() => router.push("/scanner")}>
-        <Text style={s.fabText}>▣ Escanear</Text>
-      </Pressable>
     </View>
   );
 }
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 18,
+    paddingBottom: 4,
+  },
+  h1: { color: colors.papel, fontSize: 26, fontFamily: fonts.serif },
   search: {
     backgroundColor: colors.tinta2,
     borderWidth: 1,
@@ -357,19 +343,4 @@ const s = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 3,
   },
-  fab: {
-    position: "absolute",
-    bottom: 28,
-    alignSelf: "center",
-    backgroundColor: colors.ambar,
-    borderRadius: 99,
-    paddingHorizontal: 26,
-    paddingVertical: 14,
-    shadowColor: colors.ambar,
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
-  },
-  fabText: { color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 15 },
 });

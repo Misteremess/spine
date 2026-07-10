@@ -45,10 +45,11 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: colors.tinta },
         }}
       >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="library" options={{ title: "Biblioteca", headerBackVisible: false }} />
         <Stack.Screen name="scanner" options={{ title: "Escáner", presentation: "fullScreenModal" }} />
+        <Stack.Screen name="notifications" options={{ title: "Avisos" }} />
+        <Stack.Screen name="clubs" options={{ title: "Clubs de lectura" }} />
       </Stack>
     </>
   );

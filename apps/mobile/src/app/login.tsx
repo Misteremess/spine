@@ -33,7 +33,7 @@ export default function Login() {
       setError(res.error.message ?? "No se pudo iniciar sesión");
       return;
     }
-    router.replace("/library");
+    router.replace("/");
   }
 
   return (
