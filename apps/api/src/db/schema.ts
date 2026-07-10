@@ -17,6 +17,7 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -43,7 +44,34 @@ export const series = pgTable("series", {
   type: seriesType("type").notNull().default("saga"),
   status: seriesStatus("status").notNull().default("unknown"),
   totalVolumes: integer("total_volumes"),
+  /* Ficha enriquecida (AniList + radar de Google Books). */
+  anilistId: integer("anilist_id"),
+  coverUrl: text("cover_url"),
+  description: text("description"),
+  /** Último tomo detectado como publicado (radar de novedades). */
+  latestVolume: integer("latest_volume"),
+  latestVolumeDate: text("latest_volume_date"),
+  /** Última pasada del radar; null = nunca comprobada. */
+  checkedAt: timestamp("checked_at"),
 });
+
+/** Tomos detectados por el radar de novedades (uno por serie+número). */
+export const seriesReleases = pgTable(
+  "series_releases",
+  {
+    id: serial("id").primaryKey(),
+    seriesId: integer("series_id")
+      .notNull()
+      .references(() => series.id, { onDelete: "cascade" }),
+    volumeNumber: integer("volume_number").notNull(),
+    title: text("title").notNull(),
+    isbn13: varchar("isbn13", { length: 13 }),
+    publishedDate: text("published_date"),
+    coverUrl: text("cover_url"),
+    discoveredAt: timestamp("discovered_at").notNull().defaultNow(),
+  },
+  (t) => [unique().on(t.seriesId, t.volumeNumber)]
+);
 
 export const works = pgTable("works", {
   id: serial("id").primaryKey(),
@@ -217,6 +245,22 @@ export const progressEntries = pgTable("progress_entries", {
   page: integer("page"),
   percent: integer("percent"),
   note: text("note"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+/** Avisos in-app: nuevos tomos de tus sagas, actividad de tus clubs… */
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  /** new_volume · upcoming_volume · club_post … */
+  type: text("type").notNull(),
+  title: text("title").notNull(),
+  body: text("body"),
+  /** Contexto para navegar al tocar: { seriesId, volume, isbn13… } */
+  data: jsonb("data").$type<Record<string, unknown>>().default({}),
+  readAt: timestamp("read_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

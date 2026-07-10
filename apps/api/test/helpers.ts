@@ -7,7 +7,8 @@ export async function resetDb() {
   await db.execute(sql`
     TRUNCATE "user", session, account, verification,
       publishers, authors, series, works, work_authors, editions, resolution_log,
-      user_books, readings, progress_entries, wishlist_items
+      user_books, readings, progress_entries, wishlist_items,
+      series_releases, notifications
     RESTART IDENTITY CASCADE
   `);
 }

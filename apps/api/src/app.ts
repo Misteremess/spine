@@ -8,6 +8,7 @@ import { env } from "./env";
 import { collectionsRoutes } from "./routes/collections";
 import { importRoutes } from "./routes/import";
 import { libraryRoutes } from "./routes/library";
+import { notificationsRoutes, seriesRoutes } from "./routes/series";
 import { statsRoutes } from "./routes/stats";
 import { wishlistRoutes } from "./routes/wishlist";
 import { resolveIsbn } from "./services/resolver";
@@ -105,6 +106,8 @@ export async function buildApp() {
   app.register(async (scope) => collectionsRoutes(scope));
   app.register(async (scope) => statsRoutes(scope));
   app.register(async (scope) => importRoutes(scope));
+  app.register(async (scope) => seriesRoutes(scope));
+  app.register(async (scope) => notificationsRoutes(scope));
 
   return app;
 }
