@@ -64,7 +64,9 @@ export default function Scanner() {
     lastScanAt.current = now;
     seen.current.add(isbn13);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    setCards((cs) => [{ isbn13, state: "loading" }, ...cs]);
+    // Reemplaza cualquier tarjeta previa del mismo ISBN (p.ej. un reintento
+    // tras error) para que la key nunca se duplique en la lista.
+    setCards((cs) => [{ isbn13, state: "loading" }, ...cs.filter((c) => c.isbn13 !== isbn13)]);
 
     // Modo wishlist: el código va a la lista de deseos con sus datos reales.
     if (toWishlist) {
