@@ -5,6 +5,20 @@ import { z } from "zod";
 import { db, schema } from "../db/index";
 import { requireUser } from "../plugins/require-user";
 import { resolveIsbn } from "../services/resolver";
+import { seriesNameKey } from "../services/series";
+import { refreshSeries } from "../services/series-info";
+
+/** Tras añadir un libro con serie, refresca la ficha de la saga en segundo
+ *  plano (total de tomos, portadas de los que faltan, novedades). */
+async function refreshSeriesForEdition(editionId: number) {
+  const [row] = await db
+    .select({ seriesId: schema.works.seriesId })
+    .from(schema.editions)
+    .innerJoin(schema.works, eq(schema.editions.workId, schema.works.id))
+    .where(eq(schema.editions.id, editionId))
+    .limit(1);
+  if (row?.seriesId) void refreshSeries(row.seriesId).catch(() => {});
+}
 
 const AddByIsbnSchema = z.object({
   isbn: z.string().min(10).max(17),
@@ -115,6 +129,10 @@ export function libraryRoutes(app: FastifyInstance) {
       .returning();
     if (!book) return reply.code(500).send({ error: "insert_failed" });
     await db.insert(schema.readings).values({ userBookId: book.id });
+
+    // Si el libro pertenece a una saga, actualiza su ficha en segundo plano
+    // para que la colección salga con total real y portadas de lo que falta.
+    void refreshSeriesForEdition(edition.id);
 
     return reply.code(201).send({ userBook: book, metadata: resolved.metadata, source: resolved.source });
   });
@@ -279,6 +297,90 @@ export function libraryRoutes(app: FastifyInstance) {
     if (!book) return reply.code(404).send({ error: "not_found" });
     await db.delete(schema.userBooks).where(eq(schema.userBooks.id, id));
     return reply.code(204).send();
+  });
+
+  /**
+   * Corregir/asignar la saga de un libro a mano (plan §5.5): resuelve el
+   * caso de sagas no detectadas ("La Rueda del Tiempo") y tomos metidos en
+   * la variante equivocada ("Rent-a-Girlfriend" vs "…Really Shy"). Como la
+   * obra es del catálogo compartido, la corrección solo se aplica si NADIE
+   * más tiene esa edición (para no reescribir la serie de otros usuarios);
+   * si la comparten, se clona la obra para este ejemplar.
+   */
+  const SeriesSchema = z.object({
+    series: z.string().trim().max(200).nullable(),
+    volume: z.number().int().min(1).max(1000).nullable().optional(),
+  });
+  app.patch<{ Params: { id: string } }>("/v1/library/:id/series", async (req, reply) => {
+    const id = Number(req.params.id);
+    const body = SeriesSchema.parse(req.body);
+    const book = await ownedBook(req.user.id, id);
+    if (!book) return reply.code(404).send({ error: "not_found" });
+    if (!book.editionId) {
+      return reply.code(400).send({ error: "manual_book", message: "Este libro no es del catálogo" });
+    }
+
+    let seriesId: number | null = null;
+    if (body.series) {
+      const key = seriesNameKey(body.series);
+      const [ser] = await db
+        .insert(schema.series)
+        .values({ name: body.series, nameKey: key })
+        .onConflictDoUpdate({ target: schema.series.nameKey, set: { nameKey: key } })
+        .returning({ id: schema.series.id });
+      seriesId = ser?.id ?? null;
+    }
+
+    const [ed] = await db
+      .select({ id: schema.editions.id, workId: schema.editions.workId })
+      .from(schema.editions)
+      .where(eq(schema.editions.id, book.editionId))
+      .limit(1);
+    if (!ed) return reply.code(404).send({ error: "not_found" });
+
+    // ¿Comparten esta edición otros usuarios? Si sí, aislamos clonando la obra.
+    const sharers = await db
+      .select({ id: schema.userBooks.id })
+      .from(schema.userBooks)
+      .where(and(eq(schema.userBooks.editionId, ed.id), eq(schema.userBooks.userId, req.user.id)));
+    const others = await db
+      .select({ id: schema.userBooks.id })
+      .from(schema.userBooks)
+      .where(eq(schema.userBooks.editionId, ed.id));
+    const shared = others.length > sharers.length;
+
+    if (shared) {
+      const [orig] = await db.select().from(schema.works).where(eq(schema.works.id, ed.workId)).limit(1);
+      const [clone] = await db
+        .insert(schema.works)
+        .values({
+          title: orig?.title ?? "",
+          type: orig?.type ?? "book",
+          description: orig?.description ?? null,
+          seriesId,
+          seriesPosition: body.volume ?? null,
+        })
+        .returning({ id: schema.works.id });
+      if (clone && orig) {
+        const authors = await db
+          .select({ authorId: schema.workAuthors.authorId })
+          .from(schema.workAuthors)
+          .where(eq(schema.workAuthors.workId, orig.id));
+        for (const a of authors) {
+          await db.insert(schema.workAuthors).values({ workId: clone.id, authorId: a.authorId }).onConflictDoNothing();
+        }
+        await db.update(schema.editions).set({ workId: clone.id, volumeNumber: body.volume ?? null }).where(eq(schema.editions.id, ed.id));
+      }
+    } else {
+      await db
+        .update(schema.works)
+        .set({ seriesId, seriesPosition: body.volume ?? null })
+        .where(eq(schema.works.id, ed.workId));
+      await db.update(schema.editions).set({ volumeNumber: body.volume ?? null }).where(eq(schema.editions.id, ed.id));
+    }
+
+    if (seriesId) void refreshSeries(seriesId).catch(() => {});
+    return { ok: true, seriesId };
   });
 
   /**

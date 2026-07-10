@@ -5,10 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { api } from "@/lib/api";
 
-type Volume = { volume: number | null; userBookId: number; title: string; status: string };
+type Volume = { volume: number | null; userBookId: number; title: string; coverUrl: string | null; status: string };
 
 type Collection = {
-  series: { id: number; name: string; totalVolumes: number | null };
+  series: { id: number; name: string; totalVolumes: number | null; latestVolume: number | null; coverUrl: string | null };
   volumes: Volume[];
   ownedCount: number;
   maxOwned: number;
@@ -62,12 +62,13 @@ export default function Colecciones() {
 
         {(collections ?? []).map((c) => {
           const total = c.series.totalVolumes;
+          const known = total ?? c.series.latestVolume;
           const ownedByNumber = new Map<number, Volume[]>();
           for (const v of c.volumes) {
             if (v.volume === null) continue;
             ownedByNumber.set(v.volume, [...(ownedByNumber.get(v.volume) ?? []), v]);
           }
-          const horizon = total ?? c.maxOwned;
+          const horizon = Math.max(total ?? 0, c.series.latestVolume ?? 0, c.maxOwned);
           const pct = horizon > 0 ? Math.min(100, Math.round((ownedByNumber.size / horizon) * 100)) : 0;
           const editing = editingId === c.series.id;
 
@@ -78,7 +79,7 @@ export default function Colecciones() {
                   {c.series.name} <span style={{ color: "var(--mut)", fontSize: 15 }}>›</span>
                 </Link>
                 <span style={{ color: "var(--ambar)", fontSize: 13.5, fontWeight: 700 }}>
-                  {ownedByNumber.size} de {total ?? "?"}
+                  {ownedByNumber.size} de {known ?? "?"}
                 </span>
               </div>
 
@@ -95,9 +96,9 @@ export default function Colecciones() {
                         key={n}
                         title={`Tomo ${n}: te falta — añadir a deseos`}
                         style={{
-                          width: 34,
-                          height: 34,
-                          borderRadius: 8,
+                          width: 36,
+                          height: 52,
+                          borderRadius: 5,
                           border: "1px dashed rgba(193,85,61,.55)",
                           color: "var(--arcilla)",
                           fontSize: 12,
@@ -110,25 +111,61 @@ export default function Colecciones() {
                     );
                   }
                   const read = owners.some((o) => o.status === "finished");
-                  const bg = read ? "var(--salvia)" : "var(--ambar)";
+                  const cover = owners.find((o) => o.coverUrl)?.coverUrl ?? null;
                   return (
                     <Link
                       key={n}
                       href={`/libro/${owners[0]!.userBookId}`}
                       title={owners[0]!.title}
                       style={{
-                        width: 34,
-                        height: 34,
-                        borderRadius: 8,
-                        background: bg,
+                        position: "relative",
+                        width: 36,
+                        height: 52,
+                        borderRadius: 5,
+                        overflow: "hidden",
+                        background: cover ? `center/cover url(${cover})` : read ? "var(--salvia)" : "var(--ambar)",
                         color: "var(--ink-on-accent)",
                         fontSize: 12,
                         fontWeight: 700,
                         display: "grid",
-                        placeItems: "center",
+                        placeItems: cover ? "end end" : "center",
                       }}
                     >
-                      {n}
+                      <span
+                        style={
+                          cover
+                            ? {
+                                background: "rgba(20,18,15,.82)",
+                                color: "var(--papel)",
+                                fontSize: 9,
+                                padding: "0 3px",
+                                borderRadius: 3,
+                                margin: 1,
+                              }
+                            : undefined
+                        }
+                      >
+                        {n}
+                      </span>
+                      {read && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: 1,
+                            left: 1,
+                            background: "var(--salvia)",
+                            color: "var(--ink-on-accent)",
+                            fontSize: 8,
+                            width: 13,
+                            height: 13,
+                            borderRadius: 3,
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          ✓
+                        </span>
+                      )}
                     </Link>
                   );
                 })}

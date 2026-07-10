@@ -1,7 +1,7 @@
 import { toIsbn13 } from "@spine/shared";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { api, ApiError } from "../lib/api";
@@ -17,8 +17,11 @@ type Card = {
 /**
  * Escáner en ráfaga (plan §8): la cámara nunca se cierra. Cada código
  * capturado se apila abajo mientras se resuelve en segundo plano.
+ * Con `?target=wishlist` los códigos van a la lista de deseos.
  */
 export default function Scanner() {
+  const { target } = useLocalSearchParams<{ target?: string }>();
+  const toWishlist = target === "wishlist";
   const [permission, requestPermission] = useCameraPermissions();
   const [cards, setCards] = useState<Card[]>([]);
   const seen = useRef(new Set<string>());
@@ -62,6 +65,25 @@ export default function Scanner() {
     seen.current.add(isbn13);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     setCards((cs) => [{ isbn13, state: "loading" }, ...cs]);
+
+    // Modo wishlist: el código va a la lista de deseos con sus datos reales.
+    if (toWishlist) {
+      try {
+        const res = await api<{ item: { title: string | null } }>("/v1/wishlist", {
+          method: "POST",
+          body: { isbn: isbn13, priority: 2 },
+        });
+        patchCard(isbn13, { state: "added", title: res.item?.title ?? undefined });
+        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 404) patchCard(isbn13, { state: "notfound" });
+        else {
+          patchCard(isbn13, { state: "error" });
+          seen.current.delete(isbn13);
+        }
+      }
+      return;
+    }
 
     try {
       const res = await api<{ metadata: { title: string; coverUrl: string | null } }>("/v1/library", {

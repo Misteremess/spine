@@ -49,6 +49,11 @@ type Detail = {
   readCount: number;
   missing: number[];
   upcoming: { volume: number; title: string | null; publishedDate: string | null; isbn13: string | null }[];
+  reviews: {
+    average: number | null;
+    count: number;
+    items: { id: number; rating: number; text: string | null; spoilers: boolean; userName: string; own: boolean }[];
+  };
 };
 
 const STATUS_LABEL = {
@@ -122,7 +127,9 @@ export default function SeriesDetail() {
     );
   }
 
-  const { series, volumes, unnumbered, ownedCount, readCount, missing, upcoming } = detail;
+  const { series, volumes, unnumbered, ownedCount, readCount, missing, upcoming, reviews } = detail;
+  const stars = (r: number) =>
+    "★".repeat(Math.floor(r / 2)) + (r % 2 ? "⯨" : "") + "☆".repeat(5 - Math.ceil(r / 2));
   const st = STATUS_LABEL[series.status];
   const horizon = Math.max(series.totalVolumes ?? 0, volumes.length);
   const pct = horizon > 0 ? Math.round((ownedCount / horizon) * 100) : 0;
@@ -227,9 +234,21 @@ export default function SeriesDetail() {
                 </View>
               );
             }
+            // Hueco: si el radar tiene su portada, la mostramos atenuada
+            // (se ven los tomos que aún no tienes) con marco arcilla punteado.
             return (
               <Pressable key={v.volume} style={[s.tomoBase, s.tomoGap]} onPress={() => wish(v, series.name)}>
-                <Text style={{ color: colors.arcilla, fontSize: 12, fontFamily: fonts.sansSemi }}>{v.volume}</Text>
+                {v.coverUrl ? (
+                  <>
+                    <Image source={{ uri: v.coverUrl }} style={s.tomoCover} contentFit="cover" />
+                    <View style={s.gapOverlay} />
+                    <View style={s.gapNum}>
+                      <Text style={{ color: colors.papel, fontSize: 9, fontFamily: fonts.sansBold }}>{v.volume}</Text>
+                    </View>
+                  </>
+                ) : (
+                  <Text style={{ color: colors.arcilla, fontSize: 12, fontFamily: fonts.sansSemi }}>{v.volume}</Text>
+                )}
               </Pressable>
             );
           })}
@@ -259,6 +278,44 @@ export default function SeriesDetail() {
           <Text style={{ color: colors.marfil, fontSize: 13.5, lineHeight: 20 }}>{series.description}</Text>
         </View>
       ) : null}
+
+      {/* Reseñas de la comunidad (agregadas de todos los tomos de la saga) */}
+      <View style={s.section}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <Text style={s.sectionTitle}>Reseñas de la saga</Text>
+          {reviews.average !== null && (
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+              <Text style={{ color: colors.ambar, fontSize: 14 }}>{stars(Math.round(reviews.average))}</Text>
+              <Text style={{ color: colors.mut, fontSize: 11.5, fontVariant: ["tabular-nums"] }}>
+                {(reviews.average / 2).toFixed(1)} · {reviews.count}
+              </Text>
+            </View>
+          )}
+        </View>
+        {reviews.count === 0 ? (
+          <Text style={{ color: colors.mut, fontSize: 12.5 }}>
+            Aún no hay reseñas de esta saga. Reseña sus tomos desde su ficha.
+          </Text>
+        ) : (
+          reviews.items.slice(0, 6).map((r) => (
+            <View key={r.id} style={s.reviewCard}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                <Text style={{ color: colors.papel, fontSize: 12.5, fontFamily: fonts.sansSemi, flex: 1 }}>
+                  {r.own ? "Tu reseña" : r.userName}
+                </Text>
+                <Text style={{ color: colors.ambar, fontSize: 12 }}>{stars(r.rating)}</Text>
+              </View>
+              {r.text && !r.spoilers ? (
+                <Text style={{ color: colors.marfil, fontSize: 13, lineHeight: 19 }} numberOfLines={4}>
+                  {r.text}
+                </Text>
+              ) : r.text ? (
+                <Text style={{ color: colors.mut, fontSize: 12.5, fontStyle: "italic" }}>Contiene spoilers</Text>
+              ) : null}
+            </View>
+          ))
+        )}
+      </View>
 
       <Pressable
         style={[s.refreshBtn, refreshingRadar && { opacity: 0.5 }]}
@@ -330,7 +387,16 @@ const s = StyleSheet.create({
     paddingHorizontal: 4,
     paddingVertical: 1,
   },
-  tomoGap: { borderColor: "rgba(193,85,61,.55)", borderStyle: "dashed" },
+  tomoGap: { borderColor: "rgba(193,85,61,.7)", borderStyle: "dashed", overflow: "hidden" },
+  gapOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(20,18,15,.45)" },
+  gapNum: {
+    position: "absolute",
+    bottom: 2,
+    right: 2,
+    backgroundColor: "rgba(193,85,61,.9)",
+    borderRadius: 3,
+    paddingHorizontal: 3,
+  },
   readBadge: {
     position: "absolute",
     top: 2,
@@ -344,4 +410,12 @@ const s = StyleSheet.create({
   },
   tomoUpcoming: { borderColor: "rgba(217,164,65,.5)", borderStyle: "dotted" },
   refreshBtn: { alignItems: "center", gap: 3, paddingVertical: 8 },
+  reviewCard: {
+    backgroundColor: colors.tinta,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 10,
+    padding: 11,
+    gap: 5,
+  },
 });

@@ -53,11 +53,13 @@ export function wishlistRoutes(app: FastifyInstance) {
     const body = AddSchema.parse(req.body);
 
     let editionId: number | null = null;
+    let resolvedTitle: string | null = null;
     if (body.isbn) {
       const isbn13 = toIsbn13(body.isbn);
       if (!isbn13) return reply.code(400).send({ error: "invalid_isbn" });
       const resolved = await resolveIsbn(isbn13);
       if (resolved) {
+        resolvedTitle = resolved.metadata.title;
         const [ed] = await db
           .select({ id: schema.editions.id })
           .from(schema.editions)
@@ -78,7 +80,7 @@ export function wishlistRoutes(app: FastifyInstance) {
         notes: body.notes ?? null,
       })
       .returning();
-    return reply.code(201).send({ item });
+    return reply.code(201).send({ item: { ...item, title: item?.title ?? resolvedTitle } });
   });
 
   /** "Lo compré": pasa de la wishlist a la biblioteca en un toque (plan §8). */

@@ -83,6 +83,9 @@ export default function BookDetail() {
   const [pageInput, setPageInput] = useState("");
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<EjemplarForm | null>(null);
+  const [editingSaga, setEditingSaga] = useState(false);
+  const [sagaName, setSagaName] = useState("");
+  const [sagaVol, setSagaVol] = useState("");
 
   const load = useCallback(async () => {
     try {
@@ -155,6 +158,26 @@ export default function BookDetail() {
       await api(`/v1/library/${book.id}`, { method: "PATCH", body: patch });
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Keyboard.dismiss();
+      await load();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function saveSaga() {
+    if (!edition) return;
+    const vol = Number(sagaVol);
+    setSaving(true);
+    try {
+      await api(`/v1/library/${book.id}/series`, {
+        method: "PATCH",
+        body: {
+          series: sagaName.trim() || null,
+          volume: Number.isInteger(vol) && vol >= 1 ? vol : null,
+        },
+      });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setEditingSaga(false);
       await load();
     } finally {
       setSaving(false);
@@ -328,6 +351,72 @@ export default function BookDetail() {
           ) : null}
         </View>
       </View>
+
+      {/* Saga: asignar o corregir la serie a mano (solo libros de catálogo) */}
+      {edition && (
+        <View style={s.section}>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <Text style={s.sectionTitle}>Saga</Text>
+            {!editingSaga && (
+              <Pressable
+                hitSlop={8}
+                onPress={() => {
+                  setSagaName(edition.series ?? "");
+                  setSagaVol(edition.seriesVolume ? String(edition.seriesVolume) : "");
+                  setEditingSaga(true);
+                }}
+              >
+                <Text style={{ color: colors.ambar, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
+                  {edition.series ? "Cambiar" : "Asignar"}
+                </Text>
+              </Pressable>
+            )}
+          </View>
+          {editingSaga ? (
+            <View style={{ gap: 10 }}>
+              <TextInput
+                style={s.fieldInput}
+                value={sagaName}
+                onChangeText={setSagaName}
+                placeholder="Nombre de la saga (vacío = ninguna)"
+                placeholderTextColor={colors.mut}
+                autoFocus
+              />
+              <TextInput
+                style={s.fieldInput}
+                value={sagaVol}
+                onChangeText={setSagaVol}
+                placeholder="Nº de tomo (opcional)"
+                placeholderTextColor={colors.mut}
+                keyboardType="number-pad"
+              />
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                <Pressable
+                  style={[s.btn, { flex: 1, paddingVertical: 11, alignItems: "center" }, saving && { opacity: 0.5 }]}
+                  disabled={saving}
+                  onPress={() => void saveSaga()}
+                >
+                  <Text style={s.btnText}>{saving ? "Guardando…" : "Guardar saga"}</Text>
+                </Pressable>
+                <Pressable style={{ justifyContent: "center", paddingHorizontal: 8 }} onPress={() => setEditingSaga(false)}>
+                  <Text style={{ color: colors.mut, fontSize: 13 }}>Cancelar</Text>
+                </Pressable>
+              </View>
+            </View>
+          ) : edition.series ? (
+            <Pressable onPress={() => edition.seriesId && router.push(`/series/${edition.seriesId}`)}>
+              <Text style={{ color: colors.papel, fontSize: 14 }}>
+                ▦ {edition.series}
+                {edition.seriesVolume ? ` · tomo ${edition.seriesVolume}` : ""}
+              </Text>
+            </Pressable>
+          ) : (
+            <Text style={{ color: colors.mut, fontSize: 12.5 }}>
+              Este libro no está en ninguna saga. Asígnala si pertenece a una (ej. La Rueda del Tiempo).
+            </Text>
+          )}
+        </View>
+      )}
 
       {/* Tu ejemplar: la parte inventario del coleccionista (plan §5.1) */}
       {form && (

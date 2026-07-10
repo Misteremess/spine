@@ -22,6 +22,8 @@ export function collectionsRoutes(app: FastifyInstance) {
         seriesId: schema.series.id,
         seriesName: schema.series.name,
         totalVolumes: schema.series.totalVolumes,
+        latestVolume: schema.series.latestVolume,
+        seriesCover: schema.series.coverUrl,
       })
       .from(schema.userBooks)
       .innerJoin(schema.editions, eq(schema.userBooks.editionId, schema.editions.id))
@@ -52,13 +54,27 @@ export function collectionsRoutes(app: FastifyInstance) {
     };
     const bySeries = new Map<
       number,
-      { id: number; name: string; totalVolumes: number | null; volumes: Volume[] }
+      {
+        id: number;
+        name: string;
+        totalVolumes: number | null;
+        latestVolume: number | null;
+        seriesCover: string | null;
+        volumes: Volume[];
+      }
     >();
 
     for (const r of rows) {
       let group = bySeries.get(r.seriesId);
       if (!group) {
-        group = { id: r.seriesId, name: r.seriesName, totalVolumes: r.totalVolumes, volumes: [] };
+        group = {
+          id: r.seriesId,
+          name: r.seriesName,
+          totalVolumes: r.totalVolumes,
+          latestVolume: r.latestVolume,
+          seriesCover: r.seriesCover,
+          volumes: [],
+        };
         bySeries.set(r.seriesId, group);
       }
       group.volumes.push({
@@ -76,12 +92,21 @@ export function collectionsRoutes(app: FastifyInstance) {
           g.volumes.map((v) => v.volume).filter((n): n is number => n !== null)
         );
         const maxOwned = owned.size ? Math.max(...owned) : 0;
-        const horizon = g.totalVolumes ?? maxOwned;
+        // Horizonte real: el total conocido o, si no, el último tomo que el
+        // radar detectó como publicado; nunca menos de lo que ya tienes.
+        const horizon = Math.max(g.totalVolumes ?? 0, g.latestVolume ?? 0, maxOwned);
         const missing: number[] = [];
         for (let n = 1; n <= horizon; n++) if (!owned.has(n)) missing.push(n);
         g.volumes.sort((a, b) => (a.volume ?? 0) - (b.volume ?? 0));
+        const cover = g.seriesCover ?? g.volumes.find((v) => v.coverUrl)?.coverUrl ?? null;
         return {
-          series: { id: g.id, name: g.name, totalVolumes: g.totalVolumes },
+          series: {
+            id: g.id,
+            name: g.name,
+            totalVolumes: g.totalVolumes,
+            latestVolume: g.latestVolume,
+            coverUrl: cover,
+          },
           volumes: g.volumes,
           ownedCount: g.volumes.length,
           maxOwned,

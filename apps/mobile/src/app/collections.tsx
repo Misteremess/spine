@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { router, Stack, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -18,11 +19,12 @@ type Volume = {
   volume: number | null;
   userBookId: number;
   title: string;
+  coverUrl: string | null;
   status: string;
 };
 
 type Collection = {
-  series: { id: number; name: string; totalVolumes: number | null };
+  series: { id: number; name: string; totalVolumes: number | null; latestVolume: number | null; coverUrl: string | null };
   volumes: Volume[];
   ownedCount: number;
   maxOwned: number;
@@ -100,7 +102,10 @@ export default function Collections() {
         }
         renderItem={({ item }) => {
           const total = item.series.totalVolumes;
-          const horizon = total ?? item.maxOwned;
+          // Total a mostrar: fijado por el usuario o, si no, el último tomo
+          // publicado que detectó el radar.
+          const known = total ?? item.series.latestVolume;
+          const horizon = Math.max(total ?? 0, item.series.latestVolume ?? 0, item.maxOwned);
           const ownedByNumber = new Map<number, Volume[]>();
           for (const v of item.volumes) {
             if (v.volume === null) continue;
@@ -121,7 +126,7 @@ export default function Collections() {
                   {item.series.name}
                 </Text>
                 <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansBold }}>
-                  {ownedByNumber.size} de {total ?? "?"}
+                  {ownedByNumber.size} de {known ?? "?"}
                 </Text>
                 <Text style={{ color: colors.mut, fontSize: 15, marginLeft: "auto" }}>›</Text>
               </Pressable>
@@ -130,26 +135,40 @@ export default function Collections() {
                 <View style={[s.barFill, { width: `${Math.min(100, pct)}%` }]} />
               </View>
 
-              {/* Cuadrícula de tomos: leído salvia, sin leer ámbar, hueco arcilla */}
+              {/* Tira de tomos con miniaturas de portada: hueco = punteado arcilla */}
               <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
                 {Array.from({ length: horizon }, (_, i) => i + 1).map((n) => {
                   const owners = ownedByNumber.get(n);
                   if (!owners) {
                     return (
-                      <Pressable key={n} style={[s.tomo, s.tomoGap]} onPress={() => wishMissing(item, n)}>
+                      <Pressable key={n} style={[s.tomoMini, s.tomoGap]} onPress={() => wishMissing(item, n)}>
                         <Text style={{ color: colors.arcilla, fontSize: 11, fontFamily: fonts.sansSemi }}>{n}</Text>
                       </Pressable>
                     );
                   }
                   const read = owners.some((o) => o.status === "finished");
-                  const bg = read ? colors.salvia : colors.ambar;
+                  const cover = owners.find((o) => o.coverUrl)?.coverUrl ?? null;
                   return (
                     <Pressable
                       key={n}
-                      style={[s.tomo, { backgroundColor: bg, borderColor: bg }]}
+                      style={s.tomoMini}
                       onPress={() => router.push(`/book/${owners[0]!.userBookId}`)}
                     >
-                      <Text style={{ color: colors.inkOnAccent, fontSize: 11, fontFamily: fonts.sansBold }}>{n}</Text>
+                      {cover ? (
+                        <Image source={{ uri: cover }} style={s.tomoCover} contentFit="cover" />
+                      ) : (
+                        <View style={[s.tomoCover, { backgroundColor: read ? colors.salvia : colors.ambar, alignItems: "center", justifyContent: "center" }]}>
+                          <Text style={{ color: colors.inkOnAccent, fontSize: 11, fontFamily: fonts.sansBold }}>{n}</Text>
+                        </View>
+                      )}
+                      <View style={s.tomoBadge}>
+                        <Text style={{ color: colors.papel, fontSize: 8, fontFamily: fonts.sansBold }}>{n}</Text>
+                      </View>
+                      {read && (
+                        <View style={s.readTick}>
+                          <Text style={{ color: colors.inkOnAccent, fontSize: 8, fontFamily: fonts.sansBold }}>✓</Text>
+                        </View>
+                      )}
                     </Pressable>
                   );
                 })}
@@ -211,15 +230,44 @@ const s = StyleSheet.create({
   name: { color: colors.papel, fontSize: 17, fontFamily: fonts.serif, flexShrink: 1 },
   barTrack: { height: 5, borderRadius: 99, backgroundColor: colors.tinta3, overflow: "hidden" },
   barFill: { height: 5, borderRadius: 99, backgroundColor: colors.ambar },
-  tomo: {
+  tomoMini: {
     width: 34,
-    height: 34,
-    borderRadius: 8,
+    height: 50,
+    borderRadius: 5,
     borderWidth: 1,
+    borderColor: colors.tinta3,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  tomoCover: { width: "100%", height: "100%" },
+  tomoBadge: {
+    position: "absolute",
+    bottom: 1,
+    right: 1,
+    backgroundColor: "rgba(20,18,15,.82)",
+    borderRadius: 3,
+    paddingHorizontal: 3,
+  },
+  readTick: {
+    position: "absolute",
+    top: 1,
+    left: 1,
+    backgroundColor: colors.salvia,
+    borderRadius: 3,
+    width: 12,
+    height: 12,
     alignItems: "center",
     justifyContent: "center",
   },
-  tomoGap: { borderColor: "rgba(193,85,61,.55)", borderStyle: "dashed" },
+  tomoGap: {
+    width: 34,
+    height: 50,
+    borderRadius: 5,
+    borderColor: "rgba(193,85,61,.55)",
+    borderStyle: "dashed",
+    backgroundColor: "transparent",
+  },
   totalInput: {
     flex: 1,
     backgroundColor: colors.tinta,

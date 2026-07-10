@@ -48,6 +48,9 @@ export default function Libro() {
   const router = useRouter();
   const [detail, setDetail] = useState<Detail | null>(null);
   const [pageInput, setPageInput] = useState("");
+  const [editingSaga, setEditingSaga] = useState(false);
+  const [sagaName, setSagaName] = useState("");
+  const [sagaVol, setSagaVol] = useState("");
 
   const load = useCallback(async () => {
     try {
@@ -107,6 +110,16 @@ export default function Libro() {
     if (!confirm(`«${title}» saldrá de tu biblioteca. ¿Seguro?`)) return;
     await api(`/v1/library/${book.id}`, { method: "DELETE" });
     router.replace("/biblioteca");
+  }
+
+  async function saveSaga() {
+    const vol = Number(sagaVol);
+    await api(`/v1/library/${book.id}/series`, {
+      method: "PATCH",
+      body: { series: sagaName.trim() || null, volume: Number.isInteger(vol) && vol >= 1 ? vol : null },
+    });
+    setEditingSaga(false);
+    await load();
   }
 
   return (
@@ -275,6 +288,68 @@ export default function Libro() {
               <p style={{ color: "var(--marfil)", fontSize: 14, lineHeight: 1.55 }}>
                 {edition.description}
               </p>
+            </div>
+          )}
+
+          {edition && (
+            <div className="card" style={{ display: "grid", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4 }}>
+                  SAGA
+                </p>
+                {!editingSaga && (
+                  <button
+                    style={{ color: "var(--ambar)", fontSize: 13, fontWeight: 600 }}
+                    onClick={() => {
+                      setSagaName(edition.series ?? "");
+                      setSagaVol(edition.seriesVolume ? String(edition.seriesVolume) : "");
+                      setEditingSaga(true);
+                    }}
+                  >
+                    {edition.series ? "Cambiar" : "Asignar"}
+                  </button>
+                )}
+              </div>
+              {editingSaga ? (
+                <form
+                  style={{ display: "grid", gap: 10 }}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void saveSaga();
+                  }}
+                >
+                  <input
+                    autoFocus
+                    placeholder="Nombre de la saga (vacío = ninguna)"
+                    value={sagaName}
+                    onChange={(e) => setSagaName(e.target.value)}
+                  />
+                  <input
+                    inputMode="numeric"
+                    placeholder="Nº de tomo (opcional)"
+                    value={sagaVol}
+                    onChange={(e) => setSagaVol(e.target.value)}
+                    style={{ maxWidth: 200 }}
+                  />
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <button className="btn" type="submit">
+                      Guardar saga
+                    </button>
+                    <button className="muted" type="button" style={{ fontSize: 13 }} onClick={() => setEditingSaga(false)}>
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              ) : edition.series ? (
+                <Link href={edition.seriesId ? `/serie/${edition.seriesId}` : "/colecciones"} style={{ color: "var(--marfil)", fontSize: 14 }}>
+                  ▦ {edition.series}
+                  {edition.seriesVolume ? ` · tomo ${edition.seriesVolume}` : ""}
+                </Link>
+              ) : (
+                <p className="muted" style={{ fontSize: 13 }}>
+                  Este libro no está en ninguna saga. Asígnala si pertenece a una (ej. La Rueda del Tiempo).
+                </p>
+              )}
             </div>
           )}
 

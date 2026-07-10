@@ -1,7 +1,6 @@
-import { toIsbn13 } from "@spine/shared";
 import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   Alert,
@@ -37,6 +36,15 @@ const PRIORITIES: { value: number; label: string; color: string }[] = [
 
 const prio = (v: number) => PRIORITIES.find((p) => p.value === v) ?? PRIORITIES[1]!;
 
+type Candidate = {
+  isbn13: string | null;
+  title: string;
+  authors: string[];
+  publisher: string | null;
+  publishedDate: string | null;
+  coverUrl: string | null;
+};
+
 export default function Wishlist() {
   const insets = useSafeAreaInsets();
   const [items, setItems] = useState<Item[]>([]);
@@ -44,6 +52,8 @@ export default function Wishlist() {
   const [input, setInput] = useState("");
   const [priority, setPriority] = useState(2);
   const [adding, setAdding] = useState(false);
+  const [results, setResults] = useState<Candidate[] | null>(null);
+  const [searching, setSearching] = useState(false);
 
   const load = useCallback(async () => {
     const data = await api<{ items: Item[] }>("/v1/wishlist");
@@ -56,21 +66,32 @@ export default function Wishlist() {
     }, [load])
   );
 
-  async function add() {
-    const text = input.trim();
-    if (!text || adding) return;
+  async function search() {
+    const q = input.trim();
+    if (q.length < 2 || searching) return;
+    setSearching(true);
+    Keyboard.dismiss();
+    try {
+      const data = await api<{ candidates: Candidate[] }>(`/v1/search?q=${encodeURIComponent(q)}`);
+      setResults(data.candidates);
+    } catch {
+      Alert.alert("No se pudo buscar", "Comprueba la conexión y reinténtalo.");
+    } finally {
+      setSearching(false);
+    }
+  }
+
+  async function addCandidate(c: Candidate) {
+    if (adding) return;
     setAdding(true);
     try {
-      // Si lo escrito es un ISBN válido va como isbn (resuelve portada y título);
-      // cualquier otra cosa es un título libre.
-      const isbn13 = toIsbn13(text.replace(/[-\s]/g, ""));
       await api("/v1/wishlist", {
         method: "POST",
-        body: isbn13 ? { isbn: isbn13, priority } : { title: text, priority },
+        body: c.isbn13 ? { isbn: c.isbn13, priority } : { title: c.title, priority },
       });
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setInput("");
-      Keyboard.dismiss();
+      setResults(null);
       await load();
     } catch {
       Alert.alert("No se pudo añadir", "Comprueba la conexión y reinténtalo.");
@@ -179,8 +200,45 @@ export default function Wishlist() {
         }}
       />
 
-      {/* Composer: título libre o ISBN + prioridad */}
+      {/* Composer: busca el libro real (título o ISBN) o escanea el código */}
       <View style={s.composer}>
+        {/* Resultados de búsqueda con datos reales */}
+        {results !== null && (
+          <View style={{ maxHeight: 240 }}>
+            {results.length === 0 ? (
+              <Text style={{ color: colors.mut, fontSize: 12.5, padding: 8 }}>
+                Sin resultados. Prueba con otro título o el ISBN.
+              </Text>
+            ) : (
+              <FlatList
+                data={results}
+                keyboardShouldPersistTaps="handled"
+                keyExtractor={(c, i) => `${c.isbn13 ?? c.title}-${i}`}
+                renderItem={({ item: c }) => (
+                  <Pressable style={s.resultRow} onPress={() => void addCandidate(c)}>
+                    {c.coverUrl ? (
+                      <Image source={{ uri: c.coverUrl }} style={s.resultCover} contentFit="cover" />
+                    ) : (
+                      <View style={[s.resultCover, { alignItems: "center", justifyContent: "center" }]}>
+                        <Text style={{ color: colors.mut, fontSize: 8 }}>—</Text>
+                      </View>
+                    )}
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ color: colors.papel, fontSize: 13, fontFamily: fonts.sansSemi }} numberOfLines={2}>
+                        {c.title}
+                      </Text>
+                      <Text style={{ color: colors.mut, fontSize: 11 }} numberOfLines={1}>
+                        {[c.authors.join(", "), c.publishedDate?.slice(0, 4)].filter(Boolean).join(" · ")}
+                      </Text>
+                    </View>
+                    <Text style={{ color: colors.ambar, fontSize: 20 }}>＋</Text>
+                  </Pressable>
+                )}
+              />
+            )}
+          </View>
+        )}
+
         <View style={{ flexDirection: "row", gap: 8 }}>
           {PRIORITIES.map((p) => {
             const active = priority === p.value;
@@ -204,22 +262,25 @@ export default function Wishlist() {
           })}
         </View>
         <View style={{ flexDirection: "row", gap: 10 }}>
+          <Pressable style={s.scanBtn} onPress={() => router.push("/scanner?target=wishlist")}>
+            <Text style={{ color: colors.ambar, fontSize: 18 }}>▣</Text>
+          </Pressable>
           <TextInput
             style={s.input}
             value={input}
             onChangeText={setInput}
-            placeholder="Título o ISBN"
+            placeholder="Busca por título o ISBN"
             placeholderTextColor={colors.mut}
-            returnKeyType="done"
-            onSubmitEditing={() => void add()}
+            returnKeyType="search"
+            onSubmitEditing={() => void search()}
           />
           <Pressable
-            style={[s.addBtn, (!input.trim() || adding) && { opacity: 0.4 }]}
-            disabled={!input.trim() || adding}
-            onPress={() => void add()}
+            style={[s.addBtn, (input.trim().length < 2 || searching) && { opacity: 0.4 }]}
+            disabled={input.trim().length < 2 || searching}
+            onPress={() => void search()}
           >
             <Text style={{ color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 14 }}>
-              {adding ? "…" : "Añadir"}
+              {searching ? "…" : "Buscar"}
             </Text>
           </Pressable>
         </View>
@@ -289,4 +350,21 @@ const s = StyleSheet.create({
     paddingHorizontal: 16,
     justifyContent: "center",
   },
+  scanBtn: {
+    width: 44,
+    borderWidth: 1,
+    borderColor: "rgba(217,164,65,.5)",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  resultRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.tinta3,
+  },
+  resultCover: { width: 30, height: 44, borderRadius: 4, backgroundColor: colors.tinta3 },
 });

@@ -10,6 +10,7 @@ import { collectionsRoutes } from "./routes/collections";
 import { importRoutes } from "./routes/import";
 import { reviewsRoutes } from "./routes/reviews";
 import { libraryRoutes } from "./routes/library";
+import { searchRoutes } from "./routes/search";
 import { notificationsRoutes, seriesRoutes } from "./routes/series";
 import { statsRoutes } from "./routes/stats";
 import { wishlistRoutes } from "./routes/wishlist";
@@ -112,6 +113,7 @@ export async function buildApp() {
   app.register(async (scope) => notificationsRoutes(scope));
   app.register(async (scope) => reviewsRoutes(scope));
   app.register(async (scope) => clubsRoutes(scope));
+  app.register(async (scope) => searchRoutes(scope));
 
   return app;
 }

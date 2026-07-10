@@ -41,7 +41,16 @@ type Detail = {
   readCount: number;
   missing: number[];
   upcoming: { volume: number; title: string | null; publishedDate: string | null; isbn13: string | null }[];
+  reviews: {
+    average: number | null;
+    count: number;
+    items: { id: number; rating: number; text: string | null; spoilers: boolean; userName: string; own: boolean }[];
+  };
 };
+
+function stars(r: number) {
+  return "★".repeat(Math.floor(r / 2)) + (r % 2 ? "⯨" : "") + "☆".repeat(5 - Math.ceil(r / 2));
+}
 
 const STATUS = {
   ongoing: { text: "En publicación", color: "var(--ambar)" },
@@ -88,7 +97,7 @@ export default function SerieDetalle() {
     );
   }
 
-  const { series, volumes, unnumbered, ownedCount, readCount, missing, upcoming } = detail;
+  const { series, volumes, unnumbered, ownedCount, readCount, missing, upcoming, reviews } = detail;
   const st = STATUS[series.status];
   const horizon = Math.max(series.totalVolumes ?? 0, volumes.length);
   const pct = horizon > 0 ? Math.min(100, Math.round((ownedCount / horizon) * 100)) : 0;
@@ -242,22 +251,48 @@ export default function SerieDetalle() {
                   </div>
                 );
               }
+              // Hueco: si el radar conoce su portada, la mostramos atenuada
+              // (así se ven los tomos que aún no tienes) con marco arcilla.
               return (
                 <button
                   key={v.volume}
-                  title={`Tomo ${v.volume}: te falta — añadir a deseos${v.isbn13 ? " (con su ISBN)" : ""}`}
+                  title={`Tomo ${v.volume}${v.title ? ` · ${v.title}` : ""}: te falta — añadir a deseos${v.isbn13 ? " (con su ISBN)" : ""}`}
                   onClick={() => void wish(v, series.name)}
                   style={{
+                    position: "relative",
                     width: 52,
                     height: 74,
                     borderRadius: 7,
-                    border: "1px dashed rgba(193,85,61,.55)",
+                    overflow: "hidden",
+                    border: "1px dashed rgba(193,85,61,.7)",
+                    background: v.coverUrl ? `center/cover url(${v.coverUrl})` : "transparent",
                     color: "var(--arcilla)",
                     fontSize: 12,
                     fontWeight: 600,
+                    display: "grid",
+                    placeItems: v.coverUrl ? "end end" : "center",
                   }}
                 >
-                  {v.volume}
+                  {v.coverUrl && (
+                    <span style={{ position: "absolute", inset: 0, background: "rgba(20,18,15,.45)" }} />
+                  )}
+                  <span
+                    style={
+                      v.coverUrl
+                        ? {
+                            position: "relative",
+                            background: "rgba(193,85,61,.9)",
+                            color: "var(--papel)",
+                            fontSize: 9,
+                            padding: "1px 4px",
+                            borderRadius: 3,
+                            margin: 2,
+                          }
+                        : undefined
+                    }
+                  >
+                    {v.volume}
+                  </span>
                 </button>
               );
             })}
@@ -286,6 +321,49 @@ export default function SerieDetalle() {
             <p style={{ color: "var(--marfil)", fontSize: 14, lineHeight: 1.55 }}>{series.description}</p>
           </div>
         )}
+
+        <div className="card" style={{ display: "grid", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <strong style={{ fontSize: 13 }}>Reseñas de la saga</strong>
+            {reviews.average !== null && (
+              <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <span style={{ color: "var(--ambar)", fontSize: 15 }}>{stars(Math.round(reviews.average))}</span>
+                <span className="muted" style={{ fontSize: 12.5, fontVariantNumeric: "tabular-nums" }}>
+                  {(reviews.average / 2).toFixed(1)} · {reviews.count}
+                </span>
+              </span>
+            )}
+          </div>
+          {reviews.count === 0 ? (
+            <p className="muted" style={{ fontSize: 13 }}>
+              Aún no hay reseñas de esta saga. Reseña sus tomos desde su ficha.
+            </p>
+          ) : (
+            reviews.items.slice(0, 8).map((r) => (
+              <div
+                key={r.id}
+                style={{
+                  background: "var(--tinta)",
+                  border: "1px solid var(--tinta3)",
+                  borderRadius: 10,
+                  padding: 12,
+                  display: "grid",
+                  gap: 5,
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                  <strong style={{ fontSize: 13 }}>{r.own ? "Tu reseña" : r.userName}</strong>
+                  <span style={{ color: "var(--ambar)", fontSize: 13 }}>{stars(r.rating)}</span>
+                </div>
+                {r.text && !r.spoilers ? (
+                  <p style={{ color: "var(--marfil)", fontSize: 13.5, lineHeight: 1.5 }}>{r.text}</p>
+                ) : r.text ? (
+                  <span className="muted" style={{ fontSize: 12.5, fontStyle: "italic" }}>Contiene spoilers</span>
+                ) : null}
+              </div>
+            ))
+          )}
+        </div>
 
         <button className="muted" style={{ fontSize: 13, justifySelf: "center" }} disabled={checking} onClick={() => void refresh()}>
           {checking ? "Comprobando novedades…" : "⟳ Comprobar novedades ahora"}

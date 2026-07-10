@@ -12,12 +12,22 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { SettingsProvider, useSettings } from "../lib/settings";
 import { colors, fonts } from "../lib/theme";
 
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  return (
+    <SettingsProvider>
+      <RootNav />
+    </SettingsProvider>
+  );
+}
+
+function RootNav() {
+  const { revision } = useSettings();
   const [loaded] = useFonts({
     Fraunces_500Medium,
     Fraunces_600SemiBold,
@@ -34,7 +44,8 @@ export default function RootLayout() {
   if (!loaded) return null;
 
   return (
-    <>
+    // La `key` remonta el árbol al cambiar el tamaño de texto (ver settings.tsx).
+    <React.Fragment key={revision}>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -42,6 +53,8 @@ export default function RootLayout() {
           headerTintColor: colors.papel,
           headerTitleStyle: { fontFamily: fonts.serif, fontSize: 19 },
           headerShadowVisible: false,
+          headerBackButtonDisplayMode: "minimal",
+          headerBackTitle: "",
           contentStyle: { backgroundColor: colors.tinta },
         }}
       >
@@ -51,6 +64,6 @@ export default function RootLayout() {
         <Stack.Screen name="notifications" options={{ title: "Avisos" }} />
         <Stack.Screen name="clubs" options={{ title: "Clubs de lectura" }} />
       </Stack>
-    </>
+    </React.Fragment>
   );
 }

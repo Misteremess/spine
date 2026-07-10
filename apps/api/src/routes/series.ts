@@ -104,6 +104,31 @@ async function seriesDetail(seriesId: number, userId: string) {
 
   const readCount = volumes.filter((v) => v.read).length;
 
+  // Reseñas de toda la saga: la comunidad valora la serie en conjunto
+  // agregando las reseñas de cualquier obra que pertenezca a ella.
+  const reviewRows = await db
+    .select({
+      id: schema.reviews.id,
+      rating: schema.reviews.rating,
+      text: schema.reviews.text,
+      spoilers: schema.reviews.spoilers,
+      createdAt: schema.reviews.createdAt,
+      userId: schema.reviews.userId,
+      userName: schema.user.name,
+      workTitle: schema.works.title,
+    })
+    .from(schema.reviews)
+    .innerJoin(schema.works, eq(schema.reviews.workId, schema.works.id))
+    .innerJoin(schema.user, eq(schema.reviews.userId, schema.user.id))
+    .where(eq(schema.works.seriesId, seriesId))
+    .orderBy(desc(schema.reviews.updatedAt))
+    .limit(50);
+  const reviewCount = reviewRows.length;
+  const average =
+    reviewCount > 0
+      ? Math.round((reviewRows.reduce((s, r) => s + r.rating, 0) / reviewCount) * 10) / 10
+      : null;
+
   return {
     series: {
       id: ser.id,
@@ -123,6 +148,14 @@ async function seriesDetail(seriesId: number, userId: string) {
     readCount,
     missing,
     upcoming,
+    reviews: {
+      average,
+      count: reviewCount,
+      items: reviewRows.slice(0, 20).map(({ userId: reviewerId, ...r }) => ({
+        ...r,
+        own: reviewerId === userId,
+      })),
+    },
   };
 }
 

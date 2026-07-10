@@ -6,7 +6,10 @@ import { router } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { authClient } from "../../lib/auth";
+import { SCALE_LABEL, type TextScale, useSettings } from "../../lib/settings";
 import { colors, fonts } from "../../lib/theme";
+
+const SCALES: TextScale[] = ["sm", "md", "lg", "xl"];
 
 const MENU = [
   { glyph: "✦", label: "Estadísticas de lectura", to: "/stats" },
@@ -20,6 +23,7 @@ const MENU = [
 export default function Profile() {
   const insets = useSafeAreaInsets();
   const { data: session } = authClient.useSession();
+  const { scale, setScale } = useSettings();
 
   async function signOut() {
     await authClient.signOut();
@@ -59,6 +63,38 @@ export default function Profile() {
             <Text style={{ color: colors.mut, fontSize: 16 }}>›</Text>
           </Pressable>
         ))}
+      </View>
+
+      {/* Tamaño del texto (accesibilidad) */}
+      <View style={{ gap: 8 }}>
+        <Text style={{ color: colors.marfil, fontSize: 13, fontFamily: fonts.sansBold, letterSpacing: 0.4 }}>
+          Tamaño del texto
+        </Text>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          {SCALES.map((sz) => {
+            const active = scale === sz;
+            return (
+              <Pressable
+                key={sz}
+                onPress={() => setScale(sz)}
+                style={[s.sizeChip, active && { backgroundColor: colors.ambar, borderColor: colors.ambar }]}
+              >
+                <Text
+                  style={{
+                    color: active ? colors.inkOnAccent : colors.papel,
+                    fontFamily: fonts.sansSemi,
+                    fontSize: 12.5,
+                  }}
+                >
+                  {SCALE_LABEL[sz]}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        <Text style={{ color: colors.mut, fontSize: 11.5 }}>
+          Cambia el tamaño de toda la letra de la app. Pensado para leer más cómodo.
+        </Text>
       </View>
 
       <Pressable style={{ alignItems: "center", paddingVertical: 10 }} onPress={() => void signOut()}>
@@ -101,5 +137,13 @@ const s = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 16,
     paddingVertical: 14,
+  },
+  sizeChip: {
+    flex: 1,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 10,
+    paddingVertical: 10,
   },
 });

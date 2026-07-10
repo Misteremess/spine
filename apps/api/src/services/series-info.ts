@@ -20,6 +20,21 @@ function simplify(s: string): string {
   return seriesNameKey(s).replace(/\s+/g, "");
 }
 
+/** Limpia HTML de sinopsis y decodifica entidades (AniList doble-escapa). */
+function cleanDescription(raw: string): string {
+  return raw
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;|&apos;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 function titlesMatch(a: string, b: string): boolean {
   const sa = simplify(a);
   const sb = simplify(b);
@@ -109,9 +124,7 @@ async function queryAniList(name: string): Promise<AniListInfo | null> {
         typeof media.volumes === "number" && media.volumes > 0 ? media.volumes : null,
       coverUrl: typeof media.coverImage?.large === "string" ? media.coverImage.large : null,
       description:
-        typeof media.description === "string"
-          ? media.description.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "").trim()
-          : null,
+        typeof media.description === "string" ? cleanDescription(media.description) : null,
       isManga: media.format === "MANGA" || media.format === "ONE_SHOT",
     };
   } catch {

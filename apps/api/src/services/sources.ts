@@ -354,3 +354,66 @@ export async function fromGoogleBooks(isbn13: string): Promise<SourceResult> {
     },
   };
 }
+
+/** Un resultado de búsqueda con datos reales para elegir a mano. */
+export type SearchCandidate = {
+  isbn13: string | null;
+  title: string;
+  authors: string[];
+  publisher: string | null;
+  publishedDate: string | null;
+  pages: number | null;
+  coverUrl: string | null;
+};
+
+/**
+ * Búsqueda por texto libre (título, autor…) para wishlist y alta manual:
+ * Google Books devuelve candidatos reales entre los que elegir, en vez de
+ * teclear los datos a mano. Prioriza los que traen ISBN-13 (los que luego
+ * se pueden resolver a ficha completa).
+ */
+export async function searchBooks(query: string, limit = 12): Promise<SearchCandidate[]> {
+  if (!env.GOOGLE_BOOKS_API_KEY) return [];
+  const q = encodeURIComponent(query.trim());
+  const url =
+    `https://www.googleapis.com/books/v1/volumes?q=${q}` +
+    `&maxResults=${Math.min(20, limit * 2)}&key=${env.GOOGLE_BOOKS_API_KEY}`;
+  // GB da 503 intermitentes: la búsqueda nunca debe tumbar la petición.
+  let data: unknown;
+  try {
+    ({ data } = await fetchJson(url, { retries: 1 }));
+  } catch {
+    return [];
+  }
+  if (!data || typeof data !== "object") return [];
+  const items = (data as Record<string, any>).items;
+  if (!Array.isArray(items)) return [];
+
+  const out: SearchCandidate[] = [];
+  const seen = new Set<string>();
+  for (const it of items) {
+    const vi = it?.volumeInfo;
+    if (!vi || typeof vi.title !== "string") continue;
+    const ids = Array.isArray(vi.industryIdentifiers) ? vi.industryIdentifiers : [];
+    const isbn13 = ids.find((x: any) => x?.type === "ISBN_13")?.identifier ?? null;
+    // Deduplicar por título+autor (GB repite ediciones del mismo libro).
+    const key = `${vi.title}|${(vi.authors ?? []).join(",")}`.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      isbn13: typeof isbn13 === "string" ? isbn13 : null,
+      title: vi.title,
+      authors: Array.isArray(vi.authors) ? vi.authors.slice(0, 3) : [],
+      publisher: typeof vi.publisher === "string" ? vi.publisher : null,
+      publishedDate: typeof vi.publishedDate === "string" ? vi.publishedDate : null,
+      pages: typeof vi.pageCount === "number" && vi.pageCount > 0 ? vi.pageCount : null,
+      coverUrl:
+        typeof vi.imageLinks?.thumbnail === "string"
+          ? vi.imageLinks.thumbnail.replace("http://", "https://")
+          : null,
+    });
+    if (out.length >= limit) break;
+  }
+  // Los que tienen ISBN primero: se pueden resolver a ficha completa.
+  return out.sort((a, b) => (a.isbn13 ? 0 : 1) - (b.isbn13 ? 0 : 1));
+}

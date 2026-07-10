@@ -1,6 +1,5 @@
 "use client";
 
-import { toIsbn13 } from "@spine/shared";
 import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { api } from "@/lib/api";
@@ -12,6 +11,15 @@ type Item = {
   coverUrl: string | null;
   priority: number;
   notes: string | null;
+};
+
+type Candidate = {
+  isbn13: string | null;
+  title: string;
+  authors: string[];
+  publisher: string | null;
+  publishedDate: string | null;
+  coverUrl: string | null;
 };
 
 const PRIORITIES = [
@@ -27,6 +35,7 @@ export default function Deseos() {
   const [input, setInput] = useState("");
   const [priority, setPriority] = useState(2);
   const [busy, setBusy] = useState(false);
+  const [results, setResults] = useState<Candidate[] | null>(null);
 
   const load = useCallback(async () => {
     const data = await api<{ items: Item[] }>("/v1/wishlist");
@@ -37,22 +46,27 @@ export default function Deseos() {
     void load().catch(() => setItems([]));
   }, [load]);
 
-  async function add(e: React.FormEvent) {
+  async function search(e: React.FormEvent) {
     e.preventDefault();
-    const text = input.trim();
-    if (!text || busy) return;
+    const q = input.trim();
+    if (q.length < 2 || busy) return;
     setBusy(true);
     try {
-      const isbn13 = toIsbn13(text.replace(/[-\s]/g, ""));
-      await api("/v1/wishlist", {
-        method: "POST",
-        body: isbn13 ? { isbn: isbn13, priority } : { title: text, priority },
-      });
-      setInput("");
-      await load();
+      const data = await api<{ candidates: Candidate[] }>(`/v1/search?q=${encodeURIComponent(q)}`);
+      setResults(data.candidates);
     } finally {
       setBusy(false);
     }
+  }
+
+  async function addCandidate(c: Candidate) {
+    await api("/v1/wishlist", {
+      method: "POST",
+      body: c.isbn13 ? { isbn: c.isbn13, priority } : { title: c.title, priority },
+    });
+    setInput("");
+    setResults(null);
+    await load();
   }
 
   async function purchase(item: Item) {
@@ -79,7 +93,7 @@ export default function Deseos() {
           </span>
         </div>
 
-        <form className="card" style={{ display: "grid", gap: 10 }} onSubmit={add}>
+        <form className="card" style={{ display: "grid", gap: 10 }} onSubmit={search}>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {PRIORITIES.map((p) => (
               <button
@@ -100,14 +114,49 @@ export default function Deseos() {
           <div style={{ display: "flex", gap: 10 }}>
             <input
               style={{ flex: 1 }}
-              placeholder="Título o ISBN"
+              placeholder="Busca por título o ISBN"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
-            <button className="btn" type="submit" disabled={!input.trim() || busy}>
-              {busy ? "…" : "Añadir"}
+            <button className="btn" type="submit" disabled={input.trim().length < 2 || busy}>
+              {busy ? "…" : "Buscar"}
             </button>
           </div>
+
+          {/* Resultados reales para elegir */}
+          {results !== null && (
+            <div style={{ display: "grid", gap: 2, marginTop: 4 }}>
+              {results.length === 0 ? (
+                <p className="muted" style={{ fontSize: 12.5 }}>Sin resultados. Prueba con el ISBN o otro título.</p>
+              ) : (
+                results.map((c, i) => (
+                  <button
+                    key={`${c.isbn13 ?? c.title}-${i}`}
+                    type="button"
+                    onClick={() => void addCandidate(c)}
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      alignItems: "center",
+                      textAlign: "left",
+                      padding: "8px 6px",
+                      borderBottom: "1px solid var(--tinta3)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span style={{ width: 30, height: 44, borderRadius: 4, background: c.coverUrl ? `center/cover url(${c.coverUrl})` : "var(--tinta3)", flexShrink: 0 }} />
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ display: "block", fontSize: 13, fontWeight: 600 }}>{c.title}</span>
+                      <span className="muted" style={{ fontSize: 11 }}>
+                        {[c.authors.join(", "), c.publishedDate?.slice(0, 4)].filter(Boolean).join(" · ")}
+                      </span>
+                    </span>
+                    <span style={{ color: "var(--ambar)", fontSize: 18 }}>＋</span>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
         </form>
 
         {items !== null && items.length === 0 && (
