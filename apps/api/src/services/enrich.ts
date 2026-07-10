@@ -12,6 +12,8 @@ import { seriesNameKey } from "./series";
 import {
   coverByIsbn,
   fromGoogleBooks,
+  fromHardcover,
+  fromIsbnDb,
   fromOpenLibrary,
   fromOpenLibrarySearch,
 } from "./sources";
@@ -47,12 +49,16 @@ export async function enrichEdition(isbn13: string): Promise<boolean> {
   };
   if (!Object.values(missing).some(Boolean)) return false;
 
-  const [ol, gb] = await Promise.allSettled([fromOpenLibrary(isbn13), fromGoogleBooks(isbn13)]);
-  const results = [
-    ol.status === "fulfilled" ? ol.value : null,
-    gb.status === "fulfilled" ? gb.value : null,
-  ];
-  if (!results[0] && !results[1]) {
+  const settled = await Promise.allSettled([
+    fromOpenLibrary(isbn13),
+    fromGoogleBooks(isbn13),
+    fromIsbnDb(isbn13),
+    fromHardcover(isbn13),
+  ]);
+  const results: import("./sources").SourceResult[] = settled.map((r) =>
+    r.status === "fulfilled" ? r.value : null
+  );
+  if (!results.some((r) => r !== null)) {
     results.push(await fromOpenLibrarySearch(isbn13).catch(() => null));
   }
 

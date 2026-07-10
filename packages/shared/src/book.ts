@@ -23,7 +23,15 @@ export type BookMetadata = z.infer<typeof BookMetadataSchema>;
 export const ResolveResponseSchema = z.object({
   metadata: BookMetadataSchema,
   /** De dónde salió el resultado final. */
-  source: z.enum(["catalog", "openlibrary", "googlebooks", "merged"]),
+  source: z.enum([
+    "catalog",
+    "openlibrary",
+    "openlibrary-search",
+    "googlebooks",
+    "isbndb",
+    "hardcover",
+    "merged",
+  ]),
   /** true si vino de nuestro catálogo sin tocar APIs externas. */
   cached: z.boolean(),
 });

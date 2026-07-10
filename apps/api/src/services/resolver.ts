@@ -12,6 +12,8 @@ import { extractSeries, seriesNameKey } from "./series";
 import {
   coverByIsbn,
   fromGoogleBooks,
+  fromHardcover,
+  fromIsbnDb,
   fromOpenLibrary,
   fromOpenLibrarySearch,
 } from "./sources";
@@ -147,14 +149,19 @@ export async function resolveIsbn(isbn13: string): Promise<ResolveResponse | nul
     return { metadata: cached, source: "catalog", cached: true };
   }
 
-  const [ol, gb] = await Promise.allSettled([fromOpenLibrary(isbn13), fromGoogleBooks(isbn13)]);
-  const results = [
-    ol.status === "fulfilled" ? ol.value : null,
-    gb.status === "fulfilled" ? gb.value : null,
-  ];
+  // ISBNdb y Hardcover son no-op sin key: la cascada crece sola al activarlas.
+  const settled = await Promise.allSettled([
+    fromOpenLibrary(isbn13),
+    fromGoogleBooks(isbn13),
+    fromIsbnDb(isbn13),
+    fromHardcover(isbn13),
+  ]);
+  const results: import("./sources").SourceResult[] = settled.map((r) =>
+    r.status === "fulfilled" ? r.value : null
+  );
 
   // Si ninguna fuente directa responde, el buscador de OL como red final.
-  if (!results[0] && !results[1]) {
+  if (!results.some((r) => r !== null)) {
     results.push(await fromOpenLibrarySearch(isbn13).catch(() => null));
   }
 

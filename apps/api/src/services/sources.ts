@@ -188,6 +188,133 @@ export async function fromOpenLibrarySearch(isbn13: string): Promise<SourceResul
   return { partial, source: "openlibrary-search" };
 }
 
+/**
+ * ISBNdb (api2.isbndb.com): la base comercial con mejor cobertura del ISBN
+ * español (recibe el feed de la industria). De pago (~15 $/mes) — el
+ * adaptador queda listo pero desactivado hasta que ISBNDB_KEY tenga valor.
+ * Límite del plan básico: 1 petición/segundo.
+ */
+export async function fromIsbnDb(isbn13: string): Promise<SourceResult> {
+  if (!env.ISBNDB_KEY) return null;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const res = await fetch(`https://api2.isbndb.com/book/${isbn13}`, {
+      headers: { "User-Agent": UA, Authorization: env.ISBNDB_KEY },
+      signal: ctrl.signal,
+    });
+    if (!res.ok) return null;
+    const book = ((await res.json()) as Record<string, any>)?.book;
+    if (!book || typeof book.title !== "string") return null;
+
+    const partial: Partial<BookMetadata> = {
+      isbn13,
+      title: book.title,
+      authors: Array.isArray(book.authors) ? book.authors.slice(0, 4) : undefined,
+      publisher: typeof book.publisher === "string" ? book.publisher : undefined,
+      language: typeof book.language === "string" ? book.language.slice(0, 8) : undefined,
+      pages: typeof book.pages === "number" && book.pages > 0 ? book.pages : undefined,
+      publishedDate:
+        typeof book.date_published === "string" ? book.date_published : undefined,
+      coverUrl: typeof book.image === "string" ? book.image : undefined,
+      description:
+        typeof book.synopsis === "string"
+          ? book.synopsis.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "")
+          : undefined,
+    };
+    const hit = extractSeries(book.title);
+    if (hit) {
+      partial.series = hit.name;
+      partial.seriesVolume = hit.volume;
+    }
+    return { partial, source: "isbndb" };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+/**
+ * Hardcover (gratuito, GraphQL): metadatos cuidados por bibliotecarios,
+ * especialmente buenos en series y sinopsis. Requiere token gratuito del
+ * perfil de hardcover.app en HARDCOVER_TOKEN.
+ */
+export async function fromHardcover(isbn13: string): Promise<SourceResult> {
+  if (!env.HARDCOVER_TOKEN) return null;
+  const query = `query($isbn: String!) {
+    editions(where: {isbn_13: {_eq: $isbn}}, limit: 1) {
+      title subtitle pages release_date
+      image { url }
+      publisher { name }
+      language { code2 }
+      cached_contributors
+      book {
+        description
+        book_series { position series { name books_count } }
+      }
+    }
+  }`;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const res = await fetch("https://api.hardcover.app/v1/graphql", {
+      method: "POST",
+      headers: {
+        "User-Agent": UA,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.HARDCOVER_TOKEN}`,
+      },
+      body: JSON.stringify({ query, variables: { isbn: isbn13 } }),
+      signal: ctrl.signal,
+    });
+    if (!res.ok) return null;
+    const ed = ((await res.json()) as Record<string, any>)?.data?.editions?.[0];
+    if (!ed || typeof ed.title !== "string") return null;
+
+    // cached_contributors: [{ author: { name }, contribution }] — filtrar
+    // traductores/ilustradores (contribution !== null) para quedarnos con autores.
+    const authors = Array.isArray(ed.cached_contributors)
+      ? ed.cached_contributors
+          .filter((c: any) => !c?.contribution)
+          .map((c: any) => c?.author?.name)
+          .filter((n: unknown): n is string => typeof n === "string")
+          .slice(0, 4)
+      : [];
+
+    const partial: Partial<BookMetadata> = {
+      isbn13,
+      title: ed.title,
+      subtitle: typeof ed.subtitle === "string" ? ed.subtitle : undefined,
+      authors: authors.length > 0 ? authors : undefined,
+      publisher: typeof ed.publisher?.name === "string" ? ed.publisher.name : undefined,
+      language: typeof ed.language?.code2 === "string" ? ed.language.code2 : undefined,
+      pages: typeof ed.pages === "number" && ed.pages > 0 ? ed.pages : undefined,
+      publishedDate: typeof ed.release_date === "string" ? ed.release_date : undefined,
+      coverUrl: typeof ed.image?.url === "string" ? ed.image.url : undefined,
+      description: typeof ed.book?.description === "string" ? ed.book.description : undefined,
+    };
+    const bs = ed.book?.book_series?.[0];
+    if (typeof bs?.series?.name === "string") {
+      partial.series = bs.series.name;
+      if (typeof bs.position === "number" && bs.position >= 1 && Number.isInteger(bs.position)) {
+        partial.seriesVolume = bs.position;
+      }
+    } else if (partial.title) {
+      const hit = extractSeries(partial.title);
+      if (hit) {
+        partial.series = hit.name;
+        partial.seriesVolume = hit.volume;
+      }
+    }
+    return { partial, source: "hardcover" };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 export async function fromGoogleBooks(isbn13: string): Promise<SourceResult> {
   if (!env.GOOGLE_BOOKS_API_KEY) return null;
   // Sin `country`: fijarlo a ES filtraba resultados que GB SÍ tiene

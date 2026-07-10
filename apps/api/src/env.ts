@@ -16,6 +16,11 @@ if (existsSync(envFile)) {
 const EnvSchema = z.object({
   DATABASE_URL: z.string().default("postgres://localhost:5432/spine_dev"),
   GOOGLE_BOOKS_API_KEY: z.string().default(""),
+  // Fuentes opcionales de metadatos. Vacías = desactivadas (coste cero).
+  // ISBNdb es de pago (~15 $/mes): NO contratar sin decisión expresa.
+  ISBNDB_KEY: z.string().default(""),
+  // Hardcover es gratuito: token desde el perfil de hardcover.app.
+  HARDCOVER_TOKEN: z.string().default(""),
   PORT: z.coerce.number().default(3123),
   BETTER_AUTH_URL: z.string().default("http://localhost:3123"),
   // Solo para desarrollo local; en producción DEBE venir del entorno.
