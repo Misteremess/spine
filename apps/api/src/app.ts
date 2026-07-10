@@ -24,7 +24,7 @@ export async function buildApp() {
   await app.register(cors, {
     origin: [env.WEB_ORIGIN],
     credentials: true,
-    methods: ["GET", "HEAD", "POST", "PATCH", "DELETE"],
+    methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"],
   });
 
   // Límite global por IP; protege sobre todo la cuota gratuita de Google

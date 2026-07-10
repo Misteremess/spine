@@ -74,9 +74,9 @@ export default function Colecciones() {
           return (
             <div key={c.series.id} className="card" style={{ display: "grid", gap: 12 }}>
               <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                <h2 className="serif" style={{ fontSize: 19, fontWeight: 500 }}>
-                  {c.series.name}
-                </h2>
+                <Link href={`/serie/${c.series.id}`} className="serif" style={{ fontSize: 19, fontWeight: 500, color: "var(--papel)" }}>
+                  {c.series.name} <span style={{ color: "var(--mut)", fontSize: 15 }}>›</span>
+                </Link>
                 <span style={{ color: "var(--ambar)", fontSize: 13.5, fontWeight: 700 }}>
                   {ownedByNumber.size} de {total ?? "?"}
                 </span>
