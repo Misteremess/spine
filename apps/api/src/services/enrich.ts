@@ -11,7 +11,6 @@ import { mergeResults } from "./merge";
 import { seriesNameKey } from "./series";
 import {
   coverByIsbn,
-  fromGoogleBooks,
   fromHardcover,
   fromIsbnDb,
   fromOpenLibrary,
@@ -50,9 +49,8 @@ export async function enrichEdition(isbn13: string): Promise<boolean> {
   if (!Object.values(missing).some(Boolean)) return false;
 
   const settled = await Promise.allSettled([
-    fromOpenLibrary(isbn13),
-    fromGoogleBooks(isbn13),
     fromIsbnDb(isbn13),
+    fromOpenLibrary(isbn13),
     fromHardcover(isbn13),
   ]);
   const results: import("./sources").SourceResult[] = settled.map((r) =>

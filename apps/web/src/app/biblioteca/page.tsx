@@ -219,7 +219,7 @@ export default function Biblioteca() {
                     style={{
                       width: spineWidth(item.pages),
                       height: spineHeight(seed),
-                      background: bg,
+                      background: item.coverUrl ? "var(--tinta2)" : bg,
                       color: ink,
                       borderRadius: "4px 4px 0 0",
                       border: "1px solid rgba(0,0,0,0.25)",
@@ -229,21 +229,30 @@ export default function Biblioteca() {
                       overflow: "hidden",
                     }}
                   >
-                    <span
-                      style={{
-                        writingMode: "vertical-rl",
-                        transform: "rotate(180deg)",
-                        fontSize: 11,
-                        fontWeight: 600,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        maxHeight: spineHeight(seed) - 16,
-                        padding: "8px 0",
-                      }}
-                    >
-                      {item.title ?? "Sin título"}
-                    </span>
+                    {item.coverUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.coverUrl}
+                        alt=""
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
+                    ) : (
+                      <span
+                        style={{
+                          writingMode: "vertical-rl",
+                          transform: "rotate(180deg)",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxHeight: spineHeight(seed) - 16,
+                          padding: "8px 0",
+                        }}
+                      >
+                        {item.title ?? "Sin título"}
+                      </span>
+                    )}
                   </Link>
                 );
               })}

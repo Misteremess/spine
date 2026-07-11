@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import {
@@ -321,16 +322,24 @@ function Shelf({
           const seed = it.title ?? String(it.id);
           const bg = spineColor(seed);
           const ink = spineInk(bg);
+          const h = spineHeight(seed);
           return (
             <Pressable
               key={it.id}
               onPress={() => router.push(`/book/${it.id}`)}
-              style={[s.spine, { width: spineWidth(it.pages), height: spineHeight(seed), backgroundColor: bg }]}
+              style={[s.spine, { width: spineWidth(it.pages), height: h, backgroundColor: it.coverUrl ? colors.tinta2 : bg }]}
             >
-              <Text numberOfLines={1} style={[s.spineText, { color: ink }]}>
-                {it.title ?? "Sin título"}
-              </Text>
-              {it.favorite && <Text style={{ color: ink, fontSize: 9, opacity: 0.85 }}>♥</Text>}
+              {it.coverUrl ? (
+                // Tira vertical de la cubierta real: parece una estantería de verdad.
+                <Image source={{ uri: it.coverUrl }} style={{ width: "100%", height: "100%" }} contentFit="cover" />
+              ) : (
+                <>
+                  <Text numberOfLines={1} style={[s.spineText, { color: ink, width: h - 18 }]}>
+                    {it.title ?? "Sin título"}
+                  </Text>
+                  {it.favorite && <Text style={{ color: ink, fontSize: 9, opacity: 0.85 }}>♥</Text>}
+                </>
+              )}
             </Pressable>
           );
         })}
@@ -431,14 +440,13 @@ const makeStyles = (colors: Palette) => StyleSheet.create({
     borderTopRightRadius: 3,
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.25)",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 8,
+    overflow: "hidden",
   },
   spineText: {
     fontSize: 10,
     fontFamily: fonts.sansSemi,
-    width: 120,
     textAlign: "center",
     transform: [{ rotate: "90deg" }],
   },

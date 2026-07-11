@@ -8,7 +8,7 @@
  * El radar corre periódicamente; cuando detecta un tomo nuevo avisa a todos
  * los usuarios que tienen algún tomo de esa saga.
  */
-import { eq, isNull, lt, or, sql } from "drizzle-orm";
+import { eq, isNull, lt, or } from "drizzle-orm";
 import { db, schema } from "../db/index";
 import { env } from "../env";
 import { extractFromTitle, seriesNameKey } from "./series";
@@ -141,67 +141,49 @@ export type ReleaseHit = {
 };
 
 /**
- * Radar de Google Books: busca el título de la serie y extrae los tomos
- * numerados. `lang` acota al mercado del usuario (las novedades que
- * importan son las de TU edición, no la japonesa).
+ * Radar de novedades por ISBNdb: busca el nombre de la serie y extrae los
+ * tomos numerados de los títulos. (Google Books retirado por coste/cuota.)
  */
-export async function scanGoogleBooksReleases(
-  name: string,
-  lang: string | null
-): Promise<ReleaseHit[]> {
-  const hits = await scanGoogleBooksOnce(name, lang);
+export async function scanSeriesReleases(name: string): Promise<ReleaseHit[]> {
+  const hits = await scanIsbnDbOnce(name);
   if (hits.length > 0) return hits;
-  // Serie nicho en ese idioma: reintentar sin acotar y con el nombre limpio.
+  // Serie nicho: reintentar con el nombre limpio de sufijos de edición.
   const stripped = stripEditionSuffix(name);
-  if (lang) {
-    const noLang = await scanGoogleBooksOnce(stripped, null);
-    if (noLang.length > 0) return noLang;
-  }
-  return stripped === name ? [] : scanGoogleBooksOnce(stripped, lang);
+  return stripped === name ? [] : scanIsbnDbOnce(stripped);
 }
 
-async function scanGoogleBooksOnce(name: string, lang: string | null): Promise<ReleaseHit[]> {
-  if (!env.GOOGLE_BOOKS_API_KEY) return [];
-  // El buscador de GB no entiende "×" (SPY×FAMILY): en los títulos impresos
-  // españoles es "Spy x Family".
-  const q = encodeURIComponent(`intitle:"${name.replace(/×/g, " x ").replace(/\s{2,}/g, " ")}"`);
-  const langParam = lang ? `&langRestrict=${encodeURIComponent(lang)}` : "";
-  const url =
-    `https://www.googleapis.com/books/v1/volumes?q=${q}${langParam}` +
-    `&orderBy=newest&maxResults=40&key=${env.GOOGLE_BOOKS_API_KEY}`;
+async function scanIsbnDbOnce(name: string): Promise<ReleaseHit[]> {
+  if (!env.ISBNDB_KEY) return [];
+  // "×" (SPY×FAMILY) se imprime "Spy x Family" en las ediciones españolas.
+  const query = name.replace(/×/g, " x ").replace(/\s{2,}/g, " ").trim();
+  const url = `https://api2.isbndb.com/books/${encodeURIComponent(query)}?pageSize=40`;
   try {
     const res = await fetch(url, {
-      headers: { "User-Agent": UA },
+      headers: { "User-Agent": UA, Authorization: env.ISBNDB_KEY },
       signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) return [];
-    const items = ((await res.json()) as Record<string, any>)?.items;
-    if (!Array.isArray(items)) return [];
+    const books = ((await res.json()) as Record<string, any>)?.books;
+    if (!Array.isArray(books)) return [];
 
     const key = seriesNameKey(name);
     const byVolume = new Map<number, ReleaseHit>();
-    for (const it of items) {
-      const vi = it?.volumeInfo;
-      if (!vi || typeof vi.title !== "string") continue;
-      const hit = extractFromTitle(vi.title);
+    for (const b of books) {
+      if (typeof b?.title !== "string") continue;
+      const hit = extractFromTitle(b.title);
       if (!hit?.volume) continue;
       // El título extraído debe ser la MISMA serie, no una parecida.
       const hitKey = seriesNameKey(hit.name);
       if (hitKey !== key && !titlesMatch(hit.name, name)) continue;
 
-      const isbn13 = Array.isArray(vi.industryIdentifiers)
-        ? (vi.industryIdentifiers.find((x: any) => x?.type === "ISBN_13")?.identifier ?? null)
-        : null;
+      const isbn13 = typeof b.isbn13 === "string" ? b.isbn13 : null;
       const prev = byVolume.get(hit.volume);
       const entry: ReleaseHit = {
         volumeNumber: hit.volume,
-        title: vi.title,
-        isbn13: typeof isbn13 === "string" ? isbn13 : null,
-        publishedDate: typeof vi.publishedDate === "string" ? vi.publishedDate : null,
-        coverUrl:
-          typeof vi.imageLinks?.thumbnail === "string"
-            ? vi.imageLinks.thumbnail.replace("http://", "https://")
-            : null,
+        title: b.title,
+        isbn13,
+        publishedDate: typeof b.date_published === "string" ? b.date_published : null,
+        coverUrl: typeof b.image === "string" ? b.image : null,
       };
       // Ante ediciones duplicadas del mismo tomo, prioriza la que tenga ISBN.
       if (!prev || (!prev.isbn13 && entry.isbn13)) byVolume.set(hit.volume, entry);
@@ -210,18 +192,6 @@ async function scanGoogleBooksOnce(name: string, lang: string | null): Promise<R
   } catch {
     return [];
   }
-}
-
-/** Idioma dominante de las ediciones que los usuarios tienen de esta serie. */
-async function dominantLanguage(seriesId: number): Promise<string | null> {
-  const rows = await db
-    .select({ language: schema.editions.language, n: sql<number>`count(*)` })
-    .from(schema.editions)
-    .innerJoin(schema.works, eq(schema.editions.workId, schema.works.id))
-    .where(eq(schema.works.seriesId, seriesId))
-    .groupBy(schema.editions.language)
-    .orderBy(sql`count(*) desc`);
-  return rows.find((r) => r.language)?.language ?? null;
 }
 
 /** Usuarios que tienen al menos un tomo de la serie (a quienes avisar). */
@@ -254,7 +224,7 @@ export async function refreshSeries(seriesId: number): Promise<{ newVolumes: Rel
   const [ani, releases] = await Promise.all([
     // Sin ficha AniList previa se intenta; con ella, se re-consulta por si terminó.
     fetchAniListInfo(ser.name),
-    scanGoogleBooksReleases(ser.name, await dominantLanguage(seriesId)),
+    scanSeriesReleases(ser.name),
   ]);
 
   const patch: Partial<typeof schema.series.$inferInsert> = { checkedAt: new Date() };

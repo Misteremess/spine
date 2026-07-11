@@ -1,11 +1,10 @@
 /**
  * Clientes de las fuentes externas de la cascada (plan §13).
- * Lecciones de fase 0 aplicadas:
- *  - OL guarda autores/portada a nivel de work → seguir SIEMPRE el enlace.
- *  - Google Books responde de forma intermitente → reintentos con backoff.
- *  - GB exige API key (el acceso anónimo devuelve 429).
+ * Fuentes activas: ISBNdb (mejor cobertura ES, de pago), OpenLibrary y
+ * Hardcover (gratis). Google Books retirado por riesgo de coste/cuota.
+ * Lección de fase 0: OL guarda autores/portada a nivel de work → seguir
+ * SIEMPRE el enlace edition→work.
  */
-import { createHash } from "node:crypto";
 import type { BookMetadata } from "@spine/shared";
 import { env } from "../env";
 import { extractSeries } from "./series";
@@ -109,18 +108,11 @@ export async function fromOpenLibrary(isbn13: string): Promise<SourceResult> {
   return { partial, source: "openlibrary" };
 }
 
-/** Imágenes "portada no disponible" de Google Books, por zoom. */
-export const GB_PLACEHOLDER_MD5 = new Set([
-  "d7c21c65fc861fc5128753e9e091b23c", // zoom=1
-  "1fe98bd081e1f98c8193d52c74cf2ad2", // zoom=3
-]);
-
 /**
- * Cadena de portadas por ISBN, independiente de las fichas:
- * 1. Índice de covers de OL (HEAD con default=false).
- * 2. Portada directa de Google Books (existe para ~87% de los ISBNs
- *    españoles que ni siquiera resuelven metadatos; si no hay imagen
- *    devuelve un gif diminuto, de ahí el umbral de tamaño).
+ * Portada por ISBN, independiente de las fichas: índice de covers de Open
+ * Library (gratis). ISBNdb ya cubre el ~98% de portadas en la cascada, así
+ * que esto es solo la red de seguridad para lo que falte. (El fallback de
+ * imágenes de Google Books se retiró: nada de Google.)
  */
 export async function coverByIsbn(isbn13: string): Promise<string | null> {
   const ol = `https://covers.openlibrary.org/b/isbn/${isbn13}-L.jpg?default=false`;
@@ -132,24 +124,7 @@ export async function coverByIsbn(isbn13: string): Promise<string | null> {
     });
     if (res.ok) return ol;
   } catch {
-    /* probamos la siguiente fuente */
-  }
-
-  // zoom=3 da ~575px de ancho; si no existe a esa resolución, zoom=1 (128px).
-  // GB devuelve una imagen genérica de "no disponible" (no un 404), así que
-  // hay que descartarla por hash — el tamaño no vale, pesa 246 KB.
-  for (const zoom of [3, 1]) {
-    const gb = `https://books.google.com/books/content?vid=ISBN${isbn13}&printsec=frontcover&img=1&zoom=${zoom}`;
-    try {
-      const res = await fetch(gb, { redirect: "follow", signal: AbortSignal.timeout(6000) });
-      if (!res.ok) continue;
-      const buf = Buffer.from(await res.arrayBuffer());
-      if (buf.byteLength > 1500 && !GB_PLACEHOLDER_MD5.has(createHash("md5").update(buf).digest("hex"))) {
-        return gb;
-      }
-    } catch {
-      /* probamos el siguiente zoom */
-    }
+    /* sin portada disponible */
   }
   return null;
 }
@@ -315,46 +290,6 @@ export async function fromHardcover(isbn13: string): Promise<SourceResult> {
   }
 }
 
-export async function fromGoogleBooks(isbn13: string): Promise<SourceResult> {
-  if (!env.GOOGLE_BOOKS_API_KEY) return null;
-  // Sin `country`: fijarlo a ES filtraba resultados que GB SÍ tiene
-  // (verificado: rescata el 58% de los ISBNs españoles no resueltos).
-  // Si GB exige país por la IP, se reintenta una vez con country=ES.
-  const base = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn13}&key=${env.GOOGLE_BOOKS_API_KEY}`;
-
-  // GB a veces devuelve 200 con cero items para un ISBN que SÍ tiene
-  // (intermitencia verificada en fase 0 y en producción): un reintento
-  // corto recupera la mayoría de esos falsos negativos.
-  let vi: Record<string, any> | undefined;
-  for (let attempt = 0; attempt < 2 && !vi; attempt++) {
-    if (attempt > 0) await new Promise((r) => setTimeout(r, 400));
-    let { status, data } = await fetchJson(base);
-    if (status === 403) ({ status, data } = await fetchJson(`${base}&country=ES`));
-    if (status !== 200) return null;
-    vi = (data as Record<string, any> | null)?.items?.[0]?.volumeInfo;
-  }
-  if (!vi) return null;
-
-  return {
-    source: "googlebooks",
-    partial: {
-      isbn13,
-      title: typeof vi.title === "string" ? vi.title : undefined,
-      subtitle: typeof vi.subtitle === "string" ? vi.subtitle : undefined,
-      authors: Array.isArray(vi.authors) ? vi.authors : undefined,
-      publisher: typeof vi.publisher === "string" ? vi.publisher : undefined,
-      language: typeof vi.language === "string" ? vi.language : undefined,
-      pages: typeof vi.pageCount === "number" && vi.pageCount > 0 ? vi.pageCount : undefined,
-      publishedDate: typeof vi.publishedDate === "string" ? vi.publishedDate : undefined,
-      coverUrl:
-        typeof vi.imageLinks?.thumbnail === "string"
-          ? vi.imageLinks.thumbnail.replace("http://", "https://")
-          : undefined,
-      description: typeof vi.description === "string" ? vi.description : undefined,
-    },
-  };
-}
-
 /** Un resultado de búsqueda con datos reales para elegir a mano. */
 export type SearchCandidate = {
   isbn13: string | null;
@@ -368,52 +303,81 @@ export type SearchCandidate = {
 
 /**
  * Búsqueda por texto libre (título, autor…) para wishlist y alta manual:
- * Google Books devuelve candidatos reales entre los que elegir, en vez de
- * teclear los datos a mano. Prioriza los que traen ISBN-13 (los que luego
- * se pueden resolver a ficha completa).
+ * devuelve candidatos reales entre los que elegir en vez de teclear a mano.
+ * ISBNdb primero (mejor catálogo ES); OpenLibrary de reserva gratis. Sin
+ * Google. Prioriza los que traen ISBN-13 (resolubles a ficha completa).
  */
 export async function searchBooks(query: string, limit = 12): Promise<SearchCandidate[]> {
-  if (!env.GOOGLE_BOOKS_API_KEY) return [];
-  const q = encodeURIComponent(query.trim());
-  const url =
-    `https://www.googleapis.com/books/v1/volumes?q=${q}` +
-    `&maxResults=${Math.min(20, limit * 2)}&key=${env.GOOGLE_BOOKS_API_KEY}`;
-  // GB da 503 intermitentes: la búsqueda nunca debe tumbar la petición.
-  let data: unknown;
+  const q = query.trim();
+  if (!q) return [];
+  const fromIsbndb = env.ISBNDB_KEY ? await searchIsbnDb(q, limit).catch(() => []) : [];
+  const out = fromIsbndb.length ? fromIsbndb : await searchOpenLibrary(q, limit).catch(() => []);
+  // Los que tienen ISBN primero: se pueden resolver a ficha completa.
+  return out.sort((a, b) => (a.isbn13 ? 0 : 1) - (b.isbn13 ? 0 : 1));
+}
+
+/** Búsqueda en ISBNdb (api2.isbndb.com/books/:query). */
+async function searchIsbnDb(query: string, limit: number): Promise<SearchCandidate[]> {
+  const url = `https://api2.isbndb.com/books/${encodeURIComponent(query)}?pageSize=${Math.min(20, limit * 2)}`;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 8000);
   try {
-    ({ data } = await fetchJson(url, { retries: 1 }));
+    const res = await fetch(url, { headers: { "User-Agent": UA, Authorization: env.ISBNDB_KEY } });
+    if (!res.ok) return [];
+    const books = ((await res.json()) as Record<string, any>)?.books;
+    if (!Array.isArray(books)) return [];
+    const out: SearchCandidate[] = [];
+    const seen = new Set<string>();
+    for (const b of books) {
+      if (typeof b?.title !== "string") continue;
+      const key = `${b.title}|${(b.authors ?? []).join(",")}`.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({
+        isbn13: typeof b.isbn13 === "string" ? b.isbn13 : null,
+        title: b.title,
+        authors: Array.isArray(b.authors) ? b.authors.slice(0, 3) : [],
+        publisher: typeof b.publisher === "string" ? b.publisher : null,
+        publishedDate: typeof b.date_published === "string" ? b.date_published : null,
+        pages: typeof b.pages === "number" && b.pages > 0 ? b.pages : null,
+        coverUrl: typeof b.image === "string" ? b.image : null,
+      });
+      if (out.length >= limit) break;
+    }
+    return out;
   } catch {
     return [];
+  } finally {
+    clearTimeout(t);
   }
-  if (!data || typeof data !== "object") return [];
-  const items = (data as Record<string, any>).items;
-  if (!Array.isArray(items)) return [];
+}
 
+/** Búsqueda en Open Library (gratis) como reserva. */
+async function searchOpenLibrary(query: string, limit: number): Promise<SearchCandidate[]> {
+  const url =
+    `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}` +
+    `&limit=${Math.min(20, limit * 2)}&fields=title,author_name,isbn,publisher,first_publish_year,number_of_pages_median,cover_i`;
+  const { data } = await fetchJson(url, { retries: 1 });
+  const docs = (data as Record<string, any> | null)?.docs;
+  if (!Array.isArray(docs)) return [];
   const out: SearchCandidate[] = [];
   const seen = new Set<string>();
-  for (const it of items) {
-    const vi = it?.volumeInfo;
-    if (!vi || typeof vi.title !== "string") continue;
-    const ids = Array.isArray(vi.industryIdentifiers) ? vi.industryIdentifiers : [];
-    const isbn13 = ids.find((x: any) => x?.type === "ISBN_13")?.identifier ?? null;
-    // Deduplicar por título+autor (GB repite ediciones del mismo libro).
-    const key = `${vi.title}|${(vi.authors ?? []).join(",")}`.toLowerCase();
+  for (const d of docs) {
+    if (typeof d?.title !== "string") continue;
+    const key = `${d.title}|${(d.author_name ?? []).join(",")}`.toLowerCase();
     if (seen.has(key)) continue;
     seen.add(key);
+    const isbn13 = Array.isArray(d.isbn) ? d.isbn.find((x: string) => /^\d{13}$/.test(x)) ?? null : null;
     out.push({
-      isbn13: typeof isbn13 === "string" ? isbn13 : null,
-      title: vi.title,
-      authors: Array.isArray(vi.authors) ? vi.authors.slice(0, 3) : [],
-      publisher: typeof vi.publisher === "string" ? vi.publisher : null,
-      publishedDate: typeof vi.publishedDate === "string" ? vi.publishedDate : null,
-      pages: typeof vi.pageCount === "number" && vi.pageCount > 0 ? vi.pageCount : null,
-      coverUrl:
-        typeof vi.imageLinks?.thumbnail === "string"
-          ? vi.imageLinks.thumbnail.replace("http://", "https://")
-          : null,
+      isbn13,
+      title: d.title,
+      authors: Array.isArray(d.author_name) ? d.author_name.slice(0, 3) : [],
+      publisher: Array.isArray(d.publisher) ? d.publisher[0] ?? null : null,
+      publishedDate: d.first_publish_year ? String(d.first_publish_year) : null,
+      pages: typeof d.number_of_pages_median === "number" ? d.number_of_pages_median : null,
+      coverUrl: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg` : null,
     });
     if (out.length >= limit) break;
   }
-  // Los que tienen ISBN primero: se pueden resolver a ficha completa.
-  return out.sort((a, b) => (a.isbn13 ? 0 : 1) - (b.isbn13 ? 0 : 1));
+  return out;
 }

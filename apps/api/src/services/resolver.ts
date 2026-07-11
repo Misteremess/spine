@@ -11,7 +11,6 @@ import { mergeResults } from "./merge";
 import { extractSeries, seriesNameKey } from "./series";
 import {
   coverByIsbn,
-  fromGoogleBooks,
   fromHardcover,
   fromIsbnDb,
   fromOpenLibrary,
@@ -149,11 +148,12 @@ export async function resolveIsbn(isbn13: string): Promise<ResolveResponse | nul
     return { metadata: cached, source: "catalog", cached: true };
   }
 
-  // ISBNdb y Hardcover son no-op sin key: la cascada crece sola al activarlas.
+  // Cascada por prioridad (mergeResults: primero con valor gana). ISBNdb va
+  // primero (98% de cobertura y portadas); OpenLibrary y Hardcover, gratis,
+  // rellenan lo que falte. Google Books retirado (riesgo de coste/cuota).
   const settled = await Promise.allSettled([
-    fromOpenLibrary(isbn13),
-    fromGoogleBooks(isbn13),
     fromIsbnDb(isbn13),
+    fromOpenLibrary(isbn13),
     fromHardcover(isbn13),
   ]);
   const results: import("./sources").SourceResult[] = settled.map((r) =>
