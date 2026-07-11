@@ -1,5 +1,5 @@
 import { toIsbn13 } from "@spine/shared";
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { db, schema } from "../db/index";
@@ -200,6 +200,35 @@ export function libraryRoutes(app: FastifyInstance) {
     const latest = new Map<number, (typeof allReadings)[number]>();
     for (const r of allReadings) if (!latest.has(r.userBookId)) latest.set(r.userBookId, r);
 
+    // Préstamos activos (badge "prestado a…") y etiquetas por ejemplar.
+    const activeLoans = ids.length
+      ? await db
+          .select({ userBookId: schema.loans.userBookId, borrower: schema.loans.borrower })
+          .from(schema.loans)
+          .where(and(eq(schema.loans.userId, req.user.id), isNull(schema.loans.returnedAt)))
+      : [];
+    const loanByBook = new Map(activeLoans.map((l) => [l.userBookId, l.borrower]));
+
+    const tagRows = ids.length
+      ? await db
+          .select({
+            userBookId: schema.userBookTags.userBookId,
+            id: schema.tags.id,
+            name: schema.tags.name,
+            color: schema.tags.color,
+          })
+          .from(schema.userBookTags)
+          .innerJoin(schema.tags, eq(schema.userBookTags.tagId, schema.tags.id))
+          .where(inArray(schema.userBookTags.userBookId, ids))
+      : [];
+    const tagsByBook = new Map<number, { id: number; name: string; color: string | null }[]>();
+    for (const t of tagRows) {
+      tagsByBook.set(t.userBookId, [
+        ...(tagsByBook.get(t.userBookId) ?? []),
+        { id: t.id, name: t.name, color: t.color },
+      ]);
+    }
+
     return {
       items: books.map((b) => ({
         ...b.userBook,
@@ -213,6 +242,8 @@ export function libraryRoutes(app: FastifyInstance) {
             ? [b.userBook.customAuthors]
             : [],
         reading: latest.get(b.userBook.id) ?? null,
+        loanedTo: loanByBook.get(b.userBook.id) ?? null,
+        tags: tagsByBook.get(b.userBook.id) ?? [],
       })),
     };
   });
@@ -308,7 +339,10 @@ export function libraryRoutes(app: FastifyInstance) {
    * si la comparten, se clona la obra para este ejemplar.
    */
   const SeriesSchema = z.object({
-    series: z.string().trim().max(200).nullable(),
+    /** Nombre de saga (se crea o se reutiliza por nameKey). */
+    series: z.string().trim().max(200).nullable().optional(),
+    /** O bien el id de una saga existente elegida del buscador. */
+    seriesId: z.number().int().positive().nullable().optional(),
     volume: z.number().int().min(1).max(1000).nullable().optional(),
   });
   app.patch<{ Params: { id: string } }>("/v1/library/:id/series", async (req, reply) => {
@@ -321,7 +355,17 @@ export function libraryRoutes(app: FastifyInstance) {
     }
 
     let seriesId: number | null = null;
-    if (body.series) {
+    if (body.seriesId != null) {
+      // Saga existente elegida del buscador: verifica que exista.
+      const [ser] = await db
+        .select({ id: schema.series.id })
+        .from(schema.series)
+        .where(eq(schema.series.id, body.seriesId))
+        .limit(1);
+      if (!ser) return reply.code(404).send({ error: "series_not_found" });
+      seriesId = ser.id;
+    } else if (body.series) {
+      // Nombre nuevo o existente: se reutiliza por nameKey.
       const key = seriesNameKey(body.series);
       const [ser] = await db
         .insert(schema.series)
@@ -330,6 +374,7 @@ export function libraryRoutes(app: FastifyInstance) {
         .returning({ id: schema.series.id });
       seriesId = ser?.id ?? null;
     }
+    // Si no llega ni seriesId ni series, seriesId queda null → se quita de la saga.
 
     const [ed] = await db
       .select({ id: schema.editions.id, workId: schema.editions.workId })

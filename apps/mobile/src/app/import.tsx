@@ -3,9 +3,11 @@ import * as FileSystem from "expo-file-system/legacy";
 import * as Haptics from "expo-haptics";
 import { router, Stack } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { api, ApiError } from "../lib/api";
-import { colors, fonts } from "../lib/theme";
+import { useThemeColors, useThemedStyles } from "../lib/settings";
+import { fonts, type Palette } from "../lib/theme";
+import { Text } from "../lib/ui";
 
 type Result = { imported: number; skipped: number; failed: number; total: number };
 
@@ -14,6 +16,8 @@ type Result = { imported: number; skipped: number; failed: number; total: number
  * El export se descarga en goodreads.com → My Books → Import and export.
  */
 export default function ImportScreen() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +100,7 @@ export default function ImportScreen() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   card: {
     backgroundColor: colors.tinta2,

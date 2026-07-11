@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { Cover } from "@/components/Cover";
 import { api, ApiError } from "@/lib/api";
+import { spineColor, spineHeight, spineInk, spineWidth } from "@/lib/spine";
 
 type Item = {
   id: number;
@@ -14,6 +16,8 @@ type Item = {
   favorite: boolean;
   authors: string[];
   reading: { status: string } | null;
+  loanedTo: string | null;
+  tags: { id: number; name: string; color: string | null }[];
 };
 
 const STATUS: Record<string, { text: string; color: string }> = {
@@ -37,6 +41,7 @@ export default function Biblioteca() {
   const [items, setItems] = useState<Item[] | null>(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+  const [shelf, setShelf] = useState(false);
   const [isbnInput, setIsbnInput] = useState("");
   const [adding, setAdding] = useState(false);
   const [addMsg, setAddMsg] = useState<{ text: string; ok: boolean } | null>(null);
@@ -129,6 +134,14 @@ export default function Biblioteca() {
         )}
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <button
+            className="pill"
+            style={shelf ? { borderColor: "var(--ambar)", color: "var(--ambar)" } : undefined}
+            onClick={() => setShelf((v) => !v)}
+            title="Cambiar vista"
+          >
+            {shelf ? "▦ Mosaico" : "▥ Estantería"}
+          </button>
           <input
             style={{ flex: "1 1 220px", maxWidth: 340 }}
             placeholder="Buscar por título o autor"
@@ -151,6 +164,24 @@ export default function Biblioteca() {
           ))}
         </div>
 
+        {items === null && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(132px, 1fr))",
+              gap: 16,
+            }}
+          >
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} style={{ display: "grid", gap: 6 }}>
+                <div className="skeleton" style={{ aspectRatio: "2 / 3", borderRadius: 10 }} />
+                <div className="skeleton" style={{ height: 11, borderRadius: 4, width: "80%" }} />
+                <div className="skeleton" style={{ height: 9, borderRadius: 4, width: "55%" }} />
+              </div>
+            ))}
+          </div>
+        )}
+
         {items !== null && visible.length === 0 && (
           <div className="card" style={{ textAlign: "center", padding: 48 }}>
             <p className="serif" style={{ fontSize: 18, color: "var(--marfil)" }}>
@@ -164,9 +195,68 @@ export default function Biblioteca() {
           </div>
         )}
 
+        {shelf && visible.length > 0 && (
+          <div className="card" style={{ padding: 20 }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "flex-end",
+                gap: 4,
+                borderBottom: "4px solid var(--tinta3)",
+                paddingBottom: 4,
+              }}
+            >
+              {visible.map((item) => {
+                const seed = item.title ?? String(item.id);
+                const bg = spineColor(seed);
+                const ink = spineInk(bg);
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/libro/${item.id}`}
+                    title={item.title ?? undefined}
+                    style={{
+                      width: spineWidth(item.pages),
+                      height: spineHeight(seed),
+                      background: bg,
+                      color: ink,
+                      borderRadius: "4px 4px 0 0",
+                      border: "1px solid rgba(0,0,0,0.25)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <span
+                      style={{
+                        writingMode: "vertical-rl",
+                        transform: "rotate(180deg)",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxHeight: spineHeight(seed) - 16,
+                        padding: "8px 0",
+                      }}
+                    >
+                      {item.title ?? "Sin título"}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+            <p className="muted" style={{ fontSize: 12, marginTop: 10, textAlign: "center" }}>
+              Cada lomo es un libro · el grosor son sus páginas
+            </p>
+          </div>
+        )}
+
         <div
           style={{
-            display: "grid",
+            display: shelf ? "none" : "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(132px, 1fr))",
             gap: 16,
           }}
@@ -190,28 +280,7 @@ export default function Biblioteca() {
                     border: "1px solid var(--tinta3)",
                   }}
                 >
-                  {item.coverUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.coverUrl}
-                      alt=""
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        height: "100%",
-                        display: "grid",
-                        placeItems: "center",
-                        padding: 10,
-                        textAlign: "center",
-                      }}
-                    >
-                      <span className="muted" style={{ fontSize: 12 }}>
-                        {item.title ?? "Sin título"}
-                      </span>
-                    </div>
-                  )}
+                  <Cover title={item.title} authors={item.authors} coverUrl={item.coverUrl} />
                   {item.favorite && (
                     <span
                       style={{
@@ -247,6 +316,16 @@ export default function Biblioteca() {
                   {item.authors.length > 0 && (
                     <p className="muted" style={{ fontSize: 11.5, marginTop: 2 }}>
                       {item.authors.join(", ")}
+                    </p>
+                  )}
+                  {item.loanedTo && (
+                    <p style={{ color: "var(--arcilla)", fontSize: 11, fontWeight: 600, marginTop: 2 }}>
+                      → prestado a {item.loanedTo}
+                    </p>
+                  )}
+                  {item.tags.length > 0 && (
+                    <p style={{ color: "var(--salvia)", fontSize: 10.5, marginTop: 2 }}>
+                      {item.tags.map((t) => t.name).join(" · ")}
                     </p>
                   )}
                 </div>

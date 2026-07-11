@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import {
@@ -7,13 +6,15 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "../../lib/api";
-import { colors, fonts } from "../../lib/theme";
+import { Cover } from "../../lib/Cover";
+import { useThemeColors, useThemedStyles } from "../../lib/settings";
+import { spineColor, spineHeight, spineInk, spineWidth } from "../../lib/spine";
+import { fonts, type Palette } from "../../lib/theme";
+import { Text, TextInput } from "../../lib/ui";
 
 type Item = {
   id: number;
@@ -25,15 +26,17 @@ type Item = {
   authors: string[];
   createdAt: string;
   reading: { status: string } | null;
+  loanedTo: string | null;
+  tags: { id: number; name: string; color: string | null }[];
 };
 
-const STATUS_LABEL: Record<string, { text: string; color: string }> = {
+const statusLabels = (colors: Palette): Record<string, { text: string; color: string }> => ({
   pending: { text: "Pendiente", color: colors.mut },
   reading: { text: "Leyendo", color: colors.ambar },
   paused: { text: "En pausa", color: colors.mut },
   finished: { text: "Leído", color: colors.salvia },
   abandoned: { text: "Abandonado", color: colors.arcilla },
-};
+});
 
 const FILTERS: { key: string; label: string }[] = [
   { key: "all", label: "Todos" },
@@ -49,12 +52,15 @@ const fold = (s: string) => s.toLowerCase().normalize("NFD").replace(/\p{M}/gu, 
 
 export default function Library() {
   const insets = useSafeAreaInsets();
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  const STATUS_LABEL = useMemo(() => statusLabels(colors), [colors]);
   const [items, setItems] = useState<Item[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [sortAz, setSortAz] = useState(false);
-  const [grid, setGrid] = useState(false);
+  const [view, setView] = useState<"list" | "grid" | "spine">("list");
 
   const visible = useMemo(() => {
     let list = items;
@@ -95,9 +101,20 @@ export default function Library() {
           <Text style={s.h1}>Biblioteca</Text>
           <Text style={{ color: colors.mut, fontSize: 14, fontVariant: ["tabular-nums"] }}>{items.length}</Text>
         </View>
-        <Pressable onPress={() => router.push("/collections")} hitSlop={10}>
-          <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>▦ Sagas</Text>
-        </Pressable>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
+          <Pressable
+            onPress={() => setView((v) => (v === "list" ? "grid" : v === "grid" ? "spine" : "list"))}
+            style={[s.viewToggle, view !== "list" && { borderColor: colors.ambar }]}
+            hitSlop={8}
+          >
+            <Text style={{ color: view !== "list" ? colors.ambar : colors.marfil, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
+              {view === "list" ? "▦ Mosaico" : view === "grid" ? "▥ Lomos" : "▤ Lista"}
+            </Text>
+          </Pressable>
+          <Pressable onPress={() => router.push("/collections")} hitSlop={10}>
+            <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>▦ Sagas</Text>
+          </Pressable>
+        </View>
       </View>
 
       {/* Buscador + filtros (aparecen a partir de unos cuantos libros) */}
@@ -141,23 +158,18 @@ export default function Library() {
                 {sortAz ? "A–Z ✓" : "A–Z"}
               </Text>
             </Pressable>
-            <Pressable
-              onPress={() => setGrid((v) => !v)}
-              style={[s.filterChip, grid && { borderColor: colors.ambar }]}
-            >
-              <Text style={{ color: grid ? colors.ambar : colors.mut, fontSize: 12, fontFamily: fonts.sansSemi }}>
-                {grid ? "▤ Lista" : "▦ Portadas"}
-              </Text>
-            </Pressable>
           </ScrollView>
         </View>
       )}
 
+      {view === "spine" ? (
+        <Shelf items={visible} refreshing={refreshing} onRefresh={load} setRefreshing={setRefreshing} />
+      ) : (
       <FlatList
-        key={grid ? "grid" : "list"}
+        key={view}
         data={visible}
-        numColumns={grid ? 3 : 1}
-        columnWrapperStyle={grid ? { gap: 10 } : undefined}
+        numColumns={view === "grid" ? 3 : 1}
+        columnWrapperStyle={view === "grid" ? { gap: 10 } : undefined}
         keyExtractor={(it) => String(it.id)}
         contentContainerStyle={{ padding: 16, gap: 10, paddingBottom: 120 }}
         refreshControl={
@@ -209,21 +221,16 @@ export default function Library() {
         }
         renderItem={({ item }) => {
           const st = item.reading ? STATUS_LABEL[item.reading.status] : undefined;
-          if (grid) {
+          if (view === "grid") {
             return (
               <Pressable style={s.gridCell} onPress={() => router.push(`/book/${item.id}`)}>
-                {item.coverUrl ? (
-                  <Image source={{ uri: item.coverUrl }} style={s.gridCover} contentFit="cover" />
-                ) : (
-                  <View style={[s.gridCover, s.gridPlaceholder]}>
-                    <Text
-                      style={{ color: colors.mut, fontSize: 10.5, textAlign: "center", padding: 6 }}
-                      numberOfLines={4}
-                    >
-                      {item.title ?? "Sin título"}
-                    </Text>
-                  </View>
-                )}
+                <Cover
+                  title={item.title}
+                  author={item.authors[0]}
+                  coverUrl={item.coverUrl}
+                  style={s.gridCover}
+                  titleSize={13}
+                />
                 {st && <View style={[s.gridDot, { backgroundColor: st.color }]} />}
                 {item.favorite && <Text style={s.gridHeart}>♥</Text>}
               </Pressable>
@@ -231,15 +238,7 @@ export default function Library() {
           }
           return (
             <Pressable style={s.card} onPress={() => router.push(`/book/${item.id}`)}>
-              {item.coverUrl ? (
-                <Image source={{ uri: item.coverUrl }} style={s.cover} contentFit="cover" />
-              ) : (
-                <View style={[s.cover, s.coverPlaceholder]}>
-                  <Text style={{ color: colors.mut, fontSize: 9, textAlign: "center" }}>
-                    sin{"\n"}portada
-                  </Text>
-                </View>
-              )}
+              <Cover title={item.title} author={item.authors[0]} coverUrl={item.coverUrl} style={s.cover} titleSize={10} radius={6} />
               <View style={{ flex: 1, gap: 3 }}>
                 <Text style={s.title} numberOfLines={2}>
                   {item.title ?? "Sin título"}
@@ -250,6 +249,16 @@ export default function Library() {
                   </Text>
                 ) : item.pages ? (
                   <Text style={s.meta}>{item.pages} págs.</Text>
+                ) : null}
+                {item.loanedTo ? (
+                  <Text style={{ color: colors.arcilla, fontSize: 11, fontFamily: fonts.sansSemi }} numberOfLines={1}>
+                    → prestado a {item.loanedTo}
+                  </Text>
+                ) : null}
+                {item.tags.length > 0 ? (
+                  <Text style={{ color: colors.salvia, fontSize: 10.5 }} numberOfLines={1}>
+                    {item.tags.map((t) => t.name).join(" · ")}
+                  </Text>
                 ) : null}
               </View>
               {item.favorite && <Text style={{ color: colors.arcilla, fontSize: 13 }}>♥</Text>}
@@ -262,12 +271,78 @@ export default function Library() {
           );
         }}
       />
+      )}
 
     </View>
   );
 }
 
-const s = StyleSheet.create({
+/**
+ * Vista estantería (plan §6.3): los libros como lomos de colores, grosor
+ * proporcional a las páginas. La captura firma de Spine.
+ */
+function Shelf({
+  items,
+  refreshing,
+  onRefresh,
+  setRefreshing,
+}: {
+  items: Item[];
+  refreshing: boolean;
+  onRefresh: () => Promise<void>;
+  setRefreshing: (v: boolean) => void;
+}) {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  if (items.length === 0) {
+    return (
+      <View style={{ alignItems: "center", marginTop: 60 }}>
+        <Text style={{ color: colors.mut, fontSize: 13 }}>Nada que mostrar en la estantería</Text>
+      </View>
+    );
+  }
+  return (
+    <ScrollView
+      contentContainerStyle={{ padding: 16, paddingBottom: 120, gap: 20 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          tintColor={colors.ambar}
+          onRefresh={async () => {
+            setRefreshing(true);
+            await onRefresh();
+            setRefreshing(false);
+          }}
+        />
+      }
+    >
+      <View style={s.shelfRow}>
+        {items.map((it) => {
+          const seed = it.title ?? String(it.id);
+          const bg = spineColor(seed);
+          const ink = spineInk(bg);
+          return (
+            <Pressable
+              key={it.id}
+              onPress={() => router.push(`/book/${it.id}`)}
+              style={[s.spine, { width: spineWidth(it.pages), height: spineHeight(seed), backgroundColor: bg }]}
+            >
+              <Text numberOfLines={1} style={[s.spineText, { color: ink }]}>
+                {it.title ?? "Sin título"}
+              </Text>
+              {it.favorite && <Text style={{ color: ink, fontSize: 9, opacity: 0.85 }}>♥</Text>}
+            </Pressable>
+          );
+        })}
+      </View>
+      <Text style={{ color: colors.mut, fontSize: 11.5, textAlign: "center" }}>
+        Cada lomo es un libro · el grosor son sus páginas
+      </Text>
+    </ScrollView>
+  );
+}
+
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   header: {
     flexDirection: "row",
@@ -293,6 +368,13 @@ const s = StyleSheet.create({
     borderRadius: 99,
     paddingHorizontal: 12,
     paddingVertical: 6,
+  },
+  viewToggle: {
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 99,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
   },
   card: {
     flexDirection: "row",
@@ -335,6 +417,31 @@ const s = StyleSheet.create({
     textShadowRadius: 3,
   },
   coverPlaceholder: { alignItems: "center", justifyContent: "center" },
+  shelfRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-end",
+    gap: 4,
+    borderBottomWidth: 3,
+    borderBottomColor: colors.tinta3,
+    paddingBottom: 3,
+  },
+  spine: {
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.25)",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  spineText: {
+    fontSize: 10,
+    fontFamily: fonts.sansSemi,
+    width: 120,
+    textAlign: "center",
+    transform: [{ rotate: "90deg" }],
+  },
   title: { color: colors.papel, fontSize: 14.5, fontFamily: fonts.sansSemi },
   meta: { color: colors.mut, fontSize: 11.5 },
   pill: {

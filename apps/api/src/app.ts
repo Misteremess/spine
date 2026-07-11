@@ -5,14 +5,19 @@ import Fastify from "fastify";
 import { ZodError } from "zod";
 import { auth } from "./auth";
 import { env } from "./env";
+import { accountRoutes } from "./routes/account";
 import { clubsRoutes } from "./routes/clubs";
 import { collectionsRoutes } from "./routes/collections";
+import { goalsRoutes } from "./routes/goals";
 import { importRoutes } from "./routes/import";
+import { loansRoutes } from "./routes/loans";
+import { notesRoutes } from "./routes/notes";
 import { reviewsRoutes } from "./routes/reviews";
 import { libraryRoutes } from "./routes/library";
 import { searchRoutes } from "./routes/search";
 import { notificationsRoutes, seriesRoutes } from "./routes/series";
 import { statsRoutes } from "./routes/stats";
+import { tagsRoutes } from "./routes/tags";
 import { wishlistRoutes } from "./routes/wishlist";
 import { resolveIsbn } from "./services/resolver";
 
@@ -114,6 +119,11 @@ export async function buildApp() {
   app.register(async (scope) => reviewsRoutes(scope));
   app.register(async (scope) => clubsRoutes(scope));
   app.register(async (scope) => searchRoutes(scope));
+  app.register(async (scope) => goalsRoutes(scope));
+  app.register(async (scope) => notesRoutes(scope));
+  app.register(async (scope) => loansRoutes(scope));
+  app.register(async (scope) => tagsRoutes(scope));
+  app.register(async (scope) => accountRoutes(scope));
 
   return app;
 }

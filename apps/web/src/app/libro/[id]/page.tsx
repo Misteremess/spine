@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { Cover } from "@/components/Cover";
 import { api } from "@/lib/api";
 
 type ReadingStatus = "pending" | "reading" | "paused" | "finished" | "abandoned";
@@ -51,6 +52,8 @@ export default function Libro() {
   const [editingSaga, setEditingSaga] = useState(false);
   const [sagaName, setSagaName] = useState("");
   const [sagaVol, setSagaVol] = useState("");
+  const [sagaResults, setSagaResults] = useState<{ id: number; name: string; totalVolumes: number | null; owned: boolean }[]>([]);
+  const [celebrate, setCelebrate] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -63,6 +66,17 @@ export default function Libro() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Buscar sagas mientras se edita: las tuyas primero, luego el catálogo.
+  useEffect(() => {
+    if (!editingSaga) return;
+    const t = setTimeout(() => {
+      api<{ items: typeof sagaResults }>(`/v1/series?q=${encodeURIComponent(sagaName.trim())}`)
+        .then((d) => setSagaResults(d.items))
+        .catch(() => {});
+    }, 250);
+    return () => clearTimeout(t);
+  }, [editingSaga, sagaName]);
 
   if (!detail) {
     return (
@@ -83,6 +97,11 @@ export default function Libro() {
   async function setStatus(status: ReadingStatus) {
     if (reading?.status === status) return;
     await api(`/v1/library/${book.id}/status`, { method: "POST", body: { status } });
+    // Celebrar al terminar un libro (plan §9): confeti discreto, una vez.
+    if (status === "finished") {
+      setCelebrate(true);
+      window.setTimeout(() => setCelebrate(false), 1400);
+    }
     await load();
   }
 
@@ -112,18 +131,21 @@ export default function Libro() {
     router.replace("/biblioteca");
   }
 
-  async function saveSaga() {
+  async function saveSaga(seriesId?: number) {
     const vol = Number(sagaVol);
+    const volume = Number.isInteger(vol) && vol >= 1 ? vol : null;
     await api(`/v1/library/${book.id}/series`, {
       method: "PATCH",
-      body: { series: sagaName.trim() || null, volume: Number.isInteger(vol) && vol >= 1 ? vol : null },
+      body: seriesId != null ? { seriesId, volume } : { series: sagaName.trim() || null, volume },
     });
     setEditingSaga(false);
+    setSagaResults([]);
     await load();
   }
 
   return (
     <Shell>
+      {celebrate && <Confetti />}
       <div className="book-layout">
         <div style={{ display: "grid", gap: 12, alignContent: "start" }}>
           <div
@@ -135,20 +157,7 @@ export default function Libro() {
               border: "1px solid var(--tinta3)",
             }}
           >
-            {edition?.coverUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={edition.coverUrl}
-                alt=""
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              />
-            ) : (
-              <div style={{ height: "100%", display: "grid", placeItems: "center" }}>
-                <span className="muted" style={{ fontSize: 12 }}>
-                  sin portada
-                </span>
-              </div>
-            )}
+            <Cover title={title} authors={authors ? [authors] : undefined} coverUrl={edition?.coverUrl} />
           </div>
           <button className="muted" style={{ fontSize: 13 }} onClick={() => void remove()}>
             <span style={{ color: "var(--arcilla)" }}>Eliminar de mi biblioteca</span>
@@ -280,6 +289,12 @@ export default function Libro() {
             </div>
           </div>
 
+          <Tags userBookId={book.id} />
+
+          <Loan userBookId={book.id} />
+
+          <Notes userBookId={book.id} />
+
           {edition?.description && (
             <div className="card">
               <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4, marginBottom: 8 }}>
@@ -320,10 +335,39 @@ export default function Libro() {
                 >
                   <input
                     autoFocus
-                    placeholder="Nombre de la saga (vacío = ninguna)"
+                    placeholder="Busca una saga o escribe una nueva"
                     value={sagaName}
                     onChange={(e) => setSagaName(e.target.value)}
                   />
+                  {sagaResults.length > 0 && (
+                    <div style={{ display: "grid", gap: 4, maxHeight: 180, overflowY: "auto" }}>
+                      {sagaResults.map((r) => (
+                        <button
+                          key={r.id}
+                          type="button"
+                          onClick={() => void saveSaga(r.id)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            textAlign: "left",
+                            padding: "8px 10px",
+                            borderRadius: 8,
+                            border: "1px solid var(--tinta3)",
+                            background: r.id === edition.seriesId ? "var(--tinta3)" : "var(--tinta)",
+                          }}
+                        >
+                          <span style={{ fontSize: 13.5, color: "var(--papel)", flex: 1 }}>▦ {r.name}</span>
+                          {r.owned && (
+                            <span style={{ fontSize: 10.5, color: "var(--salvia)", fontWeight: 600 }}>en tu biblioteca</span>
+                          )}
+                          {r.totalVolumes ? (
+                            <span className="muted" style={{ fontSize: 11 }}>{r.totalVolumes} tomos</span>
+                          ) : null}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <input
                     inputMode="numeric"
                     placeholder="Nº de tomo (opcional)"
@@ -357,6 +401,307 @@ export default function Libro() {
         </div>
       </div>
     </Shell>
+  );
+}
+
+/** Etiquetas del ejemplar: chips con × y alta por nombre. */
+function Tags({ userBookId }: { userBookId: number }) {
+  type Tag = { id: number; name: string; color: string | null };
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [input, setInput] = useState("");
+
+  const load = useCallback(async () => {
+    try {
+      const d = await api<{ items: Tag[] }>(`/v1/library/${userBookId}/tags`);
+      setTags(d.items);
+    } catch {
+      /* no romper la ficha */
+    }
+  }, [userBookId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    const name = input.trim();
+    if (!name) return;
+    await api(`/v1/library/${userBookId}/tags`, { method: "POST", body: { name } });
+    setInput("");
+    await load();
+  }
+
+  async function remove(tagId: number) {
+    setTags((t) => t.filter((x) => x.id !== tagId));
+    await api(`/v1/library/${userBookId}/tags/${tagId}`, { method: "DELETE" }).catch(() => load());
+  }
+
+  return (
+    <div className="card" style={{ display: "grid", gap: 10 }}>
+      <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4 }}>
+        ETIQUETAS
+      </p>
+      {tags.length > 0 && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {tags.map((t) => (
+            <button
+              key={t.id}
+              className="pill"
+              style={{ color: "var(--ambar)", borderColor: "var(--tinta3)" }}
+              onClick={() => void remove(t.id)}
+              title="Quitar etiqueta"
+            >
+              {t.name} <span className="muted">×</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <form style={{ display: "flex", gap: 10 }} onSubmit={add}>
+        <input
+          style={{ flex: 1, maxWidth: 260 }}
+          placeholder="Nueva etiqueta (manga, firmado…)"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button className="btn" type="submit" disabled={!input.trim()}>
+          Añadir
+        </button>
+      </form>
+    </div>
+  );
+}
+
+/** Préstamo: a quién y desde cuándo; "me lo devolvió" cierra y guarda historial. */
+function Loan({ userBookId }: { userBookId: number }) {
+  type LoanRow = { id: number; borrower: string; loanedAt: string; dueAt: string | null };
+  const [active, setActive] = useState<LoanRow | null>(null);
+  const [borrower, setBorrower] = useState("");
+  const [dueAt, setDueAt] = useState("");
+
+  const load = useCallback(async () => {
+    try {
+      const d = await api<{ active: LoanRow | null }>(`/v1/library/${userBookId}/loans`);
+      setActive(d.active);
+    } catch {
+      /* no romper la ficha */
+    }
+  }, [userBookId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function lend(e: React.FormEvent) {
+    e.preventDefault();
+    if (!borrower.trim()) return;
+    await api(`/v1/library/${userBookId}/loans`, {
+      method: "POST",
+      body: { borrower: borrower.trim(), dueAt: /^\d{4}-\d{2}-\d{2}$/.test(dueAt.trim()) ? dueAt.trim() : null },
+    });
+    setBorrower("");
+    setDueAt("");
+    await load();
+  }
+
+  async function giveBack() {
+    if (!active) return;
+    await api(`/v1/loans/${active.id}/return`, { method: "POST" });
+    await load();
+  }
+
+  return (
+    <div className="card" style={{ display: "grid", gap: 10 }}>
+      <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4 }}>
+        PRÉSTAMO
+      </p>
+      {active ? (
+        <>
+          <p style={{ fontSize: 14 }}>
+            Prestado a <strong style={{ color: "var(--ambar)" }}>{active.borrower}</strong>
+          </p>
+          <p className="muted" style={{ fontSize: 13 }}>
+            Desde el {active.loanedAt}
+            {active.dueAt ? ` · recuérdalo el ${active.dueAt}` : ""}
+          </p>
+          <button className="btn" style={{ justifySelf: "start" }} onClick={() => void giveBack()}>
+            Me lo devolvió
+          </button>
+        </>
+      ) : (
+        <form style={{ display: "grid", gap: 10 }} onSubmit={lend}>
+          <input placeholder="¿A quién se lo prestas?" value={borrower} onChange={(e) => setBorrower(e.target.value)} style={{ maxWidth: 280 }} />
+          <div style={{ display: "flex", gap: 10 }}>
+            <input placeholder="Recordatorio (2026-08-01)" value={dueAt} onChange={(e) => setDueAt(e.target.value)} style={{ maxWidth: 200 }} />
+            <button className="btn" type="submit" disabled={!borrower.trim()}>
+              Prestar
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+}
+
+/** Notas y citas privadas: lista + alta con página opcional y toggle "es cita". */
+function Notes({ userBookId }: { userBookId: number }) {
+  type Note = { id: number; text: string; page: number | null; isQuote: boolean };
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [text, setText] = useState("");
+  const [page, setPage] = useState("");
+  const [isQuote, setIsQuote] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const d = await api<{ items: Note[] }>(`/v1/library/${userBookId}/notes`);
+      setNotes(d.items);
+    } catch {
+      /* no romper la ficha */
+    }
+  }, [userBookId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (!text.trim()) return;
+    const p = Number(page);
+    await api(`/v1/library/${userBookId}/notes`, {
+      method: "POST",
+      body: { text: text.trim(), page: Number.isInteger(p) && p > 0 ? p : null, isQuote },
+    });
+    setText("");
+    setPage("");
+    setIsQuote(false);
+    await load();
+  }
+
+  async function remove(id: number) {
+    setNotes((n) => n.filter((x) => x.id !== id));
+    await api(`/v1/notes/${id}`, { method: "DELETE" }).catch(() => load());
+  }
+
+  return (
+    <div className="card" style={{ display: "grid", gap: 12 }}>
+      <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4 }}>
+        NOTAS Y CITAS
+      </p>
+      {notes.map((n) => (
+        <div
+          key={n.id}
+          style={{
+            background: "var(--tinta)",
+            border: "1px solid var(--tinta3)",
+            borderRadius: 10,
+            padding: 12,
+            display: "grid",
+            gap: 6,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}>
+            <p
+              className={n.isQuote ? "serif" : undefined}
+              style={{
+                color: n.isQuote ? "var(--marfil)" : "var(--papel)",
+                fontSize: 14,
+                lineHeight: 1.55,
+                fontStyle: n.isQuote ? "italic" : "normal",
+              }}
+            >
+              {n.isQuote ? `“${n.text}”` : n.text}
+            </p>
+            <button className="muted" style={{ fontSize: 16 }} onClick={() => void remove(n.id)} title="Eliminar">
+              ×
+            </button>
+          </div>
+          {n.page !== null && <span className="muted" style={{ fontSize: 12 }}>pág. {n.page}</span>}
+        </div>
+      ))}
+      <form style={{ display: "grid", gap: 10 }} onSubmit={add}>
+        <textarea
+          rows={2}
+          placeholder="Escribe una nota o una cita…"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          style={{ resize: "vertical" }}
+        />
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <input
+            inputMode="numeric"
+            placeholder="Página"
+            value={page}
+            onChange={(e) => setPage(e.target.value)}
+            style={{ width: 100 }}
+          />
+          <button
+            type="button"
+            className="pill"
+            style={isQuote ? { background: "var(--ambar)", borderColor: "var(--ambar)", color: "var(--ink-on-accent)" } : undefined}
+            onClick={() => setIsQuote((q) => !q)}
+          >
+            Es cita
+          </button>
+          <button className="btn" type="submit" disabled={!text.trim()}>
+            Añadir
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+/**
+ * Confeti al terminar un libro (plan §9): celebración discreta, ~1,3s, no
+ * bloquea nada (pointer-events: none). Sin dependencias: divs + keyframes.
+ */
+function Confetti() {
+  const palette = ["var(--ambar)", "var(--salvia)", "var(--arcilla)", "var(--marfil)"];
+  const pieces = Array.from({ length: 36 }, (_, i) => i);
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "fixed",
+        inset: 0,
+        pointerEvents: "none",
+        overflow: "hidden",
+        zIndex: 50,
+      }}
+    >
+      <style>{`
+        @keyframes spine-confetti-fall {
+          0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .spine-confetti-piece { animation: none !important; opacity: 0 !important; }
+        }
+      `}</style>
+      {pieces.map((i) => {
+        const left = (i * 173) % 100;
+        const delay = (i % 7) * 60;
+        const dur = 900 + ((i * 53) % 500);
+        const size = 6 + (i % 4) * 2;
+        return (
+          <span
+            key={i}
+            className="spine-confetti-piece"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: `${left}%`,
+              width: size,
+              height: size * 1.6,
+              background: palette[i % palette.length],
+              borderRadius: 1,
+              animation: `spine-confetti-fall ${dur}ms cubic-bezier(.25,.6,.4,1) ${delay}ms forwards`,
+            }}
+          />
+        );
+      })}
+    </div>
   );
 }
 

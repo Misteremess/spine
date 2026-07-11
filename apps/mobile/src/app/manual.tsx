@@ -7,18 +7,20 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { api } from "../lib/api";
-import { colors, fonts } from "../lib/theme";
+import { useThemeColors, useThemedStyles } from "../lib/settings";
+import { fonts, type Palette } from "../lib/theme";
+import { Text, TextInput } from "../lib/ui";
 
 /**
  * Alta manual (plan §8): cuando la cascada no resuelve un ISBN, el escaneo
  * no muere — llega aquí con el código precargado y el usuario lo completa.
  */
 export default function ManualAdd() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const { isbn } = useLocalSearchParams<{ isbn?: string }>();
   const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState("");
@@ -106,7 +108,7 @@ export default function ManualAdd() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   isbnChip: {
     backgroundColor: colors.tinta2,

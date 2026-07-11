@@ -13,12 +13,12 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { api, ApiError } from "../lib/api";
-import { colors, fonts } from "../lib/theme";
+import { useThemeColors, useThemedStyles } from "../lib/settings";
+import { fonts, type Palette } from "../lib/theme";
+import { Text, TextInput } from "../lib/ui";
 
 type Club = {
   id: number;
@@ -31,6 +31,8 @@ type Club = {
 };
 
 export default function Clubs() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const [clubs, setClubs] = useState<Club[]>([]);
   const [mode, setMode] = useState<"none" | "create" | "join">("none");
   const [name, setName] = useState("");
@@ -209,7 +211,7 @@ export default function Clubs() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   card: {
     flexDirection: "row",

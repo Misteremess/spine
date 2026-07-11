@@ -3,10 +3,12 @@
  * Deseos · Perfil. El botón central no es una pestaña: abre el escáner.
  */
 import { Redirect, router, Tabs } from "expo-router";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { authClient } from "../../lib/auth";
-import { colors, fonts } from "../../lib/theme";
+import { useThemeColors, useThemedStyles } from "../../lib/settings";
+import { fonts, type Palette } from "../../lib/theme";
+import { Text } from "../../lib/ui";
 
 const TABS = [
   { name: "index", label: "Inicio", glyph: "⌂" },
@@ -18,6 +20,8 @@ const TABS = [
 
 function TabBar({ state, navigation }: any) {
   const insets = useSafeAreaInsets();
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   return (
     <View style={[s.bar, { paddingBottom: Math.max(insets.bottom, 10) }]}>
       {TABS.map((tab) => {
@@ -62,6 +66,7 @@ function TabBar({ state, navigation }: any) {
 
 export default function TabsLayout() {
   const { data: session, isPending } = authClient.useSession();
+  const colors = useThemeColors();
   if (isPending) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.tinta }}>
@@ -85,7 +90,7 @@ export default function TabsLayout() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   bar: {
     flexDirection: "row",
     backgroundColor: colors.tinta2,

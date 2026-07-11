@@ -1,14 +1,17 @@
 /**
- * Ajustes de la app persistidos en el dispositivo. De momento: el tamaño
- * del texto (accesibilidad). El escalado se aplica de forma global
- * parcheando el render de Text/TextInput una sola vez: cada tamaño de
- * fuente literal se multiplica por el factor elegido. Al cambiarlo se
- * remonta el árbol (key en el layout raíz) para que el nuevo factor
- * afecte a todo sin tocar pantalla por pantalla.
+ * Ajustes de la app persistidos en el dispositivo: tamaño de texto
+ * (accesibilidad) y modo Noche/Papel (tema claro/oscuro del prototipo).
+ *
+ * En RN 0.81 `Text`/`TextInput` son componentes de función, así que el
+ * escalado NO se puede parchear en su render: se aplica con los wrappers de
+ * `lib/ui.tsx`, que leen el factor de este contexto. El tema se aplica con
+ * `useThemeColors()` / `useThemedStyles()` para que los estilos se
+ * reconstruyan al cambiar de modo (StyleSheet.create congela los colores).
  */
 import * as SecureStore from "expo-secure-store";
-import { createContext, useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput } from "react-native";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { StyleSheet } from "react-native";
+import { PALETTES, type Palette, type ThemeName } from "./theme";
 
 export type TextScale = "sm" | "md" | "lg" | "xl";
 
@@ -27,66 +30,83 @@ export const SCALE_LABEL: Record<TextScale, string> = {
   xl: "Muy grande",
 };
 
-const KEY = "spine.textScale";
+export const THEME_LABEL: Record<ThemeName, string> = {
+  noche: "● Noche",
+  papel: "○ Papel",
+};
 
-// Factor vivo que lee el render parcheado; se actualiza al cambiar el ajuste.
-let currentFactor = 1;
+const SCALE_KEY = "spine.textScale";
+const THEME_KEY = "spine.theme";
 
-function patch(Comp: any) {
-  if (!Comp || Comp.__scalePatched) return;
-  const original = Comp.render;
-  if (typeof original !== "function") return;
-  Comp.__scalePatched = true;
-  Comp.render = function (...args: any[]) {
-    const el = original.apply(this, args);
-    if (currentFactor === 1 || !el?.props) return el;
-    const flat = StyleSheet.flatten(el.props.style) || {};
-    if (typeof flat.fontSize !== "number") return el;
-    const extra: Record<string, number> = { fontSize: flat.fontSize * currentFactor };
-    if (typeof flat.lineHeight === "number") extra.lineHeight = flat.lineHeight * currentFactor;
-    // Evita que el sistema vuelva a escalar encima (ya lo hacemos nosotros).
-    return { ...el, props: { ...el.props, allowFontScaling: false, style: [el.props.style, extra] } };
-  };
-}
-patch(Text);
-patch(TextInput);
-
-type Ctx = { scale: TextScale; setScale: (s: TextScale) => void; ready: boolean; revision: number };
+type Ctx = {
+  scale: TextScale;
+  setScale: (s: TextScale) => void;
+  theme: ThemeName;
+  setTheme: (t: ThemeName) => void;
+  colors: Palette;
+  factor: number;
+  ready: boolean;
+};
 const SettingsContext = createContext<Ctx>({
   scale: "sm",
   setScale: () => {},
+  theme: "noche",
+  setTheme: () => {},
+  colors: PALETTES.noche,
+  factor: 1,
   ready: false,
-  revision: 0,
 });
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [scale, setScaleState] = useState<TextScale>("sm");
+  const [theme, setThemeState] = useState<ThemeName>("noche");
   const [ready, setReady] = useState(false);
-  const [revision, setRevision] = useState(0);
 
   useEffect(() => {
-    void SecureStore.getItemAsync(KEY).then((v) => {
-      if (v && v in SCALE_FACTOR) {
-        currentFactor = SCALE_FACTOR[v as TextScale];
-        setScaleState(v as TextScale);
-      }
+    void (async () => {
+      const [s, t] = await Promise.all([
+        SecureStore.getItemAsync(SCALE_KEY).catch(() => null),
+        SecureStore.getItemAsync(THEME_KEY).catch(() => null),
+      ]);
+      if (s && s in SCALE_FACTOR) setScaleState(s as TextScale);
+      if (t === "noche" || t === "papel") setThemeState(t);
       setReady(true);
-      setRevision((r) => r + 1);
-    });
+    })();
   }, []);
 
   function setScale(s: TextScale) {
-    currentFactor = SCALE_FACTOR[s];
     setScaleState(s);
-    setRevision((r) => r + 1); // fuerza el remonte del árbol
-    void SecureStore.setItemAsync(KEY, s);
+    void SecureStore.setItemAsync(SCALE_KEY, s);
+  }
+  function setTheme(t: ThemeName) {
+    setThemeState(t);
+    void SecureStore.setItemAsync(THEME_KEY, t);
   }
 
-  return (
-    <SettingsContext.Provider value={{ scale, setScale, ready, revision }}>
-      {children}
-    </SettingsContext.Provider>
+  const value = useMemo<Ctx>(
+    () => ({ scale, setScale, theme, setTheme, colors: PALETTES[theme], factor: SCALE_FACTOR[scale], ready }),
+    [scale, theme, ready]
   );
+
+  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }
 
 export const useSettings = () => useContext(SettingsContext);
+
+/** Paleta del tema actual (Noche/Papel). Úsala en pantallas para que repinten. */
+export const useThemeColors = (): Palette => useContext(SettingsContext).colors;
+
+/** Factor de escala de texto actual (lo consumen los wrappers de lib/ui). */
+export const useScaleFactor = (): number => useContext(SettingsContext).factor;
+
+/**
+ * Construye una hoja de estilos a partir del tema actual y la memoiza por
+ * paleta. `factory` recibe la paleta viva, así que basta con renombrar el
+ * `StyleSheet.create({...})` de cada pantalla a `(colors) => StyleSheet.create({...})`.
+ */
+export function useThemedStyles<T extends StyleSheet.NamedStyles<T>>(
+  factory: (colors: Palette) => T
+): T {
+  const colors = useThemeColors();
+  return useMemo(() => factory(colors), [factory, colors]);
+}

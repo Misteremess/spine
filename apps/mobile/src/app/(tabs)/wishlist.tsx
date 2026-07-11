@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -11,13 +11,13 @@ import {
   Pressable,
   RefreshControl,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "../../lib/api";
-import { colors, fonts } from "../../lib/theme";
+import { useThemeColors, useThemedStyles } from "../../lib/settings";
+import { fonts, type Palette } from "../../lib/theme";
+import { Text, TextInput } from "../../lib/ui";
 
 type Item = {
   id: number;
@@ -28,13 +28,11 @@ type Item = {
   notes: string | null;
 };
 
-const PRIORITIES: { value: number; label: string; color: string }[] = [
+const priorities = (colors: Palette): { value: number; label: string; color: string }[] => [
   { value: 1, label: "La quiero ya", color: colors.ambar },
   { value: 2, label: "Normal", color: colors.mut },
   { value: 3, label: "Algún día", color: colors.salvia },
 ];
-
-const prio = (v: number) => PRIORITIES.find((p) => p.value === v) ?? PRIORITIES[1]!;
 
 type Candidate = {
   isbn13: string | null;
@@ -46,6 +44,10 @@ type Candidate = {
 };
 
 export default function Wishlist() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  const PRIORITIES = useMemo(() => priorities(colors), [colors]);
+  const prio = (v: number) => PRIORITIES.find((p) => p.value === v) ?? PRIORITIES[1]!;
   const insets = useSafeAreaInsets();
   const [items, setItems] = useState<Item[]>([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -289,7 +291,7 @@ export default function Wishlist() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   header: {
     flexDirection: "row",

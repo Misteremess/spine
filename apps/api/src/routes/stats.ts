@@ -163,4 +163,91 @@ export function statsRoutes(app: FastifyInstance) {
       topAuthors,
     };
   });
+
+  /**
+   * Resumen anual "Wrapped" (plan §5.7 / §6): el ritual compartible de fin
+   * de año. Destaca lo mejor del año lector para hacer captura y compartir.
+   */
+  app.get<{ Querystring: { year?: string } }>("/v1/wrapped", async (req) => {
+    const year = Number(req.query.year) || new Date().getFullYear();
+    const y = String(year);
+
+    const books = await db
+      .select({
+        id: schema.userBooks.id,
+        rating: schema.userBooks.rating,
+        createdAt: schema.userBooks.createdAt,
+        pages: schema.editions.pages,
+        title: schema.editions.title,
+        customTitle: schema.userBooks.customTitle,
+        coverUrl: schema.editions.coverUrl,
+        workId: schema.editions.workId,
+      })
+      .from(schema.userBooks)
+      .leftJoin(schema.editions, eq(schema.userBooks.editionId, schema.editions.id))
+      .where(eq(schema.userBooks.userId, req.user.id));
+
+    const byId = new Map(books.map((b) => [b.id, b]));
+    const ids = books.map((b) => b.id);
+    const readings = ids.length
+      ? await db.select().from(schema.readings).where(inArray(schema.readings.userBookId, ids))
+      : [];
+
+    // Lecturas terminadas ESTE año.
+    const finishedThisYear = readings.filter(
+      (r) => r.status === "finished" && r.finishedAt?.startsWith(y)
+    );
+
+    let pages = 0;
+    const monthCount = new Array(12).fill(0);
+    let longest: { title: string; pages: number } | null = null;
+    let best: { title: string; rating: number; coverUrl: string | null } | null = null;
+    const authorTally = new Map<string, number>();
+
+    const workIds = [...new Set(finishedThisYear.map((r) => byId.get(r.userBookId)?.workId).filter((x): x is number => x != null))];
+    const authorRows = workIds.length
+      ? await db
+          .select({ workId: schema.workAuthors.workId, name: schema.authors.name })
+          .from(schema.workAuthors)
+          .innerJoin(schema.authors, eq(schema.workAuthors.authorId, schema.authors.id))
+          .where(inArray(schema.workAuthors.workId, workIds))
+      : [];
+    const authorsByWork = new Map<number, string[]>();
+    for (const a of authorRows) authorsByWork.set(a.workId, [...(authorsByWork.get(a.workId) ?? []), a.name]);
+
+    for (const r of finishedThisYear) {
+      const b = byId.get(r.userBookId);
+      if (!b) continue;
+      const title = b.title ?? b.customTitle ?? "Sin título";
+      pages += b.pages ?? 0;
+      if (r.finishedAt) monthCount[Number(r.finishedAt.slice(5, 7)) - 1]!++;
+      if (b.pages && (!longest || b.pages > longest.pages)) longest = { title, pages: b.pages };
+      const rating = r.rating ?? b.rating;
+      if (rating && (!best || rating > best.rating)) best = { title, rating, coverUrl: b.coverUrl };
+      for (const name of b.workId ? (authorsByWork.get(b.workId) ?? []) : []) {
+        authorTally.set(name, (authorTally.get(name) ?? 0) + 1);
+      }
+    }
+
+    const topAuthor = [...authorTally.entries()].sort((a, b) => b[1] - a[1])[0] ?? null;
+    const busiestIdx = monthCount.indexOf(Math.max(...monthCount));
+    const MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    const addedThisYear = books.filter((b) => isoDay(b.createdAt).startsWith(y)).length;
+
+    return {
+      year,
+      finished: finishedThisYear.length,
+      pages,
+      addedThisYear,
+      // Tsundoku del año: compraste X, leíste Y.
+      tsundoku: { added: addedThisYear, finished: finishedThisYear.length },
+      longest,
+      best,
+      topAuthor: topAuthor ? { name: topAuthor[0], count: topAuthor[1] } : null,
+      busiestMonth:
+        finishedThisYear.length > 0 && monthCount[busiestIdx]! > 0
+          ? { name: MONTHS[busiestIdx], count: monthCount[busiestIdx] }
+          : null,
+    };
+  });
 }

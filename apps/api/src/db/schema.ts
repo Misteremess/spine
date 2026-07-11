@@ -345,3 +345,94 @@ export const wishlistItems = pgTable("wishlist_items", {
   notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+/* ============================================================
+ * BACKLOG v1.1 → 1.0 (plan §5): objetivos, notas/citas, préstamos,
+ * etiquetas. Todo colgado del ejemplar (userBook) para funcionar
+ * también con libros manuales sin obra de catálogo.
+ * ============================================================ */
+
+/** Reto anual del plan §5.11: libros o páginas por año. */
+export const readingGoals = pgTable(
+  "reading_goals",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    year: integer("year").notNull(),
+    /** books | pages */
+    type: text("type").notNull().default("books"),
+    target: integer("target").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (t) => [unique().on(t.userId, t.year, t.type)]
+);
+
+/** Notas y citas por ejemplar (plan §5.8). Markdown, privadas. */
+export const notes = pgTable("notes", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  userBookId: integer("user_book_id")
+    .notNull()
+    .references(() => userBooks.id, { onDelete: "cascade" }),
+  text: text("text").notNull(),
+  page: integer("page"),
+  isQuote: boolean("is_quote").notNull().default(false),
+  spoiler: boolean("spoiler").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+/** Préstamo del plan §5/§6: a quién, cuándo, recordatorio y devolución. */
+export const loans = pgTable("loans", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  userBookId: integer("user_book_id")
+    .notNull()
+    .references(() => userBooks.id, { onDelete: "cascade" }),
+  /** Texto libre (nombre de contacto). */
+  borrower: text("borrower").notNull(),
+  loanedAt: text("loaned_at").notNull(),
+  /** Fecha de recordatorio opcional. */
+  dueAt: text("due_at"),
+  /** null = aún prestado. */
+  returnedAt: text("returned_at"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+/** Etiquetas del usuario (plan §5.1). `rule` reserva las inteligentes (§6.9). */
+export const tags = pgTable(
+  "tags",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    color: text("color"),
+    /** Regla automática (JSON) para etiquetas inteligentes; null = manual. */
+    rule: jsonb("rule").$type<Record<string, unknown>>(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [unique().on(t.userId, t.name)]
+);
+
+export const userBookTags = pgTable(
+  "user_book_tags",
+  {
+    userBookId: integer("user_book_id")
+      .notNull()
+      .references(() => userBooks.id, { onDelete: "cascade" }),
+    tagId: integer("tag_id")
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (t) => [primaryKey({ columns: [t.userBookId, t.tagId] })]
+);

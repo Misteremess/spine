@@ -6,14 +6,16 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { authClient } from "../lib/auth";
-import { colors, fonts } from "../lib/theme";
+import { useThemeColors, useThemedStyles } from "../lib/settings";
+import { fonts, type Palette } from "../lib/theme";
+import { Text, TextInput } from "../lib/ui";
 
 export default function Login() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -94,7 +96,7 @@ export default function Login() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta, justifyContent: "center", padding: 24 },
   card: { gap: 12 },
   logo: { fontFamily: fonts.serif, fontSize: 44, color: colors.ambar, textAlign: "center" },

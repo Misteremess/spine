@@ -2,7 +2,7 @@
  * Detalle de saga (plan §5.5 al completo): la rejilla de tomos 1..N con
  * tenidos/huecos, la ficha enriquecida y el radar de novedades bajo demanda.
  */
-import { and, asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, isNotNull } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { db, schema } from "../db/index";
 import { requireUser } from "../plugins/require-user";
@@ -161,6 +161,48 @@ async function seriesDetail(seriesId: number, userId: string) {
 
 export function seriesRoutes(app: FastifyInstance) {
   app.addHook("preHandler", requireUser);
+
+  /**
+   * Buscar sagas para reasignar un tomo (plan §5.5): sin `q` devuelve las
+   * sagas que ya tienes; con `q` busca por nombre en todo el catálogo. Las
+   * tuyas salen primero. Resuelve el "este tomo está en la saga equivocada".
+   */
+  app.get<{ Querystring: { q?: string } }>("/v1/series", async (req) => {
+    const q = (req.query.q ?? "").trim();
+
+    // IDs de sagas donde ya tienes algún tomo.
+    const ownRows = await db
+      .selectDistinct({ seriesId: schema.works.seriesId })
+      .from(schema.userBooks)
+      .innerJoin(schema.editions, eq(schema.userBooks.editionId, schema.editions.id))
+      .innerJoin(schema.works, eq(schema.editions.workId, schema.works.id))
+      .where(and(eq(schema.userBooks.userId, req.user.id), isNotNull(schema.works.seriesId)));
+    const ownIds = new Set(ownRows.map((r) => r.seriesId).filter((id): id is number => id != null));
+
+    let rows: { id: number; name: string; totalVolumes: number | null }[];
+    if (q) {
+      rows = await db
+        .select({ id: schema.series.id, name: schema.series.name, totalVolumes: schema.series.totalVolumes })
+        .from(schema.series)
+        .where(ilike(schema.series.name, `%${q}%`))
+        .orderBy(asc(schema.series.name))
+        .limit(30);
+    } else if (ownIds.size) {
+      rows = await db
+        .select({ id: schema.series.id, name: schema.series.name, totalVolumes: schema.series.totalVolumes })
+        .from(schema.series)
+        .where(inArray(schema.series.id, [...ownIds]))
+        .orderBy(asc(schema.series.name));
+    } else {
+      rows = [];
+    }
+
+    return {
+      items: rows
+        .map((r) => ({ ...r, owned: ownIds.has(r.id) }))
+        .sort((a, b) => Number(b.owned) - Number(a.owned) || a.name.localeCompare(b.name)),
+    };
+  });
 
   app.get<{ Params: { id: string } }>("/v1/series/:id", async (req, reply) => {
     const id = Number(req.params.id);

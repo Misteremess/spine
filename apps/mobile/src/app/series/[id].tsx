@@ -6,18 +6,19 @@
 import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { api } from "../../lib/api";
-import { colors, fonts } from "../../lib/theme";
+import { useThemeColors, useThemedStyles } from "../../lib/settings";
+import { fonts, type Palette } from "../../lib/theme";
+import { Text } from "../../lib/ui";
 
 type Volume = {
   volume: number;
@@ -56,11 +57,11 @@ type Detail = {
   };
 };
 
-const STATUS_LABEL = {
+const statusLabels = (colors: Palette): Record<Detail["series"]["status"], { text: string; color: string }> => ({
   ongoing: { text: "En publicación", color: colors.ambar },
   completed: { text: "Completada", color: colors.salvia },
   unknown: { text: "", color: colors.mut },
-} as const;
+});
 
 function fmtDate(d: string | null): string {
   if (!d) return "";
@@ -71,6 +72,9 @@ function fmtDate(d: string | null): string {
 }
 
 export default function SeriesDetail() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  const STATUS_LABEL = useMemo(() => statusLabels(colors), [colors]);
   const { id } = useLocalSearchParams<{ id: string }>();
   const [detail, setDetail] = useState<Detail | null>(null);
   const [refreshingRadar, setRefreshingRadar] = useState(false);
@@ -335,7 +339,7 @@ export default function SeriesDetail() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   cover: { width: 92, height: 132, borderRadius: 10, backgroundColor: colors.tinta2 },
   title: { color: colors.papel, fontSize: 21, fontFamily: fonts.serif, lineHeight: 26 },

@@ -3,14 +3,17 @@
  * progreso a un toque, las novedades de tus sagas y el estado de tus
  * colecciones. Nunca un feed.
  */
-import { Image } from "expo-image";
+import * as Haptics from "expo-haptics";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
-import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Keyboard, Pressable, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "../../lib/api";
 import { authClient } from "../../lib/auth";
-import { colors, fonts } from "../../lib/theme";
+import { useThemeColors, useThemedStyles } from "../../lib/settings";
+import { fonts, type Palette } from "../../lib/theme";
+import { Text, TextInput } from "../../lib/ui";
+import { Cover } from "../../lib/Cover";
 
 type LibItem = {
   id: number;
@@ -35,6 +38,8 @@ type Notification = {
 };
 
 export default function Home() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const insets = useSafeAreaInsets();
   const { data: session } = authClient.useSession();
   const [items, setItems] = useState<LibItem[]>([]);
@@ -136,6 +141,9 @@ export default function Home() {
         </View>
       )}
 
+      {/* Reto anual de lectura (plan §5.11) */}
+      <GoalCard />
+
       {/* Leyendo ahora */}
       <View style={{ gap: 10 }}>
         <Text style={s.section}>Leyendo ahora</Text>
@@ -150,15 +158,7 @@ export default function Home() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12 }}>
             {reading.map((it) => (
               <Pressable key={it.id} style={s.readingCard} onPress={() => router.push(`/book/${it.id}`)}>
-                {it.coverUrl ? (
-                  <Image source={{ uri: it.coverUrl }} style={s.readingCover} contentFit="cover" />
-                ) : (
-                  <View style={[s.readingCover, { alignItems: "center", justifyContent: "center" }]}>
-                    <Text style={{ color: colors.mut, fontSize: 10, textAlign: "center", padding: 4 }} numberOfLines={4}>
-                      {it.title}
-                    </Text>
-                  </View>
-                )}
+                <Cover title={it.title} author={it.authors[0]} coverUrl={it.coverUrl} style={s.readingCover} titleSize={11} />
                 <Text style={{ color: colors.papel, fontSize: 12, fontFamily: fonts.sansSemi, width: 96 }} numberOfLines={2}>
                   {it.title}
                 </Text>
@@ -216,9 +216,142 @@ export default function Home() {
   );
 }
 
-const s = StyleSheet.create({
+/**
+ * Reto anual: barra de progreso de libros del año. Si no hay objetivo,
+ * ofrece fijarlo sin salir de Inicio. Se celebra, nunca se culpabiliza (§9).
+ */
+function GoalCard() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  type Goal = { type: string; target: number; current: number; pct: number };
+  const year = new Date().getFullYear();
+  const [goal, setGoal] = useState<Goal | null>(null);
+  const [progressBooks, setProgressBooks] = useState(0);
+  const [editing, setEditing] = useState(false);
+  const [target, setTarget] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const d = await api<{ progress: { books: number }; goals: Goal[] }>(`/v1/goals?year=${year}`);
+      setProgressBooks(d.progress.books);
+      setGoal(d.goals.find((g) => g.type === "books") ?? null);
+    } catch {
+      /* el reto nunca rompe Inicio */
+    }
+  }, [year]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void load();
+    }, [load])
+  );
+
+  async function save() {
+    const n = Number(target);
+    if (!Number.isInteger(n) || n < 1 || saving) return;
+    setSaving(true);
+    try {
+      await api("/v1/goals", { method: "PUT", body: { year, type: "books", target: n } });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setEditing(false);
+      setTarget("");
+      Keyboard.dismiss();
+      await load();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (editing) {
+    return (
+      <View style={s.goalCard}>
+        <Text style={s.section}>Reto {year}</Text>
+        <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+          <TextInput
+            style={s.goalInput}
+            value={target}
+            onChangeText={setTarget}
+            placeholder="Nº de libros"
+            placeholderTextColor={colors.mut}
+            keyboardType="number-pad"
+            autoFocus
+          />
+          <Pressable style={[s.goalBtn, (!target || saving) && { opacity: 0.4 }]} disabled={!target || saving} onPress={() => void save()}>
+            <Text style={{ color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 13 }}>Guardar</Text>
+          </Pressable>
+          <Pressable onPress={() => setEditing(false)} hitSlop={8}>
+            <Text style={{ color: colors.mut, fontSize: 13 }}>Cancelar</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
+  if (!goal) {
+    return (
+      <Pressable
+        style={s.goalCard}
+        onPress={() => {
+          setTarget("");
+          setEditing(true);
+        }}
+      >
+        <Text style={s.section}>Reto de lectura {year}</Text>
+        <Text style={{ color: colors.mut, fontSize: 12.5 }}>
+          Ponte un objetivo de libros para este año. Llevas {progressBooks} leído{progressBooks === 1 ? "" : "s"}.
+        </Text>
+        <Text style={{ color: colors.ambar, fontSize: 12.5, fontFamily: fonts.sansSemi }}>Fijar mi reto →</Text>
+      </Pressable>
+    );
+  }
+
+  const done = goal.current >= goal.target;
+  return (
+    <Pressable style={s.goalCard} onPress={() => { setTarget(String(goal.target)); setEditing(true); }}>
+      <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-between" }}>
+        <Text style={s.section}>Reto {year}</Text>
+        <Text style={{ color: done ? colors.salvia : colors.ambar, fontSize: 13, fontFamily: fonts.sansBold, fontVariant: ["tabular-nums"] }}>
+          {goal.current} / {goal.target} libros
+        </Text>
+      </View>
+      <View style={s.goalTrack}>
+        <View style={[s.goalFill, { width: `${goal.pct}%`, backgroundColor: done ? colors.salvia : colors.ambar }]} />
+      </View>
+      <Text style={{ color: colors.mut, fontSize: 11.5 }}>
+        {done
+          ? "¡Reto conseguido! 🎉 Toca para ampliarlo."
+          : `Te ${goal.target - goal.current === 1 ? "queda 1 libro" : `quedan ${goal.target - goal.current} libros`} · ${goal.pct}%`}
+      </Text>
+    </Pressable>
+  );
+}
+
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   h1: { color: colors.papel, fontSize: 26, fontFamily: fonts.serif, marginTop: 2 },
+  goalCard: {
+    backgroundColor: colors.tinta2,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 14,
+    padding: 14,
+    gap: 8,
+  },
+  goalTrack: { height: 8, borderRadius: 99, backgroundColor: colors.tinta3, overflow: "hidden" },
+  goalFill: { height: 8, borderRadius: 99, backgroundColor: colors.ambar },
+  goalInput: {
+    flex: 1,
+    backgroundColor: colors.tinta,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    color: colors.papel,
+    fontSize: 15,
+  },
+  goalBtn: { backgroundColor: colors.ambar, borderRadius: 10, paddingHorizontal: 16, paddingVertical: 10 },
   bell: { padding: 4 },
   badge: {
     position: "absolute",

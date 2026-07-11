@@ -4,9 +4,11 @@
  */
 import { router, Stack, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, RefreshControl, StyleSheet, View } from "react-native";
 import { api } from "../lib/api";
-import { colors, fonts } from "../lib/theme";
+import { useThemeColors, useThemedStyles } from "../lib/settings";
+import { fonts, type Palette } from "../lib/theme";
+import { Text } from "../lib/ui";
 
 type Notification = {
   id: number;
@@ -25,6 +27,8 @@ const GLYPH: Record<string, string> = {
 };
 
 export default function Notifications() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const [items, setItems] = useState<Notification[]>([]);
   const [unread, setUnread] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -125,7 +129,7 @@ export default function Notifications() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   card: {
     flexDirection: "row",

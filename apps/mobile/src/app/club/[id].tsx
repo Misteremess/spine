@@ -16,12 +16,12 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { api } from "../../lib/api";
-import { colors, fonts } from "../../lib/theme";
+import { useThemeColors, useThemedStyles } from "../../lib/settings";
+import { fonts, type Palette } from "../../lib/theme";
+import { Text, TextInput } from "../../lib/ui";
 
 type Detail = {
   club: {
@@ -39,6 +39,8 @@ type Detail = {
 type LibItem = { id: number; title: string | null; editionId?: number | null };
 
 export default function ClubDetail() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const [detail, setDetail] = useState<Detail | null>(null);
   const [message, setMessage] = useState("");
@@ -264,7 +266,7 @@ export default function ClubDetail() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   top: {
     flexDirection: "row",

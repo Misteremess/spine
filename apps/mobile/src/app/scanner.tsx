@@ -3,9 +3,10 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useRef, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { api, ApiError } from "../lib/api";
 import { colors, fonts } from "../lib/theme";
+import { Text } from "../lib/ui";
 
 type Card = {
   isbn13: string;

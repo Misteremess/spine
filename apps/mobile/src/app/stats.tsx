@@ -1,8 +1,10 @@
 import { Stack, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import { api } from "../lib/api";
-import { colors, fonts } from "../lib/theme";
+import { useThemeColors, useThemedStyles } from "../lib/settings";
+import { fonts, type Palette } from "../lib/theme";
+import { Text } from "../lib/ui";
 
 type Stats = {
   library: { total: number; byStatus: Record<string, number>; readPct: number };
@@ -20,6 +22,8 @@ function euros(cents: number): string {
 }
 
 export default function StatsScreen() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   const [stats, setStats] = useState<Stats | null>(null);
 
   useFocusEffect(
@@ -153,6 +157,7 @@ export default function StatsScreen() {
 }
 
 function Tile({ big, label, accent }: { big: string; label: string; accent?: string }) {
+  const s = useThemedStyles(makeStyles);
   return (
     <View style={[s.card, { flex: 1 }]}>
       <Text style={[s.big, accent ? { color: accent } : null]}>{big}</Text>
@@ -161,7 +166,7 @@ function Tile({ big, label, accent }: { big: string; label: string; accent?: str
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   row: { flexDirection: "row", gap: 14 },
   card: {

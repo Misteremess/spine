@@ -12,9 +12,9 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
-import { SettingsProvider, useSettings } from "../lib/settings";
-import { colors, fonts } from "../lib/theme";
+import { useEffect } from "react";
+import { SettingsProvider, useSettings, useThemeColors } from "../lib/settings";
+import { fonts } from "../lib/theme";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -27,7 +27,8 @@ export default function RootLayout() {
 }
 
 function RootNav() {
-  const { revision } = useSettings();
+  const { ready, theme } = useSettings();
+  const colors = useThemeColors();
   const [loaded] = useFonts({
     Fraunces_500Medium,
     Fraunces_600SemiBold,
@@ -38,20 +39,19 @@ function RootNav() {
   });
 
   useEffect(() => {
-    if (loaded) void SplashScreen.hideAsync();
-  }, [loaded]);
+    if (loaded && ready) void SplashScreen.hideAsync();
+  }, [loaded, ready]);
 
-  if (!loaded) return null;
+  if (!loaded || !ready) return null;
 
   return (
-    // La `key` remonta el árbol al cambiar el tamaño de texto (ver settings.tsx).
-    <React.Fragment key={revision}>
-      <StatusBar style="light" />
+    <>
+      <StatusBar style={theme === "papel" ? "dark" : "light"} />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: colors.tinta },
           headerTintColor: colors.papel,
-          headerTitleStyle: { fontFamily: fonts.serif, fontSize: 19 },
+          headerTitleStyle: { fontFamily: fonts.serif, fontSize: 19, color: colors.papel },
           headerShadowVisible: false,
           headerBackButtonDisplayMode: "minimal",
           headerBackTitle: "",
@@ -63,7 +63,8 @@ function RootNav() {
         <Stack.Screen name="scanner" options={{ title: "Escáner", presentation: "fullScreenModal" }} />
         <Stack.Screen name="notifications" options={{ title: "Avisos" }} />
         <Stack.Screen name="clubs" options={{ title: "Clubs de lectura" }} />
+        <Stack.Screen name="settings" options={{ title: "Ajustes" }} />
       </Stack>
-    </React.Fragment>
+    </>
   );
 }

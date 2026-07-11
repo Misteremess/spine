@@ -10,7 +10,22 @@ export const fonts = {
   sansBold: "Inter_700Bold",
 } as const;
 
-export const colors = {
+export type Palette = {
+  tinta: string;
+  tinta2: string;
+  tinta3: string;
+  papel: string;
+  marfil: string;
+  mut: string;
+  ambar: string;
+  ambarDeep: string;
+  salvia: string;
+  arcilla: string;
+  inkOnAccent: string;
+};
+
+/** Modo Noche (por defecto): la "biblioteca de noche" del prototipo. */
+export const NOCHE: Palette = {
   tinta: "#14120F",
   tinta2: "#1D1A15",
   tinta3: "#2A251C",
@@ -22,4 +37,30 @@ export const colors = {
   salvia: "#7A8B6F",
   arcilla: "#C1553D",
   inkOnAccent: "#1B1610",
-} as const;
+};
+
+/** Modo Papel (claro): mismos tokens invertidos con intención (prototipo §Papel). */
+export const PAPEL: Palette = {
+  tinta: "#F7F2E8",
+  tinta2: "#FFFDF6",
+  tinta3: "#E5DBC5",
+  papel: "#201A11",
+  marfil: "#4A3F2B",
+  mut: "#7A6E58",
+  ambar: "#BE8A2C",
+  ambarDeep: "#8F6314",
+  salvia: "#5F7052",
+  arcilla: "#AE4A33",
+  inkOnAccent: "#1B1610",
+};
+
+export type ThemeName = "noche" | "papel";
+
+export const PALETTES: Record<ThemeName, Palette> = { noche: NOCHE, papel: PAPEL };
+
+/**
+ * Paleta por defecto para código que aún no consume el tema por contexto
+ * (p. ej. helpers fuera de componentes). En pantallas usa `useThemeColors()`
+ * para que el modo Papel/Noche repinte de verdad.
+ */
+export const colors = NOCHE;

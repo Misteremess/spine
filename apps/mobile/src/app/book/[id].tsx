@@ -1,7 +1,6 @@
-import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -9,12 +8,13 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { api } from "../../lib/api";
-import { colors, fonts } from "../../lib/theme";
+import { Cover } from "../../lib/Cover";
+import { useThemeColors, useThemedStyles } from "../../lib/settings";
+import { fonts, type Palette } from "../../lib/theme";
+import { Text, TextInput } from "../../lib/ui";
 
 type ReadingStatus = "pending" | "reading" | "paused" | "finished" | "abandoned";
 
@@ -51,7 +51,7 @@ type Detail = {
   lastProgress: { page: number | null; percent: number | null } | null;
 };
 
-const STATUSES: { key: ReadingStatus; label: string; color: string }[] = [
+const statuses = (colors: Palette): { key: ReadingStatus; label: string; color: string }[] => [
   { key: "pending", label: "Pendiente", color: colors.mut },
   { key: "reading", label: "Leyendo", color: colors.ambar },
   { key: "paused", label: "En pausa", color: colors.mut },
@@ -78,6 +78,9 @@ function toForm(book: Detail["book"]): EjemplarForm {
 }
 
 export default function BookDetail() {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  const STATUSES = useMemo(() => statuses(colors), [colors]);
   const { id } = useLocalSearchParams<{ id: string }>();
   const [detail, setDetail] = useState<Detail | null>(null);
   const [pageInput, setPageInput] = useState("");
@@ -86,6 +89,7 @@ export default function BookDetail() {
   const [editingSaga, setEditingSaga] = useState(false);
   const [sagaName, setSagaName] = useState("");
   const [sagaVol, setSagaVol] = useState("");
+  const [sagaResults, setSagaResults] = useState<{ id: number; name: string; totalVolumes: number | null; owned: boolean }[]>([]);
 
   const load = useCallback(async () => {
     try {
@@ -100,6 +104,17 @@ export default function BookDetail() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Buscar sagas al editar (las tuyas primero, luego el catálogo).
+  useEffect(() => {
+    if (!editingSaga) return;
+    const t = setTimeout(() => {
+      api<{ items: typeof sagaResults }>(`/v1/series?q=${encodeURIComponent(sagaName.trim())}`)
+        .then((d) => setSagaResults(d.items))
+        .catch(() => {});
+    }, 250);
+    return () => clearTimeout(t);
+  }, [editingSaga, sagaName]);
 
   if (!detail) {
     return (
@@ -164,20 +179,19 @@ export default function BookDetail() {
     }
   }
 
-  async function saveSaga() {
+  async function saveSaga(seriesId?: number) {
     if (!edition) return;
     const vol = Number(sagaVol);
+    const volume = Number.isInteger(vol) && vol >= 1 ? vol : null;
     setSaving(true);
     try {
       await api(`/v1/library/${book.id}/series`, {
         method: "PATCH",
-        body: {
-          series: sagaName.trim() || null,
-          volume: Number.isInteger(vol) && vol >= 1 ? vol : null,
-        },
+        body: seriesId != null ? { seriesId, volume } : { series: sagaName.trim() || null, volume },
       });
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setEditingSaga(false);
+      setSagaResults([]);
       await load();
     } finally {
       setSaving(false);
@@ -219,13 +233,7 @@ export default function BookDetail() {
 
       {/* Cabecera: portada + datos */}
       <View style={{ flexDirection: "row", gap: 16 }}>
-        {edition?.coverUrl ? (
-          <Image source={{ uri: edition.coverUrl }} style={s.cover} contentFit="cover" />
-        ) : (
-          <View style={[s.cover, { alignItems: "center", justifyContent: "center" }]}>
-            <Text style={{ color: colors.mut, fontSize: 11, textAlign: "center" }}>sin{"\n"}portada</Text>
-          </View>
-        )}
+        <Cover title={title} author={edition?.authors[0]} coverUrl={edition?.coverUrl} style={s.cover} titleSize={12} />
         <View style={{ flex: 1, gap: 5, justifyContent: "center" }}>
           <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
             <Text style={[s.title, { flex: 1 }]}>{title}</Text>
@@ -352,6 +360,9 @@ export default function BookDetail() {
         </View>
       </View>
 
+      {/* Etiquetas del ejemplar (plan §5.1) */}
+      <BookTags userBookId={book.id} />
+
       {/* Saga: asignar o corregir la serie a mano (solo libros de catálogo) */}
       {edition && (
         <View style={s.section}>
@@ -378,10 +389,32 @@ export default function BookDetail() {
                 style={s.fieldInput}
                 value={sagaName}
                 onChangeText={setSagaName}
-                placeholder="Nombre de la saga (vacío = ninguna)"
+                placeholder="Busca una saga o escribe una nueva"
                 placeholderTextColor={colors.mut}
                 autoFocus
               />
+              {sagaResults.map((r) => (
+                <Pressable
+                  key={r.id}
+                  onPress={() => void saveSaga(r.id)}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 8,
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    borderColor: r.id === edition.seriesId ? colors.ambar : colors.tinta3,
+                    backgroundColor: colors.tinta,
+                  }}
+                >
+                  <Text style={{ flex: 1, color: colors.papel, fontSize: 14 }} numberOfLines={1}>▦ {r.name}</Text>
+                  {r.owned ? (
+                    <Text style={{ color: colors.salvia, fontSize: 10.5, fontFamily: fonts.sansSemi }}>en tu biblioteca</Text>
+                  ) : null}
+                </Pressable>
+              ))}
               <TextInput
                 style={s.fieldInput}
                 value={sagaVol}
@@ -490,6 +523,12 @@ export default function BookDetail() {
         </View>
       )}
 
+      {/* Préstamo (plan §5.5 / diferencial §6): a quién y desde cuándo */}
+      <Loan userBookId={book.id} />
+
+      {/* Notas y citas privadas (plan §5.8) */}
+      <Notes userBookId={book.id} />
+
       {edition?.description ? (
         <View style={s.section}>
           <Text style={s.sectionTitle}>Sinopsis</Text>
@@ -514,6 +553,8 @@ export default function BookDetail() {
  * privada: toque = entera, segundo toque = media, tercero = quitar.
  */
 function Reviews({ workId }: { workId: number }) {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
   type ReviewList = {
     reviews: { id: number; rating: number; text: string | null; spoilers: boolean; userName: string; own: boolean; updatedAt: string }[];
     count: number;
@@ -664,8 +705,321 @@ function Reviews({ workId }: { workId: number }) {
   );
 }
 
-const s = StyleSheet.create({
+/** Etiquetas: chips con × y alta por nombre (crea la etiqueta si no existe). */
+function BookTags({ userBookId }: { userBookId: number }) {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  type Tag = { id: number; name: string; color: string | null };
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [input, setInput] = useState("");
+  const [adding, setAdding] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const d = await api<{ items: Tag[] }>(`/v1/library/${userBookId}/tags`);
+      setTags(d.items);
+    } catch {
+      /* las etiquetas nunca rompen la ficha */
+    }
+  }, [userBookId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function add() {
+    const name = input.trim();
+    if (!name || adding) return;
+    setAdding(true);
+    try {
+      await api(`/v1/library/${userBookId}/tags`, { method: "POST", body: { name } });
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      setInput("");
+      Keyboard.dismiss();
+      await load();
+    } finally {
+      setAdding(false);
+    }
+  }
+
+  async function remove(tagId: number) {
+    setTags((t) => t.filter((x) => x.id !== tagId));
+    await api(`/v1/library/${userBookId}/tags/${tagId}`, { method: "DELETE" }).catch(() => load());
+  }
+
+  return (
+    <View style={s.section}>
+      <Text style={s.sectionTitle}>Etiquetas</Text>
+      {tags.length > 0 && (
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+          {tags.map((t) => (
+            <Pressable key={t.id} style={s.tagChip} onPress={() => void remove(t.id)} hitSlop={4}>
+              <Text style={{ color: colors.ambar, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
+                {t.name}
+              </Text>
+              <Text style={{ color: colors.mut, fontSize: 13 }}> ×</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
+      <View style={{ flexDirection: "row", gap: 10 }}>
+        <TextInput
+          style={s.input}
+          value={input}
+          onChangeText={setInput}
+          placeholder="Nueva etiqueta (manga, firmado…)"
+          placeholderTextColor={colors.mut}
+          autoCapitalize="none"
+          returnKeyType="done"
+          onSubmitEditing={() => void add()}
+        />
+        <Pressable
+          style={[s.btn, (!input.trim() || adding) && { opacity: 0.4 }]}
+          disabled={!input.trim() || adding}
+          onPress={() => void add()}
+        >
+          <Text style={s.btnText}>Añadir</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+/** Préstamo: si está prestado muestra a quién y "me lo devolvió"; si no, el formulario. */
+function Loan({ userBookId }: { userBookId: number }) {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  type LoanRow = { id: number; borrower: string; loanedAt: string; dueAt: string | null; returnedAt: string | null };
+  const [active, setActive] = useState<LoanRow | null>(null);
+  const [borrower, setBorrower] = useState("");
+  const [dueAt, setDueAt] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const d = await api<{ active: LoanRow | null }>(`/v1/library/${userBookId}/loans`);
+      setActive(d.active);
+    } catch {
+      /* no romper la ficha */
+    }
+  }, [userBookId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function lend() {
+    if (!borrower.trim() || saving) return;
+    setSaving(true);
+    try {
+      await api(`/v1/library/${userBookId}/loans`, {
+        method: "POST",
+        body: { borrower: borrower.trim(), dueAt: /^\d{4}-\d{2}-\d{2}$/.test(dueAt.trim()) ? dueAt.trim() : null },
+      });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setBorrower("");
+      setDueAt("");
+      Keyboard.dismiss();
+      await load();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function giveBack() {
+    if (!active) return;
+    setSaving(true);
+    try {
+      await api(`/v1/loans/${active.id}/return`, { method: "POST" });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      await load();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <View style={s.section}>
+      <Text style={s.sectionTitle}>Préstamo</Text>
+      {active ? (
+        <>
+          <Text style={{ color: colors.papel, fontSize: 14 }}>
+            Prestado a <Text style={{ fontFamily: fonts.sansSemi, color: colors.ambar }}>{active.borrower}</Text>
+          </Text>
+          <Text style={s.meta}>
+            Desde el {active.loanedAt}
+            {active.dueAt ? ` · recuérdalo el ${active.dueAt}` : ""}
+          </Text>
+          <Pressable
+            style={[s.btn, { paddingVertical: 11, alignItems: "center" }, saving && { opacity: 0.5 }]}
+            disabled={saving}
+            onPress={() => void giveBack()}
+          >
+            <Text style={s.btnText}>Me lo devolvió</Text>
+          </Pressable>
+        </>
+      ) : (
+        <>
+          <TextInput
+            style={s.fieldInput}
+            value={borrower}
+            onChangeText={setBorrower}
+            placeholder="¿A quién se lo prestas?"
+            placeholderTextColor={colors.mut}
+          />
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <TextInput
+              style={[s.fieldInput, { flex: 1 }]}
+              value={dueAt}
+              onChangeText={setDueAt}
+              placeholder="Recordatorio (2026-08-01)"
+              placeholderTextColor={colors.mut}
+            />
+            <Pressable
+              style={[s.btn, (!borrower.trim() || saving) && { opacity: 0.4 }]}
+              disabled={!borrower.trim() || saving}
+              onPress={() => void lend()}
+            >
+              <Text style={s.btnText}>Prestar</Text>
+            </Pressable>
+          </View>
+        </>
+      )}
+    </View>
+  );
+}
+
+/** Notas y citas: lista + alta con página opcional y toggle "es cita". */
+function Notes({ userBookId }: { userBookId: number }) {
+  const colors = useThemeColors();
+  const s = useThemedStyles(makeStyles);
+  type Note = { id: number; text: string; page: number | null; isQuote: boolean; createdAt: string };
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [text, setText] = useState("");
+  const [page, setPage] = useState("");
+  const [isQuote, setIsQuote] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const d = await api<{ items: Note[] }>(`/v1/library/${userBookId}/notes`);
+      setNotes(d.items);
+    } catch {
+      /* no romper la ficha */
+    }
+  }, [userBookId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function add() {
+    if (!text.trim() || saving) return;
+    const p = Number(page);
+    setSaving(true);
+    try {
+      await api(`/v1/library/${userBookId}/notes`, {
+        method: "POST",
+        body: { text: text.trim(), page: Number.isInteger(p) && p > 0 ? p : null, isQuote },
+      });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setText("");
+      setPage("");
+      setIsQuote(false);
+      Keyboard.dismiss();
+      await load();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function confirmRemove(id: number) {
+    Alert.alert("Eliminar nota", "Esta nota se borrará.", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Eliminar",
+        style: "destructive",
+        onPress: async () => {
+          setNotes((n) => n.filter((x) => x.id !== id));
+          await api(`/v1/notes/${id}`, { method: "DELETE" }).catch(() => load());
+        },
+      },
+    ]);
+  }
+
+  return (
+    <View style={s.section}>
+      <Text style={s.sectionTitle}>Notas y citas</Text>
+      {notes.map((n) => (
+        <Pressable key={n.id} style={s.reviewCard} onLongPress={() => confirmRemove(n.id)}>
+          <Text
+            style={{
+              color: n.isQuote ? colors.marfil : colors.papel,
+              fontSize: 13.5,
+              lineHeight: 20,
+              fontStyle: n.isQuote ? "italic" : "normal",
+              fontFamily: n.isQuote ? fonts.serifMedium : fonts.sans,
+            }}
+          >
+            {n.isQuote ? `“${n.text}”` : n.text}
+          </Text>
+          {n.page !== null && <Text style={s.meta}>pág. {n.page}</Text>}
+        </Pressable>
+      ))}
+      <TextInput
+        style={[s.fieldInput, { minHeight: 60, textAlignVertical: "top" }]}
+        value={text}
+        onChangeText={setText}
+        placeholder="Escribe una nota o una cita…"
+        placeholderTextColor={colors.mut}
+        multiline
+      />
+      <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+        <TextInput
+          style={[s.fieldInput, { width: 90 }]}
+          value={page}
+          onChangeText={setPage}
+          placeholder="Página"
+          placeholderTextColor={colors.mut}
+          keyboardType="number-pad"
+        />
+        <Pressable
+          style={[s.pill, isQuote && { backgroundColor: colors.ambar, borderColor: colors.ambar }]}
+          onPress={() => setIsQuote((q) => !q)}
+        >
+          <Text style={{ color: isQuote ? colors.inkOnAccent : colors.mut, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
+            Es cita
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[s.btn, { flex: 1, alignItems: "center" }, (!text.trim() || saving) && { opacity: 0.4 }]}
+          disabled={!text.trim() || saving}
+          onPress={() => void add()}
+        >
+          <Text style={s.btnText}>{saving ? "Guardando…" : "Añadir"}</Text>
+        </Pressable>
+      </View>
+      {notes.length === 0 && (
+        <Text style={{ color: colors.mut, fontSize: 12 }}>
+          Guarda citas favoritas o notas de lectura. Mantén pulsada una nota para borrarla.
+        </Text>
+      )}
+    </View>
+  );
+}
+
+const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
+  tagChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    backgroundColor: colors.tinta,
+    borderRadius: 99,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
   cover: {
     width: 108,
     height: 158,

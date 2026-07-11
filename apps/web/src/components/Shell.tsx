@@ -106,9 +106,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
               </span>
             )}
           </Link>
-          <span className="muted" style={{ fontSize: 13 }}>
+          <Link href="/cuenta" className="muted" style={{ fontSize: 13 }} title="Tu cuenta">
             {session.user.name}
-          </span>
+          </Link>
           <button
             className="muted"
             style={{ fontSize: 13 }}

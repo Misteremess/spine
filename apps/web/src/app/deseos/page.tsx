@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { api } from "@/lib/api";
+import { spineColor, spineInk } from "@/lib/spine";
 
 type Item = {
   id: number;
@@ -176,13 +177,22 @@ export default function Deseos() {
                     height: 64,
                     borderRadius: 6,
                     overflow: "hidden",
-                    background: "var(--tinta3)",
                     flexShrink: 0,
+                    display: "grid",
+                    placeItems: "center",
+                    background: item.coverUrl ? "var(--tinta3)" : spineColor(item.title ?? "?"),
                   }}
                 >
-                  {item.coverUrl && (
+                  {item.coverUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={item.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <span
+                      className="serif"
+                      style={{ color: spineInk(spineColor(item.title ?? "?")), fontSize: 20, fontWeight: 500 }}
+                    >
+                      {(item.title ?? "?").trim().charAt(0).toUpperCase() || "?"}
+                    </span>
                   )}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>

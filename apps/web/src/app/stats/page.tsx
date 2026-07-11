@@ -18,6 +18,92 @@ const MONTH_LABEL = ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]
 const euros = (cents: number) =>
   (cents / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 
+/** Reto anual de lectura (plan §5.11): barra de progreso editable. */
+function GoalWidget() {
+  type Goal = { type: string; target: number; current: number; pct: number };
+  const year = new Date().getFullYear();
+  const [goal, setGoal] = useState<Goal | null>(null);
+  const [progressBooks, setProgressBooks] = useState(0);
+  const [editing, setEditing] = useState(false);
+  const [target, setTarget] = useState("");
+
+  const load = () =>
+    api<{ progress: { books: number }; goals: Goal[] }>(`/v1/goals?year=${year}`)
+      .then((d) => {
+        setProgressBooks(d.progress.books);
+        setGoal(d.goals.find((g) => g.type === "books") ?? null);
+      })
+      .catch(() => {});
+
+  useEffect(() => {
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    const n = Number(target);
+    if (!Number.isInteger(n) || n < 1) return;
+    await api("/v1/goals", { method: "PUT", body: { year, type: "books", target: n } });
+    setEditing(false);
+    setTarget("");
+    await load();
+  }
+
+  if (editing || !goal) {
+    return (
+      <div className="card" style={{ display: "grid", gap: 10 }}>
+        <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4 }}>
+          RETO DE LECTURA {year}
+        </p>
+        {!goal && !editing && (
+          <p className="muted" style={{ fontSize: 13 }}>
+            Ponte un objetivo de libros para este año. Llevas {progressBooks} leído{progressBooks === 1 ? "" : "s"}.
+          </p>
+        )}
+        <form style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }} onSubmit={save}>
+          <input
+            inputMode="numeric"
+            placeholder="Nº de libros"
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            style={{ width: 130 }}
+            autoFocus={editing}
+          />
+          <button className="btn" type="submit" disabled={!target}>
+            Guardar
+          </button>
+          {editing && (
+            <button className="muted" type="button" style={{ fontSize: 13 }} onClick={() => setEditing(false)}>
+              Cancelar
+            </button>
+          )}
+        </form>
+      </div>
+    );
+  }
+
+  const done = goal.current >= goal.target;
+  return (
+    <button className="card" style={{ display: "grid", gap: 10, textAlign: "left" }} onClick={() => { setTarget(String(goal.target)); setEditing(true); }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+        <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4 }}>
+          RETO {year}
+        </p>
+        <span style={{ color: done ? "var(--salvia)" : "var(--ambar)", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+          {goal.current} / {goal.target} libros
+        </span>
+      </div>
+      <div style={{ height: 8, borderRadius: 99, background: "var(--tinta3)", overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${goal.pct}%`, background: done ? "var(--salvia)" : "var(--ambar)" }} />
+      </div>
+      <p className="muted" style={{ fontSize: 12 }}>
+        {done ? "¡Reto conseguido! 🎉 Pulsa para ampliarlo." : `Te quedan ${goal.target - goal.current} · ${goal.pct}%`}
+      </p>
+    </button>
+  );
+}
+
 function Tile({ big, label, accent }: { big: string; label: string; accent?: string }) {
   return (
     <div className="card">
@@ -52,9 +138,16 @@ export default function StatsPage() {
   return (
     <Shell>
       <div style={{ display: "grid", gap: 16, maxWidth: 760 }}>
-        <h1 className="serif" style={{ fontSize: 26, fontWeight: 500 }}>
-          Estadísticas
-        </h1>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+          <h1 className="serif" style={{ fontSize: 26, fontWeight: 500 }}>
+            Estadísticas
+          </h1>
+          <a href="/wrapped" style={{ color: "var(--ambar)", fontSize: 13.5, fontWeight: 600 }}>
+            ✦ Tu año lector →
+          </a>
+        </div>
+
+        <GoalWidget />
 
         <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
           <Tile big={String(library.total)} label="en tu biblioteca" />
