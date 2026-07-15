@@ -5,7 +5,8 @@ node_modules
 **/.next
 .expo
 **/.expo
-apps/mobile
+apps/mobile/*
+!apps/mobile/package.json
 landing
 design
 docs
