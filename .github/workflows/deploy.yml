@@ -22,6 +22,11 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      # global-setup.ts no fija usuario en la connection string; sin esto
+      # `pg` usa el usuario del SO ("runner"), que no existe como rol en el
+      # contenedor de Postgres del job (solo existe "postgres").
+      PGUSER: postgres
     services:
       postgres:
         image: postgres:17-alpine
