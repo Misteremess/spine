@@ -7,7 +7,7 @@
  */
 import type { BookMetadata } from "@spine/shared";
 import { env } from "../env";
-import { extractSeries } from "./series";
+import { extractFromTitle, extractSeries } from "./series";
 
 const UA = "Spine/0.1 (+https://github.com/Misteremess/spine)";
 
@@ -307,30 +307,46 @@ export type SearchCandidate = {
  * ISBNdb primero (mejor catálogo ES); OpenLibrary de reserva gratis. Sin
  * Google. Prioriza los que traen ISBN-13 (resolubles a ficha completa).
  */
-export async function searchBooks(query: string, limit = 12): Promise<SearchCandidate[]> {
+export async function searchBooks(query: string, limit = 30): Promise<SearchCandidate[]> {
   const q = query.trim();
   if (!q) return [];
   const fromIsbndb = env.ISBNDB_KEY ? await searchIsbnDb(q, limit).catch(() => []) : [];
-  const out = fromIsbndb.length ? fromIsbndb : await searchOpenLibrary(q, limit).catch(() => []);
-  // Los que tienen ISBN primero: se pueden resolver a ficha completa.
-  return out.sort((a, b) => (a.isbn13 ? 0 : 1) - (b.isbn13 ? 0 : 1));
+  return fromIsbndb.length ? fromIsbndb : await searchOpenLibrary(q, limit).catch(() => []);
 }
 
-/** Búsqueda en ISBNdb (api2.isbndb.com/books/:query). */
+/**
+ * Búsqueda en ISBNdb (api2.isbndb.com/books/:query). Al buscar una saga
+ * ("La Rueda del Tiempo") ISBNdb devuelve decenas de resultados con el
+ * mismo título genérico y unos pocos numerados. Extraemos el nº de tomo,
+ * ponemos PRIMERO los tomos numerados (ordenados por nº, uno por tomo) y
+ * colapsamos los genéricos repetidos — así salen los tomos a elegir.
+ */
 async function searchIsbnDb(query: string, limit: number): Promise<SearchCandidate[]> {
-  const url = `https://api2.isbndb.com/books/${encodeURIComponent(query)}?pageSize=${Math.min(20, limit * 2)}`;
+  const url = `https://api2.isbndb.com/books/${encodeURIComponent(query)}?pageSize=40`;
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 8000);
+  const t = setTimeout(() => ctrl.abort(), 9000);
   try {
     const res = await fetch(url, { headers: { "User-Agent": UA, Authorization: env.ISBNDB_KEY } });
     if (!res.ok) return [];
     const books = ((await res.json()) as Record<string, any>)?.books;
     if (!Array.isArray(books)) return [];
+
+    // Anota nº de tomo (si el título lo lleva) para ordenar y deduplicar.
+    const annotated = books
+      .filter((b) => typeof b?.title === "string")
+      .map((b) => ({ b, volume: extractFromTitle(b.title)?.volume ?? null }));
+    annotated.sort((a, z) => {
+      if (a.volume != null && z.volume != null) return a.volume - z.volume;
+      if (a.volume != null) return -1;
+      if (z.volume != null) return 1;
+      return 0;
+    });
+
     const out: SearchCandidate[] = [];
     const seen = new Set<string>();
-    for (const b of books) {
-      if (typeof b?.title !== "string") continue;
-      const key = `${b.title}|${(b.authors ?? []).join(",")}`.toLowerCase();
+    for (const { b, volume } of annotated) {
+      // Un tomo por número; los genéricos, uno por título.
+      const key = volume != null ? `v:${volume}` : `t:${b.title.toLowerCase()}`;
       if (seen.has(key)) continue;
       seen.add(key);
       out.push({

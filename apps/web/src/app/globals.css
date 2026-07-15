@@ -69,6 +69,7 @@ textarea:focus {
   border: 1px solid var(--tinta3);
   border-radius: 14px;
   padding: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .btn {
@@ -78,16 +79,23 @@ textarea:focus {
   font-size: 14.5px;
   border-radius: 12px;
   padding: 12px 20px;
-  transition: background 0.15s;
+  transition: background 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
 }
 
 .btn:hover {
   background: var(--ambar-deep);
+  box-shadow: 0 6px 18px rgba(217, 164, 65, 0.28);
+}
+
+.btn:active {
+  transform: scale(0.97);
 }
 
 .btn:disabled {
   opacity: 0.4;
   cursor: default;
+  box-shadow: none;
+  transform: none;
 }
 
 .pill {
@@ -97,7 +105,59 @@ textarea:focus {
   font-size: 12.5px;
   font-weight: 600;
   color: var(--mut);
-  transition: all 0.15s;
+  transition: all 0.15s ease;
+}
+
+.pill:active {
+  transform: scale(0.95);
+}
+
+/* Entrada de página: un fundido ascendente al navegar entre secciones */
+.page-enter {
+  animation: page-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Aparición escalonada de rejillas y listas (cubiertas, tarjetas) */
+.stagger > * {
+  animation: rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.stagger > *:nth-child(2) { animation-delay: 0.06s; }
+.stagger > *:nth-child(3) { animation-delay: 0.1s; }
+.stagger > *:nth-child(4) { animation-delay: 0.14s; }
+.stagger > *:nth-child(5) { animation-delay: 0.18s; }
+.stagger > *:nth-child(6) { animation-delay: 0.22s; }
+.stagger > *:nth-child(7) { animation-delay: 0.26s; }
+.stagger > *:nth-child(8) { animation-delay: 0.3s; }
+.stagger > *:nth-child(n + 9) { animation-delay: 0.34s; }
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .stagger > * {
+    animation: none;
+  }
 }
 
 .muted {
@@ -122,6 +182,32 @@ main a:hover > div:first-child {
 
 main a > div:first-child {
   transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Pantalla de acceso: dos columnas (argumentos + formulario) en escritorio */
+.login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  width: 100%;
+  max-width: 880px;
+}
+.login-mobile-brand {
+  display: none;
+}
+@media (max-width: 720px) {
+  .login-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 400px;
+  }
+  .login-pitch {
+    display: none;
+  }
+  .login-mobile-brand {
+    display: block;
+  }
 }
 
 /* Skeletons de carga: un latido suave en vez de pantalla en blanco */

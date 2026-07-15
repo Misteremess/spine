@@ -61,9 +61,13 @@ export function statsRoutes(app: FastifyInstance) {
     const monthIndex = new Map(months.map((m, i) => [m.month, i]));
     let finishedThisYear = 0;
     let pagesThisYear = 0;
+    let finishedAllTime = 0;
+    let pagesAllTime = 0;
     for (const r of readings) {
       if (r.status !== "finished" || !r.finishedAt) continue;
       const pages = pagesByBook.get(r.userBookId) ?? 0;
+      finishedAllTime++;
+      pagesAllTime += pages;
       const idx = monthIndex.get(r.finishedAt.slice(0, 7));
       if (idx !== undefined) {
         months[idx]!.finished++;
@@ -92,6 +96,56 @@ export function statsRoutes(app: FastifyInstance) {
       streak++;
       cursor.setDate(cursor.getDate() - 1);
     }
+
+    // --- Leyendo ahora (con su último progreso) para el dashboard ---
+    const readingBooks = books.filter((b) => latest.get(b.id)?.status === "reading");
+    const readingLatestIds = readingBooks.map((b) => latest.get(b.id)!.id);
+    const progRows = readingLatestIds.length
+      ? await db
+          .select({
+            readingId: schema.progressEntries.readingId,
+            page: schema.progressEntries.page,
+            percent: schema.progressEntries.percent,
+          })
+          .from(schema.progressEntries)
+          .where(inArray(schema.progressEntries.readingId, readingLatestIds))
+          .orderBy(desc(schema.progressEntries.id))
+      : [];
+    const progByReading = new Map<number, { page: number | null; percent: number | null }>();
+    for (const p of progRows) if (!progByReading.has(p.readingId)) progByReading.set(p.readingId, p);
+
+    const readingIdsForTitle = readingBooks.map((b) => b.id);
+    const titleRows = readingIdsForTitle.length
+      ? await db
+          .select({
+            id: schema.userBooks.id,
+            customTitle: schema.userBooks.customTitle,
+            title: schema.editions.title,
+            coverUrl: schema.editions.coverUrl,
+          })
+          .from(schema.userBooks)
+          .leftJoin(schema.editions, eq(schema.userBooks.editionId, schema.editions.id))
+          .where(inArray(schema.userBooks.id, readingIdsForTitle))
+      : [];
+    const titleById = new Map(titleRows.map((r) => [r.id, r]));
+
+    const readingNow = readingBooks
+      .map((b) => {
+        const info = titleById.get(b.id);
+        const prog = progByReading.get(latest.get(b.id)!.id);
+        const pages = pagesByBook.get(b.id) || null;
+        const percent =
+          prog?.percent ?? (prog?.page && pages ? Math.min(100, Math.round((prog.page / pages) * 100)) : null);
+        return {
+          id: b.id,
+          title: info?.title ?? info?.customTitle ?? "Sin título",
+          coverUrl: info?.coverUrl ?? null,
+          page: prog?.page ?? null,
+          pages,
+          percent,
+        };
+      })
+      .sort((a, b) => (b.percent ?? 0) - (a.percent ?? 0));
 
     // --- Colección ---
     const valueCents = books.reduce((acc, b) => acc + (b.purchasePriceCents ?? 0), 0);
@@ -153,6 +207,8 @@ export function statsRoutes(app: FastifyInstance) {
         readPct: books.length ? Math.round((finishedBooks / books.length) * 100) : 0,
       },
       thisYear: { finished: finishedThisYear, pages: pagesThisYear },
+      allTime: { finished: finishedAllTime, pages: pagesAllTime },
+      readingNow,
       months,
       streakDays: streak,
       collection: {

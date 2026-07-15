@@ -166,7 +166,7 @@ export default function Deseos() {
           </p>
         )}
 
-        <div style={{ display: "grid", gap: 10 }}>
+        <div className="stagger" style={{ display: "grid", gap: 10 }}>
           {(items ?? []).map((item) => {
             const p = prio(item.priority);
             return (

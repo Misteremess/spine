@@ -3,19 +3,25 @@
  * un vistazo a lo que lleva leído. Los ajustes y el menú de secciones viven
  * ahora en /settings (engranaje arriba a la derecha).
  */
+import { Feather } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "../../lib/api";
 import { authClient } from "../../lib/auth";
+import { Cover } from "../../lib/Cover";
+import { FadeInUp, PopIn } from "../../lib/Motion";
 import { useThemeColors, useThemedStyles } from "../../lib/settings";
 import { fonts, type Palette } from "../../lib/theme";
 import { Text } from "../../lib/ui";
 
+type ReadingNow = { id: number; title: string; coverUrl: string | null; page: number | null; pages: number | null; percent: number | null };
 type Stats = {
   library: { total: number; byStatus: Record<string, number>; readPct: number };
   thisYear: { finished: number; pages: number };
+  allTime: { finished: number; pages: number };
+  readingNow: ReadingNow[];
   months: { month: string; finished: number; pages: number }[];
   streakDays: number;
   collection: { valueCents: number; series: number; seriesComplete: number };
@@ -63,7 +69,7 @@ export default function Profile() {
           style={s.gear}
           accessibilityLabel="Ajustes"
         >
-          <Text style={{ color: colors.marfil, fontSize: 20 }}>⚙</Text>
+          <Feather name="settings" size={19} color={colors.marfil} />
         </Pressable>
       </View>
 
@@ -73,20 +79,68 @@ export default function Profile() {
         </View>
       ) : (
         <>
+          {/* Destacado: lo que de verdad mide tu hábito lector */}
+          <PopIn style={s.highlight}>
+            <View style={{ alignItems: "center", flex: 1 }}>
+              <Text style={[s.big, stats.streakDays > 0 && { color: colors.ambar }]}>
+                {stats.streakDays > 0 ? `🔥 ${stats.streakDays}` : "—"}
+              </Text>
+              <Text style={s.label}>días de racha</Text>
+            </View>
+            <View style={s.hlDivider} />
+            <View style={{ alignItems: "center", flex: 1 }}>
+              <Text style={s.big}>{stats.allTime.pages.toLocaleString("es-ES")}</Text>
+              <Text style={s.label}>páginas leídas</Text>
+            </View>
+            <View style={s.hlDivider} />
+            <View style={{ alignItems: "center", flex: 1 }}>
+              <Text style={s.big}>{stats.allTime.finished}</Text>
+              <Text style={s.label}>libros leídos</Text>
+            </View>
+          </PopIn>
+
           {/* Resumen de la biblioteca */}
-          <View style={s.row}>
+          <FadeInUp delay={80} style={s.row}>
             <Tile big={String(stats.library.total)} label="en tu biblioteca" />
             <Tile big={`${stats.library.readPct}%`} label="ya leído" accent={colors.salvia} />
-          </View>
-          <View style={s.row}>
+          </FadeInUp>
+          <FadeInUp delay={140} style={s.row}>
             <Tile big={String(stats.library.byStatus.reading ?? 0)} label="leyendo ahora" accent={colors.ambar} />
             <Tile big={String(stats.library.byStatus.pending ?? 0)} label="esperando turno" />
-          </View>
+          </FadeInUp>
+
+          {/* Leyendo ahora, con su progreso — refleja lo que actualizas en la ficha */}
+          {stats.readingNow.length > 0 && (
+            <View style={s.card}>
+              <Text style={s.cardTitle}>Leyendo ahora</Text>
+              {stats.readingNow.map((r) => (
+                <Pressable
+                  key={r.id}
+                  onPress={() => router.push(`/book/${r.id}`)}
+                  style={{ flexDirection: "row", gap: 12, alignItems: "center" }}
+                >
+                  <Cover title={r.title} coverUrl={r.coverUrl} style={{ width: 34, height: 50 }} titleSize={8} radius={4} />
+                  <View style={{ flex: 1, gap: 5 }}>
+                    <Text style={{ color: colors.papel, fontSize: 13.5, fontFamily: fonts.sansSemi }} numberOfLines={1}>
+                      {r.title}
+                    </Text>
+                    <View style={{ height: 6, borderRadius: 99, backgroundColor: colors.tinta3, overflow: "hidden" }}>
+                      <View style={{ width: `${r.percent ?? 0}%`, height: "100%", backgroundColor: colors.ambar }} />
+                    </View>
+                    <Text style={{ color: colors.mut, fontSize: 10.5 }}>
+                      {r.percent != null ? `${r.percent}%` : "sin progreso"}
+                      {r.page != null ? ` · pág. ${r.page}${r.pages ? ` de ${r.pages}` : ""}` : ""}
+                    </Text>
+                  </View>
+                </Pressable>
+              ))}
+            </View>
+          )}
 
           {/* Este año */}
           <View style={s.card}>
             <Text style={s.cardTitle}>Este año</Text>
-            <View style={{ flexDirection: "row", gap: 20 }}>
+            <View style={{ flexDirection: "row", gap: 24 }}>
               <View>
                 <Text style={s.big}>{stats.thisYear.finished}</Text>
                 <Text style={s.label}>terminados</Text>
@@ -94,12 +148,6 @@ export default function Profile() {
               <View>
                 <Text style={s.big}>{stats.thisYear.pages.toLocaleString("es-ES")}</Text>
                 <Text style={s.label}>páginas</Text>
-              </View>
-              <View>
-                <Text style={[s.big, stats.streakDays > 0 && { color: colors.ambar }]}>
-                  {stats.streakDays > 0 ? `🔥 ${stats.streakDays}` : "—"}
-                </Text>
-                <Text style={s.label}>días de racha</Text>
               </View>
             </View>
           </View>
@@ -171,6 +219,16 @@ function Tile({ big, label, accent }: { big: string; label: string; accent?: str
 const makeStyles = (colors: Palette) => StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.tinta },
   row: { flexDirection: "row", gap: 14 },
+  highlight: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.tinta2,
+    borderWidth: 1,
+    borderColor: colors.tinta3,
+    borderRadius: 14,
+    paddingVertical: 16,
+  },
+  hlDivider: { width: 1, alignSelf: "stretch", backgroundColor: colors.tinta3, marginVertical: 4 },
   avatar: {
     width: 52,
     height: 52,

@@ -1,0 +1,61 @@
+name: spine
+
+networks:
+  proxy:
+    external: true
+  internal:
+
+volumes:
+  spine_pgdata:
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    mem_limit: 512m
+    networks: [internal]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - spine_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: ghcr.io/misteremess/spine-api:latest
+    restart: unless-stopped
+    mem_limit: 384m
+    networks: [proxy, internal]
+    env_file: .env.production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.spine-api.rule=Host(`api-spine.hyperfocus.es`)"
+      - "traefik.http.routers.spine-api.entrypoints=websecure"
+      - "traefik.http.routers.spine-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.spine-api.priority=10"
+      - "traefik.http.services.spine-api.loadbalancer.server.port=3123"
+
+  web:
+    image: ghcr.io/misteremess/spine-web:latest
+    restart: unless-stopped
+    mem_limit: 384m
+    networks: [proxy]
+    depends_on:
+      - api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.spine-web.rule=Host(`spine.hyperfocus.es`)"
+      - "traefik.http.routers.spine-web.entrypoints=websecure"
+      - "traefik.http.routers.spine-web.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.spine-web.priority=10"
+      - "traefik.http.services.spine-web.loadbalancer.server.port=3000"

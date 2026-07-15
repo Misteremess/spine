@@ -23,6 +23,7 @@ colecciones por tomos. Un CRM personal para lectores y coleccionistas.
 | [`tools/fase0-isbn-test/`](tools/fase0-isbn-test/) | Prueba de validación de la cascada ISBN con ediciones españolas reales |
 | [`design/prototipo.html`](design/prototipo.html) | Prototipo UX/UI de las 8 pantallas clave del MVP (modos Noche y Papel) |
 | [`landing/`](landing/) | Landing de captura para la beta ([misteremess.github.io/spine](https://misteremess.github.io/spine/)), desplegada vía GitHub Pages |
+| [`deploy/docker/README.md`](deploy/docker/README.md) | Despliegue en producción (Docker + Traefik + auto-deploy vía GitHub Actions) |
 
 ## Stack previsto
 

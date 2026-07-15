@@ -7,8 +7,14 @@ const TEST_URL = `postgres://localhost:5432/${TEST_DB}`;
 export default async function setup() {
   const admin = new pg.Client({ connectionString: "postgres://localhost:5432/postgres" });
   await admin.connect();
-  const exists = await admin.query("SELECT 1 FROM pg_database WHERE datname = $1", [TEST_DB]);
-  if (!exists.rowCount) await admin.query(`CREATE DATABASE ${TEST_DB}`);
+  // Recrea la BD de test desde cero cada vez: evita drift de esquema cuando
+  // cambia schema.ts (drizzle-kit push no siempre altera una BD ya existente).
+  await admin.query(
+    `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = $1 AND pid <> pg_backend_pid()`,
+    [TEST_DB]
+  );
+  await admin.query(`DROP DATABASE IF EXISTS ${TEST_DB}`);
+  await admin.query(`CREATE DATABASE ${TEST_DB}`);
   await admin.end();
 
   execSync("npx drizzle-kit push --force", {

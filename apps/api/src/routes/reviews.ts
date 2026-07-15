@@ -93,4 +93,45 @@ export function reviewsRoutes(app: FastifyInstance) {
     if (deleted.length === 0) return reply.code(404).send({ error: "not_found" });
     return reply.code(204).send();
   });
+
+  /** Crear o actualizar TU reseña de la SAGA entera (upsert por userId+seriesId). */
+  app.put<{ Params: { id: string } }>("/v1/series/:id/review", async (req, reply) => {
+    const seriesId = Number(req.params.id);
+    if (!Number.isInteger(seriesId)) return reply.code(400).send({ error: "invalid_id" });
+    const body = ReviewSchema.parse(req.body);
+
+    const [ser] = await db.select({ id: schema.series.id }).from(schema.series).where(eq(schema.series.id, seriesId)).limit(1);
+    if (!ser) return reply.code(404).send({ error: "not_found" });
+
+    const [review] = await db
+      .insert(schema.reviews)
+      .values({
+        userId: req.user.id,
+        seriesId,
+        rating: body.rating,
+        text: body.text || null,
+        spoilers: body.spoilers ?? false,
+      })
+      .onConflictDoUpdate({
+        target: [schema.reviews.userId, schema.reviews.seriesId],
+        set: {
+          rating: body.rating,
+          text: body.text || null,
+          spoilers: body.spoilers ?? false,
+          updatedAt: sql`now()`,
+        },
+      })
+      .returning();
+    return { review };
+  });
+
+  app.delete<{ Params: { id: string } }>("/v1/series/:id/review", async (req, reply) => {
+    const seriesId = Number(req.params.id);
+    const deleted = await db
+      .delete(schema.reviews)
+      .where(and(eq(schema.reviews.seriesId, seriesId), eq(schema.reviews.userId, req.user.id)))
+      .returning({ id: schema.reviews.id });
+    if (deleted.length === 0) return reply.code(404).send({ error: "not_found" });
+    return reply.code(204).send();
+  });
 }

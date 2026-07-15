@@ -1,0 +1,17 @@
+node_modules
+**/node_modules
+.git
+.next
+**/.next
+.expo
+**/.expo
+apps/mobile
+landing
+design
+docs
+tools
+*.log
+.DS_Store
+.env
+.env.*
+!.env.production.example

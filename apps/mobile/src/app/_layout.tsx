@@ -59,6 +59,7 @@ function RootNav() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="landing" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="scanner" options={{ title: "Escáner", presentation: "fullScreenModal" }} />
         <Stack.Screen name="notifications" options={{ title: "Avisos" }} />

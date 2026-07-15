@@ -1,6 +1,7 @@
 {
   "name": "spine",
   "private": true,
+  "packageManager": "pnpm@11.8.0",
   "engines": { "node": ">=22" },
   "scripts": {
     "dev:api": "pnpm --filter @spine/api dev",

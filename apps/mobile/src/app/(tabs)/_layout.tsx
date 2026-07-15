@@ -74,7 +74,7 @@ export default function TabsLayout() {
       </View>
     );
   }
-  if (!session) return <Redirect href="/login" />;
+  if (!session) return <Redirect href="/landing" />;
 
   return (
     <Tabs

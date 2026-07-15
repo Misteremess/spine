@@ -219,7 +219,7 @@ export const userBooks = pgTable("user_books", {
   /** Valoración del usuario en medias estrellas: 1..10. */
   rating: integer("rating"),
   notes: text("notes"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
@@ -245,7 +245,7 @@ export const progressEntries = pgTable("progress_entries", {
   page: integer("page"),
   percent: integer("percent"),
   note: text("note"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 /**
@@ -259,16 +259,16 @@ export const reviews = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    workId: integer("work_id")
-      .notNull()
-      .references(() => works.id, { onDelete: "cascade" }),
+    // Una reseña es de una OBRA o de una SAGA entera (uno de los dos).
+    workId: integer("work_id").references(() => works.id, { onDelete: "cascade" }),
+    seriesId: integer("series_id").references(() => series.id, { onDelete: "cascade" }),
     rating: integer("rating").notNull(),
     text: text("text"),
     spoilers: boolean("spoilers").notNull().default(false),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
-  (t) => [unique().on(t.userId, t.workId)]
+  (t) => [unique().on(t.userId, t.workId), unique().on(t.userId, t.seriesId)]
 );
 
 /* ============================================================

@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+!.env.production.example
 
 # Dependencias y builds
 node_modules/
@@ -12,3 +13,6 @@ build/
 # Sistema
 .DS_Store
 *.log
+
+# Backups locales del VPS (deploy/docker/backup.sh)
+deploy/docker/backups/

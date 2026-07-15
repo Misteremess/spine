@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { authClient } from "@/lib/auth";
@@ -9,6 +9,7 @@ import { authClient } from "@/lib/auth";
 /** Marco de las páginas con sesión: cabecera + expulsión al login. */
 export function Shell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: session, isPending } = authClient.useSession();
   const [unread, setUnread] = useState(0);
 
@@ -121,7 +122,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </button>
         </div>
       </header>
-      <main style={{ maxWidth: 1000, margin: "0 auto", padding: 20 }}>{children}</main>
+      <main style={{ maxWidth: 1000, margin: "0 auto", padding: 20 }}>
+        <div key={pathname} className="page-enter">
+          {children}
+        </div>
+      </main>
     </>
   );
 }

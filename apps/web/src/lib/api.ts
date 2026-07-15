@@ -14,12 +14,15 @@ export async function api<T = Record<string, unknown>>(
   path: string,
   init?: Omit<RequestInit, "body"> & { body?: unknown }
 ): Promise<T> {
+  // Solo declaramos JSON cuando hay cuerpo: Fastify devuelve 400 si el
+  // content-type es application/json pero el cuerpo va vacío (p. ej. DELETE).
+  const hasBody = init?.body !== undefined;
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     credentials: "include",
-    body: init?.body !== undefined ? JSON.stringify(init.body) : undefined,
+    body: hasBody ? JSON.stringify(init.body) : undefined,
     headers: {
-      "Content-Type": "application/json",
+      ...(hasBody ? { "Content-Type": "application/json" } : {}),
       ...(init?.headers as Record<string, string> | undefined),
     },
   });

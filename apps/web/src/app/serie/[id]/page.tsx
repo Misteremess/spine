@@ -45,6 +45,7 @@ type Detail = {
     average: number | null;
     count: number;
     items: { id: number; rating: number; text: string | null; spoilers: boolean; userName: string; own: boolean }[];
+    mine: { rating: number; text: string | null; spoilers: boolean } | null;
   };
 };
 
@@ -363,6 +364,7 @@ export default function SerieDetalle() {
               </div>
             ))
           )}
+          <SagaReviewForm seriesId={id} mine={reviews.mine} onSaved={load} />
         </div>
 
         <button className="muted" style={{ fontSize: 13, justifySelf: "center" }} disabled={checking} onClick={() => void refresh()}>
@@ -371,5 +373,69 @@ export default function SerieDetalle() {
         </button>
       </div>
     </Shell>
+  );
+}
+
+/** Formulario para reseñar la SAGA entera (PUT /v1/series/:id/review). */
+function SagaReviewForm({
+  seriesId,
+  mine,
+  onSaved,
+}: {
+  seriesId: string;
+  mine: { rating: number; text: string | null; spoilers: boolean } | null;
+  onSaved: () => void;
+}) {
+  const [rating, setRating] = useState(mine?.rating ?? 0);
+  const [text, setText] = useState(mine?.text ?? "");
+  const [spoilers, setSpoilers] = useState(mine?.spoilers ?? false);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (rating < 1 || saving) return;
+    setSaving(true);
+    try {
+      await api(`/v1/series/${seriesId}/review`, {
+        method: "PUT",
+        body: { rating, text: text.trim() || undefined, spoilers },
+      });
+      onSaved();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div style={{ display: "grid", gap: 8, borderTop: "1px solid var(--tinta3)", paddingTop: 12 }}>
+      <strong style={{ fontSize: 13 }}>{mine ? "Tu reseña de la saga" : "Reseña esta saga"}</strong>
+      <div style={{ display: "flex", gap: 4 }}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            title={`${star} estrellas`}
+            style={{ fontSize: 26, color: "var(--ambar)", lineHeight: 1 }}
+            onClick={() => setRating(rating === star * 2 ? star * 2 - 1 : rating === star * 2 - 1 ? 0 : star * 2)}
+          >
+            {rating >= star * 2 ? "★" : rating === star * 2 - 1 ? "⯨" : "☆"}
+          </button>
+        ))}
+      </div>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Escribe tu opinión (opcional)"
+        rows={3}
+        style={{ resize: "vertical" }}
+      />
+      <label style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13, color: "var(--mut)" }}>
+        <input type="checkbox" checked={spoilers} onChange={(e) => setSpoilers(e.target.checked)} style={{ width: "auto" }} />
+        Contiene spoilers
+      </label>
+      <div style={{ display: "flex", gap: 10 }}>
+        <button className="btn" style={{ padding: "9px 18px", fontSize: 13.5 }} disabled={rating < 1 || saving} onClick={() => void save()}>
+          {saving ? "Guardando…" : mine ? "Actualizar reseña" : "Publicar reseña"}
+        </button>
+      </div>
+    </div>
   );
 }

@@ -18,7 +18,7 @@ import {
 import { api } from "../../lib/api";
 import { useThemeColors, useThemedStyles } from "../../lib/settings";
 import { fonts, type Palette } from "../../lib/theme";
-import { Text } from "../../lib/ui";
+import { Text, TextInput } from "../../lib/ui";
 
 type Volume = {
   volume: number;
@@ -54,6 +54,7 @@ type Detail = {
     average: number | null;
     count: number;
     items: { id: number; rating: number; text: string | null; spoilers: boolean; userName: string; own: boolean }[];
+    mine: { rating: number; text: string | null; spoilers: boolean } | null;
   };
 };
 
@@ -319,6 +320,7 @@ export default function SeriesDetail() {
             </View>
           ))
         )}
+        <SagaReview seriesId={String(id)} mine={reviews.mine} onSaved={load} />
       </View>
 
       <Pressable
@@ -336,6 +338,97 @@ export default function SeriesDetail() {
         ) : null}
       </Pressable>
     </ScrollView>
+  );
+}
+
+/** Formulario para reseñar la SAGA entera (upsert en PUT /v1/series/:id/review). */
+function SagaReview({
+  seriesId,
+  mine,
+  onSaved,
+}: {
+  seriesId: string;
+  mine: { rating: number; text: string | null; spoilers: boolean } | null;
+  onSaved: () => void;
+}) {
+  const colors = useThemeColors();
+  const [rating, setRating] = useState(mine?.rating ?? 0);
+  const [text, setText] = useState(mine?.text ?? "");
+  const [spoilers, setSpoilers] = useState(mine?.spoilers ?? false);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (rating < 1 || saving) return;
+    setSaving(true);
+    try {
+      await api(`/v1/series/${seriesId}/review`, {
+        method: "PUT",
+        body: { rating, text: text.trim() || undefined, spoilers },
+      });
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      onSaved();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <View style={{ gap: 8, marginTop: 8, borderTopWidth: 1, borderTopColor: colors.tinta3, paddingTop: 12 }}>
+      <Text style={{ color: colors.marfil, fontSize: 12.5, fontFamily: fonts.sansSemi }}>
+        {mine ? "Tu reseña de la saga" : "Reseña esta saga"}
+      </Text>
+      <View style={{ flexDirection: "row", gap: 4 }}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Pressable
+            key={star}
+            onPress={() => setRating(rating === star * 2 ? star * 2 - 1 : rating === star * 2 - 1 ? 0 : star * 2)}
+          >
+            <Text style={{ fontSize: 26, color: colors.ambar }}>
+              {rating >= star * 2 ? "★" : rating === star * 2 - 1 ? "⯨" : "☆"}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+      <TextInput
+        style={{
+          backgroundColor: colors.tinta,
+          borderWidth: 1,
+          borderColor: colors.tinta3,
+          borderRadius: 10,
+          color: colors.papel,
+          padding: 10,
+          fontSize: 13.5,
+          minHeight: 70,
+          textAlignVertical: "top",
+        }}
+        value={text}
+        onChangeText={setText}
+        placeholder="Escribe tu opinión (opcional)"
+        placeholderTextColor={colors.mut}
+        multiline
+      />
+      <Pressable onPress={() => setSpoilers((v) => !v)} style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <Text style={{ color: spoilers ? colors.arcilla : colors.mut, fontSize: 12.5 }}>
+          {spoilers ? "◉" : "○"} Contiene spoilers
+        </Text>
+      </Pressable>
+      <Pressable
+        style={{
+          alignSelf: "flex-start",
+          backgroundColor: colors.ambar,
+          borderRadius: 10,
+          paddingHorizontal: 18,
+          paddingVertical: 9,
+          opacity: rating < 1 || saving ? 0.4 : 1,
+        }}
+        disabled={rating < 1 || saving}
+        onPress={() => void save()}
+      >
+        <Text style={{ color: colors.inkOnAccent, fontFamily: fonts.sansBold, fontSize: 13.5 }}>
+          {saving ? "Guardando…" : mine ? "Actualizar reseña" : "Publicar reseña"}
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 

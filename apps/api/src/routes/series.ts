@@ -104,9 +104,25 @@ async function seriesDetail(seriesId: number, userId: string) {
 
   const readCount = volumes.filter((v) => v.read).length;
 
-  // Reseñas de toda la saga: la comunidad valora la serie en conjunto
-  // agregando las reseñas de cualquier obra que pertenezca a ella.
-  const reviewRows = await db
+  // Reseñas de la SAGA: las que valoran la serie entera (seriesId) más las
+  // de cualquier obra que pertenezca a ella. `mine` es TU reseña de la saga.
+  const seriesReviewRows = await db
+    .select({
+      id: schema.reviews.id,
+      rating: schema.reviews.rating,
+      text: schema.reviews.text,
+      spoilers: schema.reviews.spoilers,
+      createdAt: schema.reviews.createdAt,
+      userId: schema.reviews.userId,
+      userName: schema.user.name,
+    })
+    .from(schema.reviews)
+    .innerJoin(schema.user, eq(schema.reviews.userId, schema.user.id))
+    .where(eq(schema.reviews.seriesId, seriesId))
+    .orderBy(desc(schema.reviews.updatedAt))
+    .limit(50);
+
+  const workReviewRows = await db
     .select({
       id: schema.reviews.id,
       rating: schema.reviews.rating,
@@ -123,11 +139,17 @@ async function seriesDetail(seriesId: number, userId: string) {
     .where(eq(schema.works.seriesId, seriesId))
     .orderBy(desc(schema.reviews.updatedAt))
     .limit(50);
+
+  const reviewRows = [
+    ...seriesReviewRows.map((r) => ({ ...r, workTitle: null as string | null })),
+    ...workReviewRows,
+  ];
   const reviewCount = reviewRows.length;
   const average =
     reviewCount > 0
       ? Math.round((reviewRows.reduce((s, r) => s + r.rating, 0) / reviewCount) * 10) / 10
       : null;
+  const mineRow = seriesReviewRows.find((r) => r.userId === userId) ?? null;
 
   return {
     series: {
@@ -155,6 +177,7 @@ async function seriesDetail(seriesId: number, userId: string) {
         ...r,
         own: reviewerId === userId,
       })),
+      mine: mineRow ? { rating: mineRow.rating, text: mineRow.text, spoilers: mineRow.spoilers } : null,
     },
   };
 }
