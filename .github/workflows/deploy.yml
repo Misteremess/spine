@@ -9,6 +9,7 @@ on:
       - "apps/mobile/**"
       - "packages/shared/**"
       - "docker-compose.production.yml"
+      - ".dockerignore"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
