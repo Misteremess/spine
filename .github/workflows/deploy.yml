@@ -86,14 +86,6 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: "[debug temporal] huella pública de VPS_SSH_KEY"
-        env:
-          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
-        run: |
-          printf '%s\n' "$SSH_KEY" > /tmp/k
-          chmod 600 /tmp/k
-          ssh-keygen -lf /tmp/k
-          rm -f /tmp/k
       - uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
