@@ -114,6 +114,9 @@ export default function Library() {
           <Pressable onPress={() => router.push("/collections")} hitSlop={10}>
             <Text style={{ color: colors.ambar, fontSize: 13, fontFamily: fonts.sansSemi }}>▦ Sagas</Text>
           </Pressable>
+          <Pressable onPress={() => router.push("/manual")} hitSlop={10}>
+            <Text style={{ color: colors.ambar, fontSize: 20, fontFamily: fonts.sansBold }}>＋</Text>
+          </Pressable>
         </View>
       </View>
 

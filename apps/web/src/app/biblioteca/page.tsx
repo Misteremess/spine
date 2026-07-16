@@ -20,6 +20,16 @@ type Item = {
   tags: { id: number; name: string; color: string | null }[];
 };
 
+type Candidate = {
+  isbn13: string | null;
+  title: string;
+  authors: string[];
+  publisher: string | null;
+  publishedDate: string | null;
+  pages: number | null;
+  coverUrl: string | null;
+};
+
 const STATUS: Record<string, { text: string; color: string }> = {
   pending: { text: "Pendiente", color: "var(--mut)" },
   reading: { text: "Leyendo", color: "var(--ambar)" },
@@ -42,9 +52,12 @@ export default function Biblioteca() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [shelf, setShelf] = useState(false);
-  const [isbnInput, setIsbnInput] = useState("");
-  const [adding, setAdding] = useState(false);
+  const [addInput, setAddInput] = useState("");
   const [addMsg, setAddMsg] = useState<{ text: string; ok: boolean } | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [results, setResults] = useState<Candidate[] | null>(null);
+  const [addingKey, setAddingKey] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -59,32 +72,53 @@ export default function Biblioteca() {
     void load();
   }, [load]);
 
-  async function addByIsbn(e: React.FormEvent) {
+  async function search(e: React.FormEvent) {
     e.preventDefault();
-    const isbn = isbnInput.trim();
-    if (!isbn || adding) return;
-    setAdding(true);
+    const q = addInput.trim();
+    if (q.length < 2 || searching) return;
+    setSearching(true);
     setAddMsg(null);
     try {
-      const res = await api<{ metadata: { title: string } }>("/v1/library", {
-        method: "POST",
-        body: { isbn },
-      });
-      setAddMsg({ text: `✓ «${res.metadata.title}» añadido`, ok: true });
-      setIsbnInput("");
+      const data = await api<{ candidates: Candidate[] }>(`/v1/search?q=${encodeURIComponent(q)}`);
+      setResults(data.candidates);
+    } catch {
+      setAddMsg({ text: "No se pudo buscar. Inténtalo de nuevo", ok: false });
+    } finally {
+      setSearching(false);
+    }
+  }
+
+  async function addCandidate(c: Candidate) {
+    const key = c.isbn13 ?? c.title;
+    if (addingKey) return;
+    setAddingKey(key);
+    setAddMsg(null);
+    try {
+      if (c.isbn13) {
+        const res = await api<{ metadata: { title: string } }>("/v1/library", {
+          method: "POST",
+          body: { isbn: c.isbn13 },
+        });
+        setAddMsg({ text: `✓ «${res.metadata.title}» añadido`, ok: true });
+      } else {
+        await api("/v1/library/manual", {
+          method: "POST",
+          body: { title: c.title, authors: c.authors.join(", ") || undefined },
+        });
+        setAddMsg({ text: `✓ «${c.title}» añadido`, ok: true });
+      }
+      setAddInput("");
+      setResults(null);
+      setSearchOpen(false);
       await load();
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) {
         setAddMsg({ text: "Ya tienes este libro en la biblioteca", ok: false });
-      } else if (err instanceof ApiError && err.status === 404) {
-        setAddMsg({ text: "Ninguna fuente conoce ese ISBN todavía — añádelo desde la app móvil", ok: false });
-      } else if (err instanceof ApiError && err.status === 400) {
-        setAddMsg({ text: "Eso no parece un ISBN válido", ok: false });
       } else {
         setAddMsg({ text: "No se pudo añadir. Inténtalo de nuevo", ok: false });
       }
     } finally {
-      setAdding(false);
+      setAddingKey(null);
     }
   }
 
@@ -111,21 +145,84 @@ export default function Biblioteca() {
             {items?.length ?? "…"} libros
           </span>
           <span style={{ flex: 1 }} />
-          <form style={{ display: "flex", gap: 8 }} onSubmit={addByIsbn}>
-            <input
-              style={{ width: 180, fontSize: 13.5, padding: "8px 11px" }}
-              placeholder="Añadir por ISBN"
-              value={isbnInput}
-              onChange={(e) => setIsbnInput(e.target.value)}
-            />
-            <button className="btn" style={{ padding: "8px 14px", fontSize: 13.5 }} disabled={!isbnInput.trim() || adding}>
-              {adding ? "…" : "Añadir"}
-            </button>
-          </form>
+          <button
+            className="btn"
+            style={{ padding: "8px 14px", fontSize: 13.5 }}
+            onClick={() => setSearchOpen((v) => !v)}
+          >
+            {searchOpen ? "Cerrar" : "＋ Añadir libro"}
+          </button>
           <Link href="/importar" className="muted" style={{ fontSize: 13 }}>
             Importar de Goodreads
           </Link>
         </div>
+
+        {searchOpen && (
+          <div className="card" style={{ display: "grid", gap: 10, maxWidth: 640 }}>
+            <form style={{ display: "flex", gap: 8 }} onSubmit={search}>
+              <input
+                style={{ flex: 1 }}
+                placeholder="Busca por título, autor o ISBN"
+                value={addInput}
+                onChange={(e) => setAddInput(e.target.value)}
+                autoFocus
+              />
+              <button className="btn" type="submit" disabled={addInput.trim().length < 2 || searching}>
+                {searching ? "…" : "Buscar"}
+              </button>
+            </form>
+
+            {results !== null && (
+              <div style={{ display: "grid", gap: 2, maxHeight: 360, overflowY: "auto" }}>
+                {results.length === 0 ? (
+                  <p className="muted" style={{ fontSize: 12.5 }}>
+                    Sin resultados. Prueba con otro título o el ISBN.
+                  </p>
+                ) : (
+                  results.map((c, i) => {
+                    const key = c.isbn13 ?? c.title;
+                    const busy = addingKey === key;
+                    return (
+                      <button
+                        key={`${key}-${i}`}
+                        type="button"
+                        onClick={() => void addCandidate(c)}
+                        disabled={Boolean(addingKey)}
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          alignItems: "center",
+                          textAlign: "left",
+                          padding: "8px 6px",
+                          borderBottom: "1px solid var(--tinta3)",
+                          cursor: "pointer",
+                          opacity: busy ? 0.5 : 1,
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: 30,
+                            height: 44,
+                            borderRadius: 4,
+                            background: c.coverUrl ? `center/cover url(${c.coverUrl})` : "var(--tinta3)",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <span style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{ display: "block", fontSize: 13, fontWeight: 600 }}>{c.title}</span>
+                          <span className="muted" style={{ fontSize: 11 }}>
+                            {[c.authors.join(", "), c.publishedDate?.slice(0, 4)].filter(Boolean).join(" · ")}
+                          </span>
+                        </span>
+                        <span style={{ color: "var(--ambar)", fontSize: 18 }}>{busy ? "…" : "＋"}</span>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {addMsg && (
           <p style={{ color: addMsg.ok ? "var(--salvia)" : "var(--arcilla)", fontSize: 13.5 }}>
