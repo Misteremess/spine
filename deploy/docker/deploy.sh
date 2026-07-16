@@ -13,7 +13,15 @@ ${COMPOSE} pull
 ${COMPOSE} up -d
 
 echo "== Healthcheck post-deploy =="
-sleep 5
-curl -fsS https://api-spine.hyperfocus.es/v1/health
-curl -fsS -o /dev/null https://spine.hyperfocus.es/
+wait_for() {
+  local url="$1"
+  for _ in $(seq 1 15); do
+    curl -fsS -o /dev/null "$url" && return 0
+    sleep 2
+  done
+  echo "✘ $url no respondió a tiempo"
+  return 1
+}
+wait_for https://api-spine.hyperfocus.es/v1/health
+wait_for https://spine.hyperfocus.es/
 echo "✔ Deploy OK"
