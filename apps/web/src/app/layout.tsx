@@ -10,7 +10,7 @@ const fraunces = Fraunces({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Spine — tu biblioteca",
+  title: "Spine",
   description: "Registra, organiza y da vida a tu colección de libros, manga y cómics.",
 };
 
