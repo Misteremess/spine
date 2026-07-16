@@ -6,8 +6,11 @@ set -euo pipefail
 APP_DIR="$HOME/spine"
 COMPOSE="docker compose -f docker-compose.production.yml --env-file .env.production"
 
+# El "git pull" NO va aquí a propósito: si este script hiciera pull de sí
+# mismo mientras bash lo está ejecutando, la lectura del fichero a medio
+# reescribir puede mezclar la versión vieja y la nueva (comportamiento no
+# fiable). El pull lo hace el step de SSH antes de invocar este script.
 cd "${APP_DIR}"
-git pull --ff-only
 
 ${COMPOSE} pull
 ${COMPOSE} up -d

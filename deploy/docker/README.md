@@ -66,8 +66,14 @@ autenticada en el VPS — no los automatiza este repo.
 5. **Esquema de base de datos** (Drizzle usa `db:push`, no hay migraciones):
 
    ```bash
-   docker compose -f docker-compose.production.yml exec api pnpm --filter @spine/api db:push
+   docker compose -f docker-compose.production.yml --env-file .env.production \
+     exec api sh -c "cd apps/api && ../../node_modules/.bin/drizzle-kit push --force"
    ```
+
+   (Usa el binario de `drizzle-kit` directamente, no `pnpm --filter @spine/api
+   db:push` — dentro de la imagen esa invocación dispara una reinstalación
+   completa del workspace porque `apps/web`/`apps/mobile` no están presentes
+   en la imagen de la API pero sí en el lockfile.)
 
    Repite este paso manualmente cuando `apps/api/src/db/schema.ts` cambie —
    deliberadamente NO está automatizado en el deploy para evitar aplicar
@@ -90,12 +96,14 @@ autenticada en el VPS — no los automatiza este repo.
 
 Cada push a `main` que toque `apps/api`, `apps/web`, `apps/mobile`,
 `packages/shared` o los ficheros de Docker: corre tests → build y push de
-imágenes a GHCR → SSH al VPS y ejecuta `deploy/docker/deploy.sh`
-(`git pull` + `docker compose pull` + `up -d` + healthcheck contra ambos
-subdominios).
+imágenes a GHCR → SSH al VPS, hace `git pull` y ejecuta
+`deploy/docker/deploy.sh` (`docker compose pull` + `up -d` + healthcheck
+contra ambos subdominios). El `git pull` va fuera de `deploy.sh` a
+propósito: si el script hiciera pull de sí mismo mientras se ejecuta,
+bash puede acabar leyendo una mezcla de la versión vieja y la nueva.
 
 ## Mantenimiento
 
 - Logs: `docker compose -f docker-compose.production.yml logs -f api web`
-- Redeploy manual: `bash ~/spine/deploy/docker/deploy.sh`
+- Redeploy manual: `cd ~/spine && git pull && bash deploy/docker/deploy.sh`
 - Backups: `ls ~/spine/deploy/docker/backups/`
