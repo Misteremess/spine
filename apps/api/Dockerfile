@@ -29,4 +29,10 @@ EXPOSE 3123
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:3123/v1/health || exit 1
 
-CMD ["pnpm", "--filter", "@spine/api", "start"]
+# Invoca tsx directamente, NO "pnpm --filter @spine/api start": esa
+# invocación dispara en cada arranque una comprobación de dependencias
+# contra el lockfile del monorepo completo (incluye apps/web/apps/mobile,
+# ausentes en esta imagen) que termina reinstalando medio workspace y
+# muriendo por SIGKILL contra el mem_limit del contenedor.
+WORKDIR /repo/apps/api
+CMD ["../../node_modules/.bin/tsx", "src/server.ts"]
