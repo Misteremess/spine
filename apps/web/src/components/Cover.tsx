@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { spineColor, spineInk } from "@/lib/spine";
 
 /** Oscurece un hex por un factor 0..1 (0 = igual, 1 = negro). */
@@ -13,24 +16,33 @@ function darken(hex: string, f: number): string {
  * Portada de un libro. Si hay imagen la muestra; si no, genera una portada
  * de color (gradiente del hash del título + canto + título serif) en vez de
  * una caja gris. Coste cero y estable entre sesiones, como los lomos.
+ *
+ * Ojo: covers.openlibrary.org responde 200 con un GIF de 1×1 cuando NO tiene
+ * portada — sin detectarlo, media biblioteca se ve como cajas vacías. Por eso
+ * se comprueba naturalWidth al cargar y se cae a la portada generada.
  */
 export function Cover({
   title,
   authors,
   coverUrl,
-  radius = 10,
 }: {
   title: string | null;
   authors?: string[];
   coverUrl?: string | null;
-  radius?: number;
 }) {
-  if (coverUrl) {
+  const [broken, setBroken] = useState(false);
+
+  if (coverUrl && !broken) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={coverUrl}
         alt=""
+        loading="lazy"
+        onError={() => setBroken(true)}
+        onLoad={(e) => {
+          if (e.currentTarget.naturalWidth <= 1) setBroken(true);
+        }}
         style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
       />
     );

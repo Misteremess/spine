@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { SafeImg } from "@/components/SafeImg";
 import { api } from "@/lib/api";
 
 type Volume = { volume: number | null; userBookId: number; title: string; coverUrl: string | null; status: string };
@@ -19,6 +20,7 @@ export default function Colecciones() {
   const [collections, setCollections] = useState<Collection[] | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [totalInput, setTotalInput] = useState("");
+  const [msg, setMsg] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const data = await api<{ collections: Collection[] }>("/v1/collections");
@@ -43,7 +45,13 @@ export default function Colecciones() {
   async function wishMissing(c: Collection, n: number) {
     const title = `${c.series.name} ${n}`;
     if (!confirm(`Te falta el tomo ${n}. ¿Añadir «${title}» a la lista de deseos?`)) return;
-    await api("/v1/wishlist", { method: "POST", body: { title, priority: 2 } });
+    try {
+      await api("/v1/wishlist", { method: "POST", body: { title, priority: 2 } });
+      setMsg(`✓ «${title}» añadido a la lista de deseos`);
+    } catch {
+      setMsg("No se pudo añadir a deseos. Inténtalo de nuevo");
+    }
+    window.setTimeout(() => setMsg(null), 4000);
   }
 
   return (
@@ -52,6 +60,10 @@ export default function Colecciones() {
         <h1 className="serif" style={{ fontSize: 26, fontWeight: 500 }}>
           Colecciones
         </h1>
+
+        {msg && (
+          <p style={{ color: msg.startsWith("✓") ? "var(--salvia)" : "var(--arcilla)", fontSize: 13.5 }}>{msg}</p>
+        )}
 
         {collections !== null && collections.length === 0 && (
           <p className="muted" style={{ textAlign: "center", padding: 32, fontSize: 14 }}>
@@ -123,27 +135,23 @@ export default function Colecciones() {
                         height: 52,
                         borderRadius: 5,
                         overflow: "hidden",
-                        background: cover ? `center/cover url(${cover})` : read ? "var(--salvia)" : "var(--ambar)",
-                        color: "var(--ink-on-accent)",
-                        fontSize: 12,
-                        fontWeight: 700,
-                        display: "grid",
-                        placeItems: cover ? "end end" : "center",
+                        background: read ? "var(--salvia)" : "var(--ambar)",
+                        display: "block",
                       }}
                     >
+                      {cover && <SafeImg src={cover} style={{ position: "absolute", inset: 0 }} />}
                       <span
-                        style={
-                          cover
-                            ? {
-                                background: "rgba(20,18,15,.82)",
-                                color: "var(--papel)",
-                                fontSize: 9,
-                                padding: "0 3px",
-                                borderRadius: 3,
-                                margin: 1,
-                              }
-                            : undefined
-                        }
+                        style={{
+                          position: "absolute",
+                          bottom: 1,
+                          right: 1,
+                          background: "rgba(20,18,15,.82)",
+                          color: "var(--papel)",
+                          fontSize: 9,
+                          fontWeight: 700,
+                          padding: "0 3px",
+                          borderRadius: 3,
+                        }}
                       >
                         {n}
                       </span>

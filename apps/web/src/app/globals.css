@@ -164,6 +164,56 @@ textarea:focus {
   color: var(--mut);
 }
 
+/* Navegación de la cabecera: estado activo visible y hover suave */
+.nav-link {
+  color: var(--mut);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.nav-link:hover {
+  color: var(--marfil);
+  background: var(--tinta3);
+}
+
+.nav-link[data-active] {
+  color: var(--ambar);
+  background: rgba(217, 164, 65, 0.12);
+  font-weight: 600;
+}
+
+/* Accesibilidad: anillo de foco visible al navegar con teclado */
+:focus-visible {
+  outline: 2px solid var(--ambar);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}
+
+::selection {
+  background: rgba(217, 164, 65, 0.35);
+}
+
+/* Scrollbar acorde al tema (WebKit) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--tinta3);
+  border-radius: 99px;
+  border: 2px solid var(--tinta);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .serif {
   font-family: var(--serif);
 }

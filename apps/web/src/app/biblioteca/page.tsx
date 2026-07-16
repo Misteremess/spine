@@ -14,6 +14,7 @@ type Item = {
   isbn13: string | null;
   pages: number | null;
   favorite: boolean;
+  rating: number | null;
   authors: string[];
   reading: { status: string } | null;
   loanedTo: string | null;
@@ -43,7 +44,15 @@ const FILTERS = [
   { key: "reading", label: "Leyendo" },
   { key: "pending", label: "Pendientes" },
   { key: "finished", label: "Leídos" },
+  { key: "abandoned", label: "Abandonados" },
 ];
+
+const SORTS = [
+  { key: "recent", label: "Más recientes" },
+  { key: "title", label: "Título A–Z" },
+  { key: "author", label: "Autor A–Z" },
+  { key: "rating", label: "Mejor valorados" },
+] as const;
 
 const fold = (s: string) => s.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
 
@@ -51,6 +60,7 @@ export default function Biblioteca() {
   const [items, setItems] = useState<Item[] | null>(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+  const [sort, setSort] = useState<(typeof SORTS)[number]["key"]>("recent");
   const [shelf, setShelf] = useState(false);
   const [addInput, setAddInput] = useState("");
   const [addMsg, setAddMsg] = useState<{ text: string; ok: boolean } | null>(null);
@@ -131,8 +141,15 @@ export default function Biblioteca() {
         (it) => fold(it.title ?? "").includes(q) || it.authors.some((a) => fold(a).includes(q))
       );
     }
+    if (sort !== "recent") {
+      list = [...list].sort((a, b) => {
+        if (sort === "title") return (a.title ?? "").localeCompare(b.title ?? "", "es");
+        if (sort === "author") return (a.authors[0] ?? "￿").localeCompare(b.authors[0] ?? "￿", "es");
+        return (b.rating ?? 0) - (a.rating ?? 0);
+      });
+    }
     return list;
-  }, [items, query, filter]);
+  }, [items, query, filter, sort]);
 
   return (
     <Shell>
@@ -259,6 +276,27 @@ export default function Biblioteca() {
               {f.label}
             </button>
           ))}
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as typeof sort)}
+            title="Ordenar"
+            style={{
+              background: "var(--tinta)",
+              color: "var(--mut)",
+              border: "1px solid var(--tinta3)",
+              borderRadius: 99,
+              padding: "6px 12px",
+              fontSize: 12.5,
+              fontWeight: 600,
+              fontFamily: "inherit",
+            }}
+          >
+            {SORTS.map((s) => (
+              <option key={s.key} value={s.key}>
+                {s.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {items === null && (
@@ -417,6 +455,11 @@ export default function Biblioteca() {
                       {item.authors.join(", ")}
                     </p>
                   )}
+                  {item.rating ? (
+                    <p style={{ color: "var(--ambar)", fontSize: 11, marginTop: 2 }}>
+                      ★ {(item.rating / 2).toFixed(1).replace(".0", "")}
+                    </p>
+                  ) : null}
                   {item.loanedTo && (
                     <p style={{ color: "var(--arcilla)", fontSize: 11, fontWeight: 600, marginTop: 2 }}>
                       → prestado a {item.loanedTo}

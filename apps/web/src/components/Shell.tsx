@@ -6,6 +6,29 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { authClient } from "@/lib/auth";
 
+const NAV = [
+  { href: "/biblioteca", label: "Biblioteca" },
+  { href: "/colecciones", label: "Colecciones" },
+  { href: "/deseos", label: "Deseos" },
+  { href: "/clubs", label: "Clubs" },
+  { href: "/stats", label: "Stats" },
+];
+
+/** Campana de avisos (SVG inline: el glifo ◷ era un reloj, no una campana). */
+function BellIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 3c-3.1 0-5.6 2.5-5.6 5.6v3.1l-1.6 3.2c-.3.6.1 1.3.8 1.3h12.8c.7 0 1.1-.7.8-1.3l-1.6-3.2V8.6C17.6 5.5 15.1 3 12 3Z"
+        stroke={active ? "var(--ambar)" : "var(--mut)"}
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path d="M9.8 19.5a2.3 2.3 0 0 0 4.4 0" stroke={active ? "var(--ambar)" : "var(--mut)"} strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /** Marco de las páginas con sesión: cabecera + expulsión al login. */
 export function Shell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -43,7 +66,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <header
         style={{
           borderBottom: "1px solid var(--tinta3)",
-          background: "var(--tinta2)",
+          background: "rgba(29,26,21,0.88)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
           position: "sticky",
           top: 0,
           zIndex: 10,
@@ -53,7 +78,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           style={{
             maxWidth: 1000,
             margin: "0 auto",
-            padding: "14px 20px",
+            padding: "12px 20px",
             display: "flex",
             alignItems: "center",
             gap: 22,
@@ -62,35 +87,33 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <Link href="/biblioteca" className="serif" style={{ fontSize: 20, color: "var(--ambar)" }}>
             Spine
           </Link>
-          <nav style={{ display: "flex", gap: 18, fontSize: 14, flex: 1, flexWrap: "wrap" }}>
-            <Link href="/biblioteca" style={{ color: "var(--marfil)" }}>
-              Biblioteca
-            </Link>
-            <Link href="/colecciones" style={{ color: "var(--marfil)" }}>
-              Colecciones
-            </Link>
-            <Link href="/deseos" style={{ color: "var(--marfil)" }}>
-              Deseos
-            </Link>
-            <Link href="/clubs" style={{ color: "var(--marfil)" }}>
-              Clubs
-            </Link>
-            <Link href="/stats" style={{ color: "var(--marfil)" }}>
-              Stats
-            </Link>
+          <nav style={{ display: "flex", gap: 4, fontSize: 14, flex: 1, flexWrap: "wrap" }}>
+            {NAV.map((item) => {
+              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="nav-link"
+                  data-active={active || undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
           <Link
             href="/avisos"
             title="Avisos y novedades"
-            style={{ position: "relative", color: unread > 0 ? "var(--ambar)" : "var(--mut)", fontSize: 17 }}
+            style={{ position: "relative", display: "grid", placeItems: "center", padding: 4 }}
           >
-            ◷
+            <BellIcon active={unread > 0} />
             {unread > 0 && (
               <span
                 style={{
                   position: "absolute",
-                  top: -6,
-                  right: -10,
+                  top: -4,
+                  right: -6,
                   background: "var(--arcilla)",
                   color: "var(--papel)",
                   borderRadius: 99,

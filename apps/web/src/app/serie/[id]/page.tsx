@@ -9,6 +9,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { SafeImg } from "@/components/SafeImg";
+import { Stars, StarPicker } from "@/components/Stars";
 import { api } from "@/lib/api";
 
 type Volume = {
@@ -49,9 +51,6 @@ type Detail = {
   };
 };
 
-function stars(r: number) {
-  return "★".repeat(Math.floor(r / 2)) + (r % 2 ? "⯨" : "") + "☆".repeat(5 - Math.ceil(r / 2));
-}
 
 const STATUS = {
   ongoing: { text: "En publicación", color: "var(--ambar)" },
@@ -182,15 +181,13 @@ export default function SerieDetalle() {
                       width: 52,
                       height: 74,
                       borderRadius: 7,
-                      background: v.coverUrl ? `center/cover url(${v.coverUrl})` : "var(--ambar)",
-                      color: "var(--ink-on-accent)",
-                      display: "grid",
-                      placeItems: v.coverUrl ? "end end" : "center",
-                      fontWeight: 700,
-                      fontSize: 13,
+                      overflow: "hidden",
+                      background: v.read ? "var(--salvia)" : "var(--ambar)",
+                      display: "block",
                       position: "relative",
                     }}
                   >
+                    {v.coverUrl && <SafeImg src={v.coverUrl} style={{ position: "absolute", inset: 0 }} />}
                     {v.read && (
                       <span
                         style={{
@@ -211,20 +208,17 @@ export default function SerieDetalle() {
                       </span>
                     )}
                     <span
-                      style={
-                        v.coverUrl
-                          ? {
-                              position: "absolute",
-                              bottom: 2,
-                              right: 2,
-                              background: "rgba(20,18,15,.85)",
-                              color: "var(--papel)",
-                              borderRadius: 4,
-                              fontSize: 9,
-                              padding: "1px 4px",
-                            }
-                          : undefined
-                      }
+                      style={{
+                        position: "absolute",
+                        bottom: 2,
+                        right: 2,
+                        background: "rgba(20,18,15,.85)",
+                        color: "var(--papel)",
+                        borderRadius: 4,
+                        fontSize: 9,
+                        fontWeight: 700,
+                        padding: "1px 4px",
+                      }}
                     >
                       {v.volume}
                     </span>
@@ -266,7 +260,7 @@ export default function SerieDetalle() {
                     borderRadius: 7,
                     overflow: "hidden",
                     border: "1px dashed rgba(193,85,61,.7)",
-                    background: v.coverUrl ? `center/cover url(${v.coverUrl})` : "transparent",
+                    background: "transparent",
                     color: "var(--arcilla)",
                     fontSize: 12,
                     fontWeight: 600,
@@ -275,7 +269,10 @@ export default function SerieDetalle() {
                   }}
                 >
                   {v.coverUrl && (
-                    <span style={{ position: "absolute", inset: 0, background: "rgba(20,18,15,.45)" }} />
+                    <>
+                      <SafeImg src={v.coverUrl} style={{ position: "absolute", inset: 0 }} />
+                      <span style={{ position: "absolute", inset: 0, background: "rgba(20,18,15,.45)" }} />
+                    </>
                   )}
                   <span
                     style={
@@ -328,7 +325,7 @@ export default function SerieDetalle() {
             <strong style={{ fontSize: 13 }}>Reseñas de la saga</strong>
             {reviews.average !== null && (
               <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <span style={{ color: "var(--ambar)", fontSize: 15 }}>{stars(Math.round(reviews.average))}</span>
+                <Stars value={Math.round(reviews.average)} size={15} />
                 <span className="muted" style={{ fontSize: 12.5, fontVariantNumeric: "tabular-nums" }}>
                   {(reviews.average / 2).toFixed(1)} · {reviews.count}
                 </span>
@@ -354,7 +351,7 @@ export default function SerieDetalle() {
               >
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
                   <strong style={{ fontSize: 13 }}>{r.own ? "Tu reseña" : r.userName}</strong>
-                  <span style={{ color: "var(--ambar)", fontSize: 13 }}>{stars(r.rating)}</span>
+                  <Stars value={r.rating} size={13} />
                 </div>
                 {r.text && !r.spoilers ? (
                   <p style={{ color: "var(--marfil)", fontSize: 13.5, lineHeight: 1.5 }}>{r.text}</p>
@@ -408,18 +405,7 @@ function SagaReviewForm({
   return (
     <div style={{ display: "grid", gap: 8, borderTop: "1px solid var(--tinta3)", paddingTop: 12 }}>
       <strong style={{ fontSize: 13 }}>{mine ? "Tu reseña de la saga" : "Reseña esta saga"}</strong>
-      <div style={{ display: "flex", gap: 4 }}>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            title={`${star} estrellas`}
-            style={{ fontSize: 26, color: "var(--ambar)", lineHeight: 1 }}
-            onClick={() => setRating(rating === star * 2 ? star * 2 - 1 : rating === star * 2 - 1 ? 0 : star * 2)}
-          >
-            {rating >= star * 2 ? "★" : rating === star * 2 - 1 ? "⯨" : "☆"}
-          </button>
-        ))}
-      </div>
+      <StarPicker size={26} value={rating} onChange={(next) => setRating(next ?? 0)} />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}

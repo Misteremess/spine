@@ -1,4 +1,5 @@
 import { Image, type ImageStyle } from "expo-image";
+import { useState } from "react";
 import { Text, View, type StyleProp, type ViewStyle } from "react-native";
 import { spineColor, spineInk } from "./spine";
 import { fonts } from "./theme";
@@ -32,8 +33,21 @@ export function Cover({
   radius?: number;
   titleSize?: number;
 }) {
-  if (coverUrl) {
-    return <Image source={{ uri: coverUrl }} style={[style as StyleProp<ImageStyle>, { borderRadius: radius }]} contentFit="cover" />;
+  // covers.openlibrary.org devuelve un GIF de 1×1 cuando NO tiene portada:
+  // hay que detectarlo y caer a la portada generada, no a una caja vacía.
+  const [broken, setBroken] = useState(false);
+  if (coverUrl && !broken) {
+    return (
+      <Image
+        source={{ uri: coverUrl }}
+        style={[style as StyleProp<ImageStyle>, { borderRadius: radius }]}
+        contentFit="cover"
+        onError={() => setBroken(true)}
+        onLoad={(e) => {
+          if (e.source.width <= 1) setBroken(true);
+        }}
+      />
+    );
   }
   const base = spineColor(title ?? "?");
   const ink = spineInk(base);

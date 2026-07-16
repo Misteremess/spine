@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { SafeImg } from "@/components/SafeImg";
 import { api } from "@/lib/api";
 import { spineColor, spineInk } from "@/lib/spine";
 
@@ -173,6 +174,7 @@ export default function Deseos() {
               <div key={item.id} className="card" style={{ display: "flex", gap: 14, alignItems: "center", padding: 12 }}>
                 <div
                   style={{
+                    position: "relative",
                     width: 44,
                     height: 64,
                     borderRadius: 6,
@@ -180,20 +182,16 @@ export default function Deseos() {
                     flexShrink: 0,
                     display: "grid",
                     placeItems: "center",
-                    background: item.coverUrl ? "var(--tinta3)" : spineColor(item.title ?? "?"),
+                    background: spineColor(item.title ?? "?"),
                   }}
                 >
-                  {item.coverUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.coverUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ) : (
-                    <span
-                      className="serif"
-                      style={{ color: spineInk(spineColor(item.title ?? "?")), fontSize: 20, fontWeight: 500 }}
-                    >
-                      {(item.title ?? "?").trim().charAt(0).toUpperCase() || "?"}
-                    </span>
-                  )}
+                  <span
+                    className="serif"
+                    style={{ color: spineInk(spineColor(item.title ?? "?")), fontSize: 20, fontWeight: 500 }}
+                  >
+                    {(item.title ?? "?").trim().charAt(0).toUpperCase() || "?"}
+                  </span>
+                  {item.coverUrl && <SafeImg src={item.coverUrl} style={{ position: "absolute", inset: 0 }} />}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 14.5, fontWeight: 600 }}>{item.title ?? "Sin título"}</p>
