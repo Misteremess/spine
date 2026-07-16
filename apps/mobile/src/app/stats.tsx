@@ -1,7 +1,7 @@
 import { Stack, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
-import { api } from "../lib/api";
+import { api, localTz } from "../lib/api";
 import { useThemeColors, useThemedStyles } from "../lib/settings";
 import { fonts, type Palette } from "../lib/theme";
 import { Text } from "../lib/ui";
@@ -28,7 +28,7 @@ export default function StatsScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      void api<Stats>("/v1/stats").then(setStats).catch(() => {});
+      void api<Stats>(`/v1/stats?tz=${encodeURIComponent(localTz())}`).then(setStats).catch(() => {});
     }, [])
   );
 

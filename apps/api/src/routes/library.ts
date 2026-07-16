@@ -53,6 +53,8 @@ const PatchSchema = z
 const StatusSchema = z.object({
   status: z.enum(["pending", "reading", "paused", "finished", "abandoned"]),
   rating: z.number().int().min(1).max(10).optional(),
+  /** Fechas locales del usuario (yyyy-mm-dd): el servidor puede estar en otra tz. */
+  startedAt: z.string().max(10).optional(),
   finishedAt: z.string().max(10).optional(),
 });
 
@@ -447,7 +449,7 @@ export function libraryRoutes(app: FastifyInstance) {
         .values({
           userBookId: id,
           status: body.status,
-          startedAt: body.status === "reading" ? today() : null,
+          startedAt: body.status === "reading" ? (body.startedAt ?? today()) : null,
         })
         .returning();
       return { reading: created, reread: Boolean(current) };
@@ -457,7 +459,7 @@ export function libraryRoutes(app: FastifyInstance) {
       .update(schema.readings)
       .set({
         status: body.status,
-        startedAt: current.startedAt ?? (body.status === "reading" ? today() : null),
+        startedAt: current.startedAt ?? (body.status === "reading" ? (body.startedAt ?? today()) : null),
         finishedAt:
           body.status === "finished" ? (body.finishedAt ?? today()) : current.finishedAt,
         rating: body.rating ?? current.rating,

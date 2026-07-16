@@ -8,6 +8,28 @@ function isoDay(d: Date): string {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
 
+/**
+ * yyyy-mm-dd en la zona horaria DEL USUARIO (`?tz=Europe/Madrid`). Sin esto,
+ * el servidor (UTC en producción) parte el día a las 00:00 UTC: una lectura
+ * a las 23:30 en España cae en el día siguiente y rompe rachas y meses.
+ */
+function makeDayFn(tz: string | undefined): (d: Date) => string {
+  if (tz) {
+    try {
+      const fmt = new Intl.DateTimeFormat("en-CA", {
+        timeZone: tz,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      return (d) => fmt.format(d);
+    } catch {
+      /* tz inválida: caemos a la hora del servidor */
+    }
+  }
+  return isoDay;
+}
+
 export function statsRoutes(app: FastifyInstance) {
   app.addHook("preHandler", requireUser);
 
@@ -16,7 +38,8 @@ export function statsRoutes(app: FastifyInstance) {
    * racha, valor de colección y series. La biblioteca personal es pequeña
    * (cientos de filas): se agrega en JS con pocas consultas.
    */
-  app.get("/v1/stats", async (req) => {
+  app.get<{ Querystring: { tz?: string } }>("/v1/stats", async (req) => {
+    const day = makeDayFn(req.query.tz);
     const books = await db
       .select({
         id: schema.userBooks.id,
@@ -51,12 +74,15 @@ export function statsRoutes(app: FastifyInstance) {
     const finishedBooks = byStatus.finished ?? 0;
 
     // --- Terminados por mes (últimos 12) y totales del año ---
-    const now = new Date();
-    const year = String(now.getFullYear());
+    const todayStr = day(new Date());
+    const year = todayStr.slice(0, 4);
     const months: { month: string; finished: number; pages: number }[] = [];
+    const [y0, m0] = [Number(todayStr.slice(0, 4)), Number(todayStr.slice(5, 7))];
     for (let i = 11; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      months.push({ month: isoDay(d).slice(0, 7), finished: 0, pages: 0 });
+      const total = y0 * 12 + (m0 - 1) - i;
+      const y = Math.floor(total / 12);
+      const m = (total % 12) + 1;
+      months.push({ month: `${y}-${String(m).padStart(2, "0")}`, finished: 0, pages: 0 });
     }
     const monthIndex = new Map(months.map((m, i) => [m.month, i]));
     let finishedThisYear = 0;
@@ -87,14 +113,19 @@ export function statsRoutes(app: FastifyInstance) {
           .from(schema.progressEntries)
           .where(inArray(schema.progressEntries.readingId, readingIds))
       : [];
-    const days = new Set(entries.map((e) => isoDay(e.createdAt)));
+    const days = new Set(entries.map((e) => day(e.createdAt)));
+    // Retrocede un día sobre una fecha yyyy-mm-dd sin depender de la tz del servidor.
+    const prevDay = (s: string) => {
+      const t = Date.UTC(Number(s.slice(0, 4)), Number(s.slice(5, 7)) - 1, Number(s.slice(8, 10)));
+      return new Date(t - 86400000).toISOString().slice(0, 10);
+    };
     let streak = 0;
     // La racha sigue viva si hoy aún no has leído pero ayer sí.
-    const cursor = new Date();
-    if (!days.has(isoDay(cursor))) cursor.setDate(cursor.getDate() - 1);
-    while (days.has(isoDay(cursor))) {
+    let cursor = todayStr;
+    if (!days.has(cursor)) cursor = prevDay(cursor);
+    while (days.has(cursor)) {
       streak++;
-      cursor.setDate(cursor.getDate() - 1);
+      cursor = prevDay(cursor);
     }
 
     // --- Leyendo ahora (con su último progreso) para el dashboard ---
@@ -224,8 +255,9 @@ export function statsRoutes(app: FastifyInstance) {
    * Resumen anual "Wrapped" (plan §5.7 / §6): el ritual compartible de fin
    * de año. Destaca lo mejor del año lector para hacer captura y compartir.
    */
-  app.get<{ Querystring: { year?: string } }>("/v1/wrapped", async (req) => {
-    const year = Number(req.query.year) || new Date().getFullYear();
+  app.get<{ Querystring: { year?: string; tz?: string } }>("/v1/wrapped", async (req) => {
+    const day = makeDayFn(req.query.tz);
+    const year = Number(req.query.year) || Number(day(new Date()).slice(0, 4));
     const y = String(year);
 
     const books = await db
@@ -288,7 +320,7 @@ export function statsRoutes(app: FastifyInstance) {
     const topAuthor = [...authorTally.entries()].sort((a, b) => b[1] - a[1])[0] ?? null;
     const busiestIdx = monthCount.indexOf(Math.max(...monthCount));
     const MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-    const addedThisYear = books.filter((b) => isoDay(b.createdAt).startsWith(y)).length;
+    const addedThisYear = books.filter((b) => day(b.createdAt).startsWith(y)).length;
 
     return {
       year,

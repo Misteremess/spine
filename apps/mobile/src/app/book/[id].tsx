@@ -10,7 +10,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { api } from "../../lib/api";
+import { api, localDay } from "../../lib/api";
 import { Cover } from "../../lib/Cover";
 import { useThemeColors, useThemedStyles } from "../../lib/settings";
 import { fonts, type Palette } from "../../lib/theme";
@@ -136,7 +136,11 @@ export default function BookDetail() {
   async function setStatus(status: ReadingStatus) {
     if (reading?.status === status) return;
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    await api(`/v1/library/${book.id}/status`, { method: "POST", body: { status } });
+    // Manda la fecha local del usuario: el servidor puede vivir en otra tz.
+    const body: Record<string, unknown> = { status };
+    if (status === "finished") body.finishedAt = localDay();
+    if (status === "reading") body.startedAt = localDay();
+    await api(`/v1/library/${book.id}/status`, { method: "POST", body });
     await load();
   }
 

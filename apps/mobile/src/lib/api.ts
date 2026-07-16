@@ -14,6 +14,21 @@ function resolveApiUrl(): string {
 
 export const API_URL = resolveApiUrl();
 
+/** Zona horaria IANA del dispositivo (para que el servidor no parta el día en UTC). */
+export function localTz(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/** Fecha local del usuario en yyyy-mm-dd. */
+export function localDay(): string {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,

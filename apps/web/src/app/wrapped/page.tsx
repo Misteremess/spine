@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
-import { api } from "@/lib/api";
+import { api, localTz } from "@/lib/api";
 
 type Wrapped = {
   year: number;
@@ -22,7 +22,7 @@ export default function WrappedPage() {
   const [data, setData] = useState<Wrapped | null>(null);
 
   useEffect(() => {
-    void api<Wrapped>(`/v1/wrapped?year=${year}`).then(setData).catch(() => {});
+    void api<Wrapped>(`/v1/wrapped?year=${year}&tz=${encodeURIComponent(localTz())}`).then(setData).catch(() => {});
   }, [year]);
 
   if (!data) {

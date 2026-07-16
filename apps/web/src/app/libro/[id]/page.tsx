@@ -5,7 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { Cover } from "@/components/Cover";
-import { api } from "@/lib/api";
+import { Stars, StarPicker } from "@/components/Stars";
+import { api, localDay } from "@/lib/api";
 
 type ReadingStatus = "pending" | "reading" | "paused" | "finished" | "abandoned";
 
@@ -96,7 +97,11 @@ export default function Libro() {
 
   async function setStatus(status: ReadingStatus) {
     if (reading?.status === status) return;
-    await api(`/v1/library/${book.id}/status`, { method: "POST", body: { status } });
+    // Manda la fecha local del usuario: el servidor puede vivir en otra tz.
+    const body: Record<string, unknown> = { status };
+    if (status === "finished") body.finishedAt = localDay();
+    if (status === "reading") body.startedAt = localDay();
+    await api(`/v1/library/${book.id}/status`, { method: "POST", body });
     // Celebrar al terminar un libro (plan §9): confeti discreto, una vez.
     if (status === "finished") {
       setCelebrate(true);
@@ -261,26 +266,7 @@ export default function Libro() {
               TU VALORACIÓN
             </p>
             <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-              {[1, 2, 3, 4, 5].map((star) => {
-                const r = book.rating ?? 0;
-                const glyph = r >= star * 2 ? "★" : r === star * 2 - 1 ? "⯨" : "☆";
-                return (
-                  <button
-                    key={star}
-                    style={{
-                      fontSize: 28,
-                      color: glyph === "☆" ? "var(--tinta3)" : "var(--ambar)",
-                    }}
-                    title={`${star} estrellas (toca de nuevo para media / quitar)`}
-                    onClick={() => {
-                      const next = r === star * 2 ? star * 2 - 1 : r === star * 2 - 1 ? null : star * 2;
-                      void setRating(next);
-                    }}
-                  >
-                    {glyph}
-                  </button>
-                );
-              })}
+              <StarPicker value={book.rating ?? 0} onChange={(next) => void setRating(next)} />
               {book.rating ? (
                 <span className="muted" style={{ fontSize: 13, marginLeft: 8 }}>
                   {(book.rating / 2).toFixed(1).replace(".0", "")} / 5
@@ -733,13 +719,7 @@ function Reviews({ workId }: { workId: number }) {
 
   if (!data) return null;
 
-  const stars = (r: number, size = 15) => (
-    <span style={{ color: "var(--ambar)", fontSize: size }}>
-      {"★".repeat(Math.floor(r / 2))}
-      {r % 2 === 1 ? "⯨" : ""}
-      <span style={{ color: "var(--tinta3)" }}>{"★".repeat(5 - Math.ceil(r / 2))}</span>
-    </span>
-  );
+  const stars = (r: number, size = 15) => <Stars value={r} size={size} />;
 
   return (
     <div className="card" style={{ display: "grid", gap: 12 }}>
@@ -771,23 +751,7 @@ function Reviews({ workId }: { workId: number }) {
             await load();
           }}
         >
-          <div style={{ display: "flex", gap: 6 }}>
-            {[1, 2, 3, 4, 5].map((star) => {
-              const glyph = rating >= star * 2 ? "★" : rating === star * 2 - 1 ? "⯨" : "☆";
-              return (
-                <button
-                  key={star}
-                  type="button"
-                  style={{ fontSize: 26, color: glyph === "☆" ? "var(--tinta3)" : "var(--ambar)" }}
-                  onClick={() =>
-                    setRating(rating === star * 2 ? star * 2 - 1 : rating === star * 2 - 1 ? 0 : star * 2)
-                  }
-                >
-                  {glyph}
-                </button>
-              );
-            })}
-          </div>
+          <StarPicker size={26} value={rating} onChange={(next) => setRating(next ?? 0)} />
           <textarea
             rows={3}
             placeholder="¿Qué te ha parecido? (opcional)"

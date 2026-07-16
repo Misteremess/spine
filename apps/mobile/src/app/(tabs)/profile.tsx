@@ -8,7 +8,7 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { api } from "../../lib/api";
+import { api, localTz } from "../../lib/api";
 import { authClient } from "../../lib/auth";
 import { Cover } from "../../lib/Cover";
 import { FadeInUp, PopIn } from "../../lib/Motion";
@@ -41,7 +41,7 @@ export default function Profile() {
 
   useFocusEffect(
     useCallback(() => {
-      void api<Stats>("/v1/stats").then(setStats).catch(() => {});
+      void api<Stats>(`/v1/stats?tz=${encodeURIComponent(localTz())}`).then(setStats).catch(() => {});
     }, [])
   );
 

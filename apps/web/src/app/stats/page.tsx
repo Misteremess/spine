@@ -1,12 +1,23 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/Shell";
-import { api } from "@/lib/api";
+import { Cover } from "@/components/Cover";
+import { api, localTz } from "@/lib/api";
 
 type Stats = {
   library: { total: number; byStatus: Record<string, number>; readPct: number };
   thisYear: { finished: number; pages: number };
+  allTime: { finished: number; pages: number };
+  readingNow: {
+    id: number;
+    title: string;
+    coverUrl: string | null;
+    page: number | null;
+    pages: number | null;
+    percent: number | null;
+  }[];
   months: { month: string; finished: number; pages: number }[];
   streakDays: number;
   collection: { valueCents: number; series: number; seriesComplete: number };
@@ -121,7 +132,8 @@ export default function StatsPage() {
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
-    void api<Stats>("/v1/stats").then(setStats).catch(() => {});
+    // La tz del navegador evita que el servidor (UTC) desplace rachas y meses.
+    void api<Stats>(`/v1/stats?tz=${encodeURIComponent(localTz())}`).then(setStats).catch(() => {});
   }, []);
 
   if (!stats) {
@@ -132,7 +144,7 @@ export default function StatsPage() {
     );
   }
 
-  const { library, thisYear, months, streakDays, collection, topAuthors } = stats;
+  const { library, thisYear, allTime, readingNow, months, streakDays, collection, topAuthors } = stats;
   const maxFinished = Math.max(1, ...months.map((m) => m.finished));
 
   return (
@@ -148,6 +160,45 @@ export default function StatsPage() {
         </div>
 
         <GoalWidget />
+
+        {readingNow.length > 0 && (
+          <div className="card" style={{ display: "grid", gap: 12 }}>
+            <p className="muted" style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.4 }}>
+              LEYENDO AHORA
+            </p>
+            {readingNow.map((b) => (
+              <Link key={b.id} href={`/libro/${b.id}`} style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <div
+                  style={{
+                    width: 34,
+                    height: 50,
+                    borderRadius: 5,
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    background: "var(--tinta3)",
+                    border: "1px solid var(--tinta3)",
+                  }}
+                >
+                  <Cover title={b.title} coverUrl={b.coverUrl} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0, display: "grid", gap: 6 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "baseline" }}>
+                    <span style={{ fontSize: 14, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {b.title}
+                    </span>
+                    <span className="muted" style={{ fontSize: 12, flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
+                      {b.percent !== null ? `${b.percent}%` : "sin progreso"}
+                      {b.page && b.pages ? ` · pág. ${b.page} de ${b.pages}` : ""}
+                    </span>
+                  </div>
+                  <div style={{ height: 6, borderRadius: 99, background: "var(--tinta3)", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${b.percent ?? 0}%`, background: "var(--ambar)" }} />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
           <Tile big={String(library.total)} label="en tu biblioteca" />
@@ -190,7 +241,11 @@ export default function StatsPage() {
               const h = m.finished === 0 ? 3 : 14 + (m.finished / maxFinished) * 56;
               const idx = Number(m.month.slice(5, 7)) - 1;
               return (
-                <div key={m.month} style={{ flex: 1, display: "grid", gap: 4, justifyItems: "center" }}>
+                <div
+                  key={m.month}
+                  title={`${m.month}: ${m.finished} ${m.finished === 1 ? "libro" : "libros"}${m.pages ? ` · ${m.pages.toLocaleString("es-ES")} págs.` : ""}`}
+                  style={{ flex: 1, display: "grid", gap: 4, justifyItems: "center" }}
+                >
                   <span className="muted" style={{ fontSize: 10 }}>
                     {m.finished > 0 ? m.finished : " "}
                   </span>
@@ -210,6 +265,12 @@ export default function StatsPage() {
               );
             })}
           </div>
+
+          {allTime.finished > thisYear.finished && (
+            <p className="muted" style={{ fontSize: 12.5 }}>
+              Desde siempre: {allTime.finished} libros · {allTime.pages.toLocaleString("es-ES")} páginas
+            </p>
+          )}
         </div>
 
         <div className="card" style={{ display: "grid", gap: 12 }}>

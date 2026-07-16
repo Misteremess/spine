@@ -10,6 +10,21 @@ export class ApiError extends Error {
   }
 }
 
+/** Zona horaria IANA del navegador (para que el servidor no parta el día en UTC). */
+export function localTz(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/** Fecha local del usuario en yyyy-mm-dd. */
+export function localDay(): string {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
 export async function api<T = Record<string, unknown>>(
   path: string,
   init?: Omit<RequestInit, "body"> & { body?: unknown }
