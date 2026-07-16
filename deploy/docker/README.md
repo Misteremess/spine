@@ -49,9 +49,12 @@ autenticada en el VPS — no los automatiza este repo.
 4. **Primer arranque**:
 
    ```bash
-   docker compose -f docker-compose.production.yml pull
-   docker compose -f docker-compose.production.yml up -d
+   docker compose -f docker-compose.production.yml --env-file .env.production pull
+   docker compose -f docker-compose.production.yml --env-file .env.production up -d
    ```
+
+   (`--env-file` es obligatorio: Compose solo carga `.env` automáticamente,
+   no `.env.production`.)
 
    Tras el primer push a `main` que publique imágenes, comprueba en GitHub →
    repo → Packages que `spine-api` y `spine-web` queden como **públicos**

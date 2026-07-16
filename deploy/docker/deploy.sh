@@ -4,7 +4,7 @@
 set -euo pipefail
 
 APP_DIR="$HOME/spine"
-COMPOSE="docker compose -f docker-compose.production.yml"
+COMPOSE="docker compose -f docker-compose.production.yml --env-file .env.production"
 
 cd "${APP_DIR}"
 git pull --ff-only
